@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/duel.gd" id="1_duel"]
+
+[node name="Duel" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_duel")
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.09, 0.11, 0.23, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel"]
+theme_override_constants/separation = 16
+custom_minimum_size = Vector2(460, 0)
+
+[node name="Title" type="Label" parent="Center/Panel/VBox"]
+text = " ДУЭЛЬ"
+horizontal_alignment = 1
+
+[node name="ChallengeLabel" type="Label" parent="Center/Panel/VBox"]
+text = "Соперник бросает тебе вызов!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="RulesLabel" type="Label" parent="Center/Panel/VBox"]
+text = "Оба играют одинаковым случайным оружием и целями. Кто наберёт больше очков за 3 раунда — победил."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="BtnRow" type="VBoxContainer" parent="Center/Panel/VBox"]
+alignment = 1
+theme_override_constants/separation = 24
+
+[node name="AcceptBtn" type="Button" parent="Center/Panel/VBox/BtnRow"]
+text = " ПРИНЯТЬ"
+
+[node name="DeclineBtn" type="Button" parent="Center/Panel/VBox/BtnRow"]
+text = " ОТКЛОНИТЬ"
+
+[node name="BackButton" type="Button" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -70.0
+offset_right = -10.0
+offset_bottom = -10.0
+text = " НАЗАД"
+
+[connection signal="pressed" from="Center/Panel/VBox/BtnRow/AcceptBtn" to="." method="_on_accept"]
+[connection signal="pressed" from="Center/Panel/VBox/BtnRow/DeclineBtn" to="." method="_on_decline"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back"]

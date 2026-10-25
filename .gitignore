@@ -1,0 +1,24 @@
+# Godot 4
+.godot/
+build/
+*.tmp
+*.log
+
+# Локальные настройки и кэш
+_backup/
+.DS_Store
+Thumbs.db
+
+# Секреты / приватное (если появятся)
+*.env
+.env
+*.key
+*.keystore
+*.jks
+
+# Не публиковать промежуточный AI-стейджинг
+assets/images/packs2/
+assets/images/packs_ai/
+assets/images/packs_ai_cut/
+
+# Генераторы/служебное — хранится в soog-workspace, не в гейм-репо

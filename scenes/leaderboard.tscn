@@ -1,0 +1,86 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/leaderboard_screen.gd" id="1_lb"]
+
+[node name="Leaderboard" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_lb")
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.09, 0.11, 0.18, 1)
+
+[node name="Title" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 700.0
+offset_bottom = 64.0
+text = " ЛИДЕРБОРД"
+horizontal_alignment = 1
+
+[node name="EmptyLabel" type="Label" parent="."]
+offset_top = 150.0
+offset_right = 720.0
+offset_bottom = 200.0
+text = "Пока пусто — сыграй и стань первым!"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 64.0
+offset_right = 700.0
+offset_bottom = 92.0
+text = "локальный рейтинг"
+horizontal_alignment = 1
+
+[node name="TournamentPanel" type="PanelContainer" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 96.0
+offset_right = 150.0
+offset_bottom = 164.0
+
+[node name="HBox" type="HBoxContainer" parent="TournamentPanel"]
+theme_override_constants/separation = 10
+
+[node name="Info" type="VBoxContainer" parent="TournamentPanel/HBox"]
+size_flags_vertical = 4
+
+[node name="ThemeLabel" type="Label" parent="TournamentPanel/HBox/Info"]
+text = "ТУРНИР НЕДЕЛИ"
+horizontal_alignment = 1
+
+[node name="TimerLabel" type="Label" parent="TournamentPanel/HBox/Info"]
+text = "до конца: --:--:--"
+horizontal_alignment = 1
+
+[node name="OpenBtn" type="Button" parent="TournamentPanel/HBox"]
+custom_minimum_size = Vector2(0, 0)
+text = "ОТКРЫТЬ"
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 172.0
+offset_bottom = -86.0
+
+[node name="Rows" type="VBoxContainer" parent="Scroll"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="BackButton" type="Button" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -70.0
+offset_right = -10.0
+offset_bottom = -10.0
+text = " НАЗАД"
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back"]
+[connection signal="pressed" from="TournamentPanel/HBox/OpenBtn" to="." method="_on_tournament_pressed"]

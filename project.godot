@@ -1,0 +1,58 @@
+﻿; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+
+config_version=5
+
+[autoload]
+
+ScoreManager="*res://scripts/score_manager.gd"
+GameState="*res://scripts/game_state.gd"
+L10N="*res://scripts/l10n.gd"
+AudioManager="*res://scripts/audio_manager.gd"
+FX="*res://scripts/fx.gd"
+YandexSDK="*res://scripts/yandex_sdk.gd"
+AdService="*res://scripts/ads.gd"
+Assets="*res://scripts/asset_manager.gd"
+OnlineService="*res://scripts/online_service.gd"
+PurchaseService="*res://scripts/purchase_service.gd"
+Notifications="*res://scripts/notifications.gd"
+Toast="*res://scripts/toast.gd"
+UIPressFX="*res://scripts/ui_fx.gd"
+
+[application]
+
+config/name="РќРѕР¶ Р‘СѓРјРµСЂР°РЅРі"
+config/description="Р“РёРїРµСЂРєР°Р·СѓР°Р»СЊРЅР°СЏ Р°СЂРєР°РґР°: Р±СЂРѕСЃР°Р№ РЅРѕР¶-Р±СѓРјРµСЂР°РЅРі РІ РІСЂР°С‰Р°СЋС‰СѓСЋСЃСЏ С†РµР»СЊ Рё РЅР°Р±РёСЂР°Р№ РјРЅРѕР¶РёС‚РµР»Рё."
+run/main_scene="res://scenes/main_menu.tscn"
+config/features=PackedStringArray("4.3")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=720
+window/size/viewport_height=1280
+#window/size/window_width_override=360  # probe: native 720 for screenshots
+#window/size/window_height_override=640  # probe: native 720 for screenshots
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+window/handheld/orientation=1
+
+[gui]
+
+theme/custom="res://assets/theme/concept_theme.tres"
+
+[input]
+
+ui_cancel={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194305,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+
+[rendering]
+
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
+environment/defaults/default_clear_color=Color(0.13, 0.13, 0.2, 1)
+textures/vram_compression/import_etc2_astc=true

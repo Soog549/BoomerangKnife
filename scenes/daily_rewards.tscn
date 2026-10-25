@@ -1,0 +1,96 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/daily_rewards.gd" id="1_daily"]
+
+[node name="DailyRewards" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_daily")
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.09, 0.11, 0.18, 1)
+
+[node name="Title" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 700.0
+offset_bottom = 64.0
+text = " ЕЖЕДНЕВНЫЕ НАГРАДЫ"
+horizontal_alignment = 1
+
+[node name="StreakLabel" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 64.0
+offset_right = 700.0
+offset_bottom = 96.0
+text = "Серия: 0 дней"
+horizontal_alignment = 1
+
+[node name="Calendar" type="GridContainer" parent="."]
+columns = 7
+offset_left = 16.0
+offset_top = 120.0
+offset_right = 704.0
+offset_bottom = 400.0
+
+[node name="ClaimButton" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = 40.0
+offset_right = 160.0
+offset_bottom = 100.0
+text = "ЗАБРАТЬ НАГРАДУ"
+
+[node name="Message" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 420.0
+offset_right = 700.0
+offset_bottom = 460.0
+text = ""
+horizontal_alignment = 1
+
+[node name="BackButton" type="Button" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -70.0
+offset_right = -10.0
+offset_bottom = -10.0
+text = " НАЗАД"
+
+[node name="QuestTitle" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 470.0
+offset_right = 700.0
+offset_bottom = 500.0
+text = "ЕЖЕДНЕВНЫЙ КВЕСТ"
+horizontal_alignment = 1
+
+[node name="QuestLabel" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 500.0
+offset_right = 700.0
+offset_bottom = 530.0
+text = ""
+horizontal_alignment = 1
+
+[node name="QuestClaim" type="Button" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -160.0
+offset_top = 540.0
+offset_right = 160.0
+offset_bottom = 590.0
+text = "В ПРОЦЕССЕ"
+
+[connection signal="pressed" from="ClaimButton" to="." method="_on_claim_pressed"]
+[connection signal="pressed" from="QuestClaim" to="." method="_on_quest_claim_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back_pressed"]

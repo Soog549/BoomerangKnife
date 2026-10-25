@@ -1,0 +1,84 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/loadout.gd" id="1_loadout"]
+
+[node name="Loadout" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_loadout")
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.09, 0.11, 0.18, 1)
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -80.0
+
+[node name="VBox" type="VBoxContainer" parent="Scroll"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Scroll/VBox"]
+text = "СКИНЫ И МОДЫ"
+
+[node name="SkinLabel" type="Label" parent="Scroll/VBox"]
+text = "Скин: Золото"
+horizontal_alignment = 1
+
+[node name="SkinPrev" type="Button" parent="Scroll/VBox"]
+text = " КРУТИТЬ СКИН "
+
+[node name="HLine" type="HSeparator" parent="Scroll/VBox"]
+
+[node name="PreviewBox" type="VBoxContainer" parent="Scroll/VBox"]
+theme_override_constants/separation = 0
+
+[node name="HLineP" type="HSeparator" parent="Scroll/VBox"]
+
+[node name="DiffTitle" type="Label" parent="Scroll/VBox"]
+text = "СЛОЖНОСТЬ"
+horizontal_alignment = 1
+
+[node name="DifficultyLabel" type="Label" parent="Scroll/VBox"]
+text = "Средний"
+horizontal_alignment = 1
+
+[node name="DifficultyPrev" type="Button" parent="Scroll/VBox"]
+text = " СМЕНИТЬ "
+
+[node name="HLine2" type="HSeparator" parent="Scroll/VBox"]
+
+[node name="ModesTitle" type="Label" parent="Scroll/VBox"]
+text = "МОДЫ (тэп для вкл/выкл)"
+horizontal_alignment = 1
+
+[node name="ModesBox" type="VBoxContainer" parent="Scroll/VBox"]
+theme_override_constants/separation = 6
+
+[node name="HLine3" type="HSeparator" parent="Scroll/VBox"]
+
+[node name="BoosterBox" type="VBoxContainer" parent="Scroll/VBox"]
+theme_override_constants/separation = 8
+
+[node name="HLine4" type="HSeparator" parent="Scroll/VBox"]
+
+[node name="GearBox" type="VBoxContainer" parent="Scroll/VBox"]
+theme_override_constants/separation = 8
+
+[node name="BackButton" type="Button" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -70.0
+offset_bottom = -10.0
+offset_right = 10.0
+offset_left = 10.0
+text = " НАЗАД"
+
+[connection signal="pressed" from="Scroll/VBox/SkinPrev" to="." method="_on_skin_prev_pressed"]
+[connection signal="pressed" from="Scroll/VBox/DifficultyPrev" to="." method="_on_difficulty_prev_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back_pressed"]

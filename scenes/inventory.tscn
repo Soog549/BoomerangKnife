@@ -1,0 +1,101 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/inventory.gd" id="1_inv"]
+
+[node name="Inventory" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_inv")
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.09, 0.11, 0.18, 1)
+
+[node name="Title" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 700.0
+offset_bottom = 64.0
+text = " ИНВЕНТАРЬ"
+horizontal_alignment = 1
+
+[node name="WalletLabel" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 64.0
+offset_right = 700.0
+offset_bottom = 96.0
+text = "Монеты: 0"
+horizontal_alignment = 1
+
+[node name="ArmedLabel" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 96.0
+offset_right = 700.0
+offset_bottom = 124.0
+text = "В лоадауте: —"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 134.0
+offset_bottom = -210.0
+
+[node name="Rows" type="VBoxContainer" parent="Scroll"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="HintLabel" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 1060.0
+offset_right = 700.0
+offset_bottom = 1090.0
+text = "Бустер срабатывает один раз за забег."
+horizontal_alignment = 1
+
+[node name="ShopButton" type="Button" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -140.0
+offset_right = -10.0
+offset_bottom = -80.0
+text = " В МАГАЗИН"
+
+[node name="ClearButton" type="Button" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -80.0
+offset_right = -10.0
+offset_bottom = -20.0
+text = "СНЯТЬ БУСТЕР"
+
+[node name="GlyphsBtn" type="Button" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -80.0
+offset_right = -10.0
+offset_bottom = -20.0
+text = " ГЛИФЫ"
+
+[node name="BackButton" type="Button" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -20.0
+offset_right = -10.0
+offset_bottom = -10.0
+text = " НАЗАД"
+
+[connection signal="pressed" from="ShopButton" to="." method="_on_shop_pressed"]
+[connection signal="pressed" from="ClearButton" to="." method="_on_clear_pressed"]
+[connection signal="pressed" from="GlyphsBtn" to="." method="_on_glyphs_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back_pressed"]

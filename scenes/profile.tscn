@@ -1,0 +1,101 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/profile.gd" id="1_prof"]
+
+[node name="Profile" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_prof")
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.09, 0.11, 0.18, 1)
+
+[node name="Title" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 700.0
+offset_bottom = 64.0
+text = " ПЕРСОНАЖ"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+horizontal_scroll_mode = 0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 76.0
+offset_bottom = -70.0
+
+[node name="VBox" type="VBoxContainer" parent="Scroll"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="AvatarPanel" type="PanelContainer" parent="Scroll/VBox"]
+size_flags_horizontal = 4
+
+[node name="HBox" type="HBoxContainer" parent="Scroll/VBox/AvatarPanel"]
+theme_override_constants/separation = 16
+
+[node name="AvatarRect" type="ColorRect" parent="Scroll/VBox/AvatarPanel/HBox"]
+custom_minimum_size = Vector2(110, 110)
+color = Color(0.95, 0.8, 0.3, 1)
+
+[node name="TypeAvatar" type="TextureRect" parent="Scroll/VBox/AvatarPanel/HBox"]
+custom_minimum_size = Vector2(110, 110)
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Info" type="VBoxContainer" parent="Scroll/VBox/AvatarPanel/HBox"]
+size_flags_vertical = 4
+
+[node name="AvatarLabel" type="Label" parent="Scroll/VBox/AvatarPanel/HBox/Info"]
+text = "Скин: Золото"
+horizontal_alignment = 1
+
+[node name="AvatarHint" type="Label" parent="Scroll/VBox/AvatarPanel/HBox/Info"]
+text = "аватар = выбранный скин\n(меняется в магазине)"
+horizontal_alignment = 1
+
+[node name="TocTitle" type="Label" parent="Scroll/VBox"]
+text = "ХАРАКТЕРИСТИКИ"
+horizontal_alignment = 1
+
+[node name="StatsBox" type="VBoxContainer" parent="Scroll/VBox"]
+theme_override_constants/separation = 8
+
+[node name="NavTitle" type="Label" parent="Scroll/VBox"]
+offset_top = 8.0
+text = "ЭКИПИРОВКА И ИНВЕНТАРЬ"
+horizontal_alignment = 1
+
+[node name="EquipmentBtn" type="Button" parent="Scroll/VBox"]
+custom_minimum_size = Vector2(0, 58)
+text = " ЭКИПИРОВКА"
+
+[node name="InventoryBtn" type="Button" parent="Scroll/VBox"]
+custom_minimum_size = Vector2(0, 58)
+text = " ИНВЕНТАРЬ"
+
+[node name="GlyphsBtn" type="Button" parent="Scroll/VBox"]
+custom_minimum_size = Vector2(0, 58)
+text = " ГЛИФЫ"
+
+[node name="BackButton" type="Button" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -60.0
+offset_right = -10.0
+offset_bottom = -10.0
+text = " НАЗАД"
+
+[connection signal="pressed" from="Scroll/VBox/EquipmentBtn" to="." method="_on_equipment_pressed"]
+[connection signal="pressed" from="Scroll/VBox/InventoryBtn" to="." method="_on_inventory_pressed"]
+[connection signal="pressed" from="Scroll/VBox/GlyphsBtn" to="." method="_on_glyphs_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back_pressed"]

@@ -1,0 +1,162 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/endless.gd" id="1_endless"]
+[ext_resource type="PackedScene" path="res://scenes/knife.tscn" id="2_knife"]
+[ext_resource type="PackedScene" path="res://scenes/target.tscn" id="3_target"]
+[ext_resource type="Script" path="res://scripts/pause_menu.gd" id="4_pause"]
+
+[node name="Endless" type="Node2D"]
+script = ExtResource("1_endless")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(360, 640)
+
+[node name="Background" type="ColorRect" parent="."]
+offset_right = 720.0
+offset_bottom = 1280.0
+color = Color(0.12, 0.09, 0.2, 1)
+mouse_filter = 2
+
+[node name="KnifeSpawn" type="Marker2D" parent="."]
+position = Vector2(360, 1100)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="VBoxContainer" parent="UI"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 600.0
+offset_bottom = 160.0
+
+[node name="WaveLabel" type="Label" parent="UI/HUD"]
+text = "ВОЛНА: 1"
+
+[node name="ScoreLabel" type="Label" parent="UI/HUD"]
+text = "СЧЁТ: 0"
+
+[node name="MultiplierTag" type="Label" parent="UI/HUD"]
+text = "МНОЖИТЕЛЬ x1.0"
+
+[node name="LivesLabel" type="Label" parent="UI/HUD"]
+text = "ЖИЗНИ: 3"
+
+[node name="BestLabel" type="Label" parent="UI/HUD"]
+text = "РЕКОРД ВОЛНЫ: 0"
+
+[node name="PauseButton" type="Button" parent="UI"]
+process_mode = 3
+offset_left = 620.0
+offset_top = 16.0
+offset_right = 700.0
+offset_bottom = 56.0
+text = "II"
+
+[node name="HomeButton" type="Button" parent="UI"]
+process_mode = 3
+offset_left = 620.0
+offset_top = 70.0
+offset_right = 700.0
+offset_bottom = 110.0
+text = ""
+
+[node name="PauseMenu" type="Control" parent="UI"]
+visible = false
+process_mode = 3
+[node name="BannerDemo" type="Control" parent="UI"]
+visible = false
+anchor_right = 1.0
+offset_top = 1240.0
+offset_bottom = 1280.0
+
+[node name="Bg" type="ColorRect" parent="UI/BannerDemo"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.16, 0.18, 0.28, 1)
+
+[node name="Label" type="Label" parent="UI/BannerDemo"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "— место баннера (демо) —"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("4_pause")
+
+[node name="Dim" type="ColorRect" parent="UI/PauseMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.7)
+
+[node name="VBox" type="VBoxContainer" parent="UI/PauseMenu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.0
+offset_top = -140.0
+offset_right = 140.0
+offset_bottom = 140.0
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="UI/PauseMenu/VBox"]
+text = "ПАУЗА"
+horizontal_alignment = 1
+
+[node name="ResumeBtn" type="Button" parent="UI/PauseMenu/VBox"]
+text = "ПРОДОЛЖИТЬ"
+
+[node name="MenuBtn" type="Button" parent="UI/PauseMenu/VBox"]
+text = "В МЕНЮ"
+
+[node name="GameOver" type="Control" parent="UI"]
+visible = false
+process_mode = 3
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Dim" type="ColorRect" parent="UI/GameOver"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.75)
+
+[node name="Panel" type="PanelContainer" parent="UI/GameOver"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -160.0
+offset_right = 180.0
+offset_bottom = 160.0
+
+[node name="VBox" type="VBoxContainer" parent="UI/GameOver/Panel"]
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="UI/GameOver/Panel/VBox"]
+text = "ИГРА ОКОНЧЕНА"
+horizontal_alignment = 1
+
+[node name="StatsLabel" type="Label" parent="UI/GameOver/Panel/VBox"]
+text = "Волна: 1 • Счёт: 0"
+horizontal_alignment = 1
+
+[node name="BestLabel" type="Label" parent="UI/GameOver/Panel/VBox"]
+text = "Рекорд: 0"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="UI/GameOver/Panel/VBox"]
+text = "ЗАНОВО"
+
+[node name="MenuButton" type="Button" parent="UI/GameOver/Panel/VBox"]
+text = "В МЕНЮ"
+
+[connection signal="pressed" from="UI/PauseButton" to="." method="_on_pause_pressed"]
+[connection signal="pressed" from="UI/HomeButton" to="." method="_on_pause_menu_pressed"]
+[connection signal="pressed" from="UI/PauseMenu/VBox/ResumeBtn" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="UI/PauseMenu/VBox/MenuBtn" to="." method="_on_pause_menu_pressed"]
+[connection signal="pressed" from="UI/GameOver/Panel/VBox/RestartButton" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="UI/GameOver/Panel/VBox/MenuButton" to="." method="_on_gameover_menu_pressed"]

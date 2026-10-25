@@ -1,0 +1,129 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/settings.gd" id="1_settings"]
+[ext_resource type="Texture2D" path="res://assets/images/background/bg_main.png" id="2_bg"]
+
+[node name="Settings" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_settings")
+
+[node name="Background" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("2_bg")
+stretch_mode = 5
+
+[node name="Center" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Center/VBox"]
+text = "НАСТРОЙКИ"
+horizontal_alignment = 1
+
+[node name="NameLabel" type="Label" parent="Center/VBox"]
+text = "Имя игрока"
+horizontal_alignment = 1
+
+[node name="NameEdit" type="LineEdit" parent="Center/VBox"]
+custom_minimum_size = Vector2(300, 0)
+placeholder_text = "Игрок"
+max_length = 16
+
+[node name="NameHint" type="Label" parent="Center/VBox"]
+text = "Имя видно в лидербордах"
+horizontal_alignment = 1
+
+[node name="YandexAuthLabel" type="Label" parent="Center/VBox"]
+text = "Гость"
+visible = false
+horizontal_alignment = 1
+
+[node name="YandexAuthButton" type="Button" parent="Center/VBox"]
+text = "Войти через Яндекс"
+visible = false
+custom_minimum_size = Vector2(300, 0)
+
+[node name="Sep1" type="HSeparator" parent="Center/VBox"]
+
+[node name="VolumeLabel" type="Label" parent="Center/VBox"]
+text = "Общая: 100"
+horizontal_alignment = 1
+
+[node name="VolumeSlider" type="HSlider" parent="Center/VBox"]
+custom_minimum_size = Vector2(300, 0)
+max_value = 100.0
+value = 100.0
+
+[node name="MusicLabel" type="Label" parent="Center/VBox"]
+text = "Музыка: 100"
+horizontal_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="Center/VBox"]
+custom_minimum_size = Vector2(300, 0)
+max_value = 100.0
+value = 100.0
+
+[node name="SFXLabel" type="Label" parent="Center/VBox"]
+text = "Звуки: 100"
+horizontal_alignment = 1
+
+[node name="SFXSlider" type="HSlider" parent="Center/VBox"]
+custom_minimum_size = Vector2(300, 0)
+max_value = 100.0
+value = 100.0
+
+[node name="ShakeToggle" type="CheckButton" parent="Center/VBox"]
+text = "Тряска экрана"
+button_pressed = true
+
+[node name="ParticlesToggle" type="CheckButton" parent="Center/VBox"]
+text = "Частицы"
+button_pressed = true
+
+[node name="LandscapeToggle" type="CheckButton" parent="Center/VBox"]
+text = "Альбомная ориентация"
+visible = false
+
+[node name="LanguageLabel" type="Label" parent="Center/VBox"]
+text = "Язык"
+horizontal_alignment = 1
+
+[node name="LanguageOption" type="OptionButton" parent="Center/VBox"]
+custom_minimum_size = Vector2(300, 0)
+
+[node name="AvatarLabel" type="Label" parent="Center/VBox"]
+text = "Персонаж"
+horizontal_alignment = 1
+
+[node name="AvatarRow" type="HBoxContainer" parent="Center/VBox"]
+alignment = 1
+
+[node name="AvatarOption" type="OptionButton" parent="Center/VBox/AvatarRow"]
+custom_minimum_size = Vector2(220, 0)
+
+[node name="AvatarPreview" type="TextureRect" parent="Center/VBox/AvatarRow"]
+custom_minimum_size = Vector2(96, 96)
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BackButton" type="Button" parent="Center/VBox"]
+text = " НАЗАД"
+
+[connection signal="text_submitted" from="Center/VBox/NameEdit" to="." method="_on_name_submitted"]
+[connection signal="focus_exited" from="Center/VBox/NameEdit" to="." method="_on_name_focus_exited"]
+[connection signal="value_changed" from="Center/VBox/VolumeSlider" to="." method="_on_volume_changed"]
+[connection signal="value_changed" from="Center/VBox/MusicSlider" to="." method="_on_music_changed"]
+[connection signal="value_changed" from="Center/VBox/SFXSlider" to="." method="_on_sfx_changed"]
+[connection signal="toggled" from="Center/VBox/ShakeToggle" to="." method="_on_shake_toggled"]
+[connection signal="toggled" from="Center/VBox/ParticlesToggle" to="." method="_on_particles_toggled"]
+[connection signal="toggled" from="Center/VBox/LandscapeToggle" to="." method="_on_landscape_toggled"]
+[connection signal="pressed" from="Center/VBox/YandexAuthButton" to="." method="_on_yandex_auth_pressed"]
+[connection signal="item_selected" from="Center/VBox/LanguageOption" to="." method="_on_language_selected"]
+[connection signal="item_selected" from="Center/VBox/AvatarRow/AvatarOption" to="." method="_on_avatar_selected"]
+[connection signal="pressed" from="Center/VBox/BackButton" to="." method="_on_back_pressed"]
