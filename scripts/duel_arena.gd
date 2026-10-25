@@ -120,9 +120,7 @@ func _process(delta: float) -> void:
 	Autoshot.tick(delta)
 
 func _banner_setup() -> void:
-	pass  # banner off in gameplay
-	if AdService.is_demo_mode():
-		banner_demo.visible = false
+	banner_demo.visible = false  # в геймплее баннер не показываем
 
 func _exit_tree() -> void:
 	AdService.hide_banner()

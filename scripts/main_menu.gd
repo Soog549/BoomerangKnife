@@ -35,6 +35,7 @@ const MENU_VIEWS := {
 		["go", "res://scenes/achievements.tscn", "ДОСТИЖЕНИЯ"],
 		["go", "res://scenes/objectives.tscn", "ЦЕЛИ"],
 		["go", "res://scenes/daily_rewards.tscn", "ЕЖЕДНЕВНАЯ НАГРАДА"],
+		["go", "res://scenes/stats.tscn", "СТАТИСТИКА"],
 		["back", "", "НАЗАД"],
 	],
 }
