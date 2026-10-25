@@ -7,7 +7,7 @@ const MENU_VIEWS := {
 	"root": [
 		["sub", "play", "ИГРАТЬ"],
 		["sub", "character", "ПЕРСОНАЖ"],
-		["go", "res://scenes/worlds.tscn", "МИРЫ"],
+		["go", "res://scenes/empire.tscn", "ИМПЕРИЯ"],
 		["sub", "rewards", "ЛИДЕРЫ И НАГРАДЫ"],
 		["go", "res://scenes/shop.tscn", "МАГАЗИН"],
 		["go", "res://scenes/my_game.tscn", "МОЯ ИГРА"],
