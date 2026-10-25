@@ -43,6 +43,8 @@ var over := false
 var t_anim := 0.0
 var flash := 0.0
 var shake := 0.0
+var dmg_pop: Array = []
+var slowmo_t := 0.0
 var banner_t := 0.0
 var banner_n := 0
 var combo := 0
@@ -349,6 +351,17 @@ func _process(dt: float) -> void:
 	t_anim += dt
 	flash = max(0.0, flash - dt * 2.2)
 	shake = max(0.0, shake - dt * 30.0)
+	if slowmo_t > 0.0:
+		slowmo_t -= dt
+		if slowmo_t <= 0.0:
+			Engine.time_scale = 1.0
+	var dp2: Array = []
+	for dp in dmg_pop:
+		dp["t"] = float(dp["t"]) + dt
+		dp["y"] = float(dp["y"]) - 40.0 * dt
+		if float(dp["t"]) < 0.8:
+			dp2.append(dp)
+	dmg_pop = dp2
 	banner_t = max(0.0, banner_t - dt)
 	combo_t = max(0.0, combo_t - dt)
 	toast_t = max(0.0, toast_t - dt)
@@ -531,6 +544,7 @@ func _process(dt: float) -> void:
 				kn.erase("straight")
 			target["hp"] = float(target["hp"]) - 15.0
 			target["flash"] = 0.18
+			dmg_pop.append({"x": float(target["x"]), "y": float(target["y"]) - float(target["r"]), "txt": "15", "t": 0.0})
 			if float(target["hp"]) <= 0.0:
 				score += 10 + wave
 				combo += 1
@@ -555,6 +569,8 @@ func _process(dt: float) -> void:
 					else:
 						drops.append({"x": target["x"], "y": target["y"], "vy": 90.0, "kind": "coin"})
 				if str(target["kind"]) == "boss":
+					slowmo_t = 0.5
+					Engine.time_scale = 0.35
 					max_knives = mini(max_knives + 1, 5)
 					ammo += 1
 					toast_text = tr("БОСС ПАЛ! НОЖ +1 (%d/5)") % max_knives
@@ -771,6 +787,9 @@ func _draw() -> void:
 	draw_set_transform(Vector2.ZERO)
 	if flash > 0.0:
 		draw_rect(Rect2(0, 0, W, H), Color(1.0, 0.15, 0.2, 0.35 * flash))
+	for dp in dmg_pop:
+		var da: float = 1.0 - float(dp["t"]) / 0.8
+		draw_string(ThemeDB.fallback_font, Vector2(float(dp["x"]) - 12.0, float(dp["y"])), str(dp["txt"]), HORIZONTAL_ALIGNMENT_CENTER, -1, 24, Color(1.0, 0.95, 0.5, da))
 	if banner_t > 0.0:
 		var a: float = minf(1.0, banner_t)
 		draw_rect(Rect2(0, H * 0.72, W, 70), Color(0.05, 0.08, 0.12, 0.65 * a))
