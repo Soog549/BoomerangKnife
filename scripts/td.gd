@@ -97,6 +97,9 @@ func _on_path(pos: Vector2) -> bool:
 
 func _start_wave() -> void:
 	wave += 1
+	if wave > GameState.max_level_reached:
+		GameState.max_level_reached = wave
+		GameState.save_settings()
 	AudioManager.play("level")
 	spawn_left = 3 + wave * 2
 	spawn_t = 0.0

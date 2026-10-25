@@ -22,8 +22,8 @@ UIPressFX="*res://scripts/ui_fx.gd"
 
 [application]
 
-config/name="РќРѕР¶ Р‘СѓРјРµСЂР°РЅРі"
-config/description="Р“РёРїРµСЂРєР°Р·СѓР°Р»СЊРЅР°СЏ Р°СЂРєР°РґР°: Р±СЂРѕСЃР°Р№ РЅРѕР¶-Р±СѓРјРµСЂР°РЅРі РІ РІСЂР°С‰Р°СЋС‰СѓСЋСЃСЏ С†РµР»СЊ Рё РЅР°Р±РёСЂР°Р№ РјРЅРѕР¶РёС‚РµР»Рё."
+config/name="BoomerangKnife"
+config/description="Hypercasual boomerang knife arcade: arena, tower defense, duels, endless."
 run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.3")
 config/icon="res://icon.svg"
