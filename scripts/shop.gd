@@ -568,7 +568,19 @@ func _build_donations() -> void:
 		btn.text = tr("Открыть")
 		btn.custom_minimum_size = Vector2(140, 48)
 		btn.pressed.connect(func() -> void:
-			AudioManager.play("click")
-			OS.shell_open(str(d.url)))
+			AudioManager.play("level")
+			GameState.mark_supporter()
+			OS.shell_open(str(d.url))
+			_note("Спасибо за поддержку! Вы — Меценат Империи.")
+			_rebuild())
 		row.add_child(btn)
 		items_box.add_child(row)
+
+
+func _note(text: String) -> void:
+	var l := Label.new()
+	l.text = text
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.add_theme_font_size_override("font_size", 16)
+	l.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
+	items_box.add_child(l)

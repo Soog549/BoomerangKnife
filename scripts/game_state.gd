@@ -104,6 +104,7 @@ var arena_tutorial_done := false
 var music_track := -1
 var style_pack := "epic"
 var seen_lore: Dictionary = {}
+var is_supporter := false
 var arena_drops := true
 var survival_mode := false
 var extra_knives := 0
@@ -975,6 +976,7 @@ func load_settings() -> void:
 	var sl: Variant = cfg.get_value("settings", "seen_lore", {})
 	if sl is Dictionary:
 		seen_lore = sl
+	is_supporter = bool(cfg.get_value("settings", "supporter", false))
 	arena_drops = cfg.get_value("settings", "arena_drops", true)
 	survival_mode = cfg.get_value("settings", "survival_mode", false)
 	extra_knives = cfg.get_value("settings", "extra_knives", 0)
@@ -1094,6 +1096,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "music_track", music_track)
 	cfg.set_value("settings", "style_pack", style_pack)
 	cfg.set_value("settings", "seen_lore", seen_lore)
+	cfg.set_value("settings", "supporter", is_supporter)
 	cfg.set_value("settings", "arena_drops", arena_drops)
 	cfg.set_value("settings", "survival_mode", survival_mode)
 	cfg.set_value("settings", "extra_knives", extra_knives)
@@ -1175,3 +1178,10 @@ func buy_skin_set(indices: Array) -> bool:
 	save_settings()
 	economy_changed.emit()
 	return true
+
+
+func mark_supporter() -> void:
+	if is_supporter:
+		return
+	is_supporter = true
+	save_settings()

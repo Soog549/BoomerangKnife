@@ -44,6 +44,15 @@ func _ready() -> void:
 	stats.position = Vector2(0, 122)
 	stats.size = Vector2(720, 24)
 	add_child(stats)
+	if GameState.is_supporter:
+		var sup := Label.new()
+		sup.text = "★ МЕЦЕНАТ ИМПЕРИИ"
+		sup.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		sup.add_theme_font_size_override("font_size", 18)
+		sup.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
+		sup.position = Vector2(0, 144)
+		sup.size = Vector2(720, 24)
+		add_child(sup)
 
 	var bar_bg := ColorRect.new()
 	bar_bg.color = Color(0.1, 0.12, 0.18)
