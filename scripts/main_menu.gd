@@ -15,11 +15,11 @@ const MENU_VIEWS := {
 		["quit", "", "ВЫХОД"],
 	],
 	"play": [
-		["go", "res://scenes/game.tscn", "КЛАССИКА"],
-		["go", "res://scenes/endless.tscn", "БЕСКОНЕЧНЫЙ"],
+		["go", "res://scenes/game.tscn", "КАМПАНИЯ"],
+		["go", "res://scenes/endless.tscn", "ЗАЩИТА РУБЕЖА"],
 		["go", "res://scenes/duel.tscn", "ДУЭЛЬ"],
 		["go", "res://scenes/mob_arena.tscn", "АРЕНА (МОБЫ)"],
-		["go", "res://scenes/td.tscn", "ТД (ПРОТО)"],
+		["go", "res://scenes/td.tscn", "ОБОРОНА"],
 		["back", "", "НАЗАД"],
 	],
 	"character": [

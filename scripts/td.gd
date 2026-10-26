@@ -72,7 +72,7 @@ func _ready() -> void:
 		path = _path_variant(randi() % 3)
 		_start_wave())
 	add_child(replay_btn)
-	position.y = 100.0
+	position.y = 70.0
 	_start_wave()
 	_build_pause()
 
@@ -129,9 +129,9 @@ func _unhandled_input(e: InputEvent) -> void:
 			_start_wave()
 			return
 		# выбор типа башни (низ экрана)
-		if p.y > 1010.0:
+		if p.y > 1120.0:
 			for i in 3:
-				var r := Rect2(20.0 + float(i) * 232.0, 1030.0, 220.0, 64.0)
+				var r := Rect2(16.0 + float(i) * 216.0, 1140.0, 200.0, 58.0)
 				if r.has_point(p):
 					sel_type = i
 					return
@@ -307,12 +307,12 @@ func _draw() -> void:
 	# кнопки типов
 	for i in 3:
 		var tt: Dictionary = TOWER_TYPES[i]
-		var r := Rect2(20.0 + float(i) * 232.0, 1030.0, 220.0, 64.0)
+		var r := Rect2(16.0 + float(i) * 216.0, 1140.0, 200.0, 58.0)
 		draw_rect(r, Color(0.16, 0.20, 0.28) if i != sel_type else Color(0.25, 0.45, 0.65))
 		draw_rect(r, tt["col"], false, 3.0)
 		draw_string(ThemeDB.fallback_font, Vector2(r.position.x + 8.0, r.position.y + 26.0), tr(str(tt["name"])), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(1, 1, 1))
 		draw_string(ThemeDB.fallback_font, Vector2(r.position.x + 8.0, r.position.y + 50.0), tr("%d мон.") % int(tt["cost"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, tt["col"])
-	draw_string(ThemeDB.fallback_font, Vector2(40, 1016), tr("Выбери башню и кликни по полю · клик по башне - апгрейд"), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.7, 0.9, 0.8))
+	draw_string(ThemeDB.fallback_font, Vector2(40, 1116), tr("Выбери башню и кликни по полю · клик по башне - апгрейд"), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.7, 0.9, 0.8))
 	if over:
 		draw_rect(Rect2(0, 400, W, 180), Color(0, 0, 0, 0.75))
 		draw_string(ThemeDB.fallback_font, Vector2(0, 470), tr("ЯДРО ПАЛО"), HORIZONTAL_ALIGNMENT_CENTER, W, 44, Color(1, 0.35, 0.35))
