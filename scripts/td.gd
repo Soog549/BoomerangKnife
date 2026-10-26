@@ -6,7 +6,7 @@ const W := 720.0
 const H := 1280.0
 const CELL := 45.0
 const GX := 16
-const GY := 20
+const GY := 24
 const CORE_HP := 20
 
 var path: Array = []
@@ -149,7 +149,7 @@ func _unhandled_input(e: InputEvent) -> void:
 				return
 		# постановка башни
 		var cell := Vector2(floor(p.x / CELL) * CELL + CELL * 0.5, floor(p.y / CELL) * CELL + CELL * 0.5)
-		if _on_path(cell) or p.y > 920.0:
+		if _on_path(cell) or p.y > 1060.0:
 			return
 		for tw in towers:
 			if Vector2(tw["x"], tw["y"]).distance_to(cell) < 20.0:
@@ -249,7 +249,7 @@ func _draw() -> void:
 		draw_rect(Rect2(0, 0, W, H), Color(0.05, 0.06, 0.10))
 	# сетка
 	for x in range(GX + 1):
-		draw_line(Vector2(x * CELL, 0), Vector2(x * CELL, 900), Color(0.12, 0.16, 0.22))
+		draw_line(Vector2(x * CELL, 0), Vector2(x * CELL, GY * CELL), Color(0.12, 0.16, 0.22))
 	for y in range(15):
 		draw_line(Vector2(0, y * CELL), Vector2(W, y * CELL), Color(0.12, 0.16, 0.22))
 	# путь
@@ -289,19 +289,19 @@ func _draw() -> void:
 		var w: float = mr * 2.0 * (float(m["hp"]) / float(m["max"]))
 		draw_rect(Rect2(mp.x - mr, mp.y - mr - 8.0, w, 4.0), Color(1, 0.4, 0.4))
 	# ядро
-	var core := Vector2(360, 880)
+	var core := Vector2(360, 1040)
 	# Ворота Империи (наш стиль) вокруг ядра
-	draw_rect(Rect2(298, 806, 28, 110), Color(0.85, 0.70, 0.30))
-	draw_rect(Rect2(394, 806, 28, 110), Color(0.85, 0.70, 0.30))
+	draw_rect(Rect2(298, 966, 28, 110), Color(0.85, 0.70, 0.30))
+	draw_rect(Rect2(394, 966, 28, 110), Color(0.85, 0.70, 0.30))
 	draw_arc(Vector2(360, 812), 48.0, PI, TAU, 26, Color(1.0, 0.85, 0.35), 10.0)
-	draw_rect(Rect2(306, 806, 12, 110), Color(0.55, 0.12, 0.12))
-	draw_rect(Rect2(402, 806, 12, 110), Color(0.55, 0.12, 0.12))
+	draw_rect(Rect2(306, 966, 12, 110), Color(0.55, 0.12, 0.12))
+	draw_rect(Rect2(402, 966, 12, 110), Color(0.55, 0.12, 0.12))
 	if core_tex:
 		draw_texture_rect(core_tex, Rect2(core.x - 46.0, core.y - 46.0, 92.0, 92.0), false)
 	else:
 		draw_circle(core, 40.0, Color(0.2, 0.85, 0.5))
 		draw_circle(core, 26.0, Color(0.75, 1.0, 0.85))
-	draw_string(ThemeDB.fallback_font, Vector2(280, 830), tr("ЯДРО %d/%d") % [core_hp, CORE_HP], HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(1, 1, 1))
+	draw_string(ThemeDB.fallback_font, Vector2(280, 990), tr("ЯДРО %d/%d") % [core_hp, CORE_HP], HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(1, 1, 1))
 	# HUD
 	draw_string(ThemeDB.fallback_font, Vector2(20, 30), tr("TD ПРОТОТИП  ВОЛНА %d  МОНЕТЫ %d") % [wave, coins], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
 	# кнопки типов
