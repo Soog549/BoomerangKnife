@@ -350,7 +350,7 @@ func _process(dt: float) -> void:
 		return
 	t_anim += dt
 	flash = max(0.0, flash - dt * 2.2)
-	shake = max(0.0, shake - dt * 30.0)
+	shake = max(0.0, shake - dt * 45.0)
 	if slowmo_t > 0.0:
 		slowmo_t -= dt
 		if slowmo_t <= 0.0:
@@ -446,7 +446,7 @@ func _process(dt: float) -> void:
 			var dmg: float = float(p["dmg"])
 			regen_t = 0.0
 			flash = 0.65
-			shake = 9.0
+			shake = 3.5
 			AudioManager.play("hit")
 			if shield > 0.0:
 				shield -= dmg

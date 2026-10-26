@@ -141,7 +141,7 @@ func _next_lang() -> void:
 
 func _next_track() -> void:
 	GameState.music_track += 1
-	if GameState.music_track > 12:
+	if GameState.music_track > 16:
 		GameState.music_track = -1
 	AudioManager.play_skin_music()
 	_save()
