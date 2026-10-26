@@ -41,6 +41,8 @@ func _ready() -> void:
 	back.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
 	add_child(back)
 
+const STYLES := ["base", "imperial", "epic", "space", "anime", "eurasia", "norse", "kids", "cyber", "dark"]
+
 func _row(label: String, value: String, cb: Callable) -> void:
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 10)
@@ -61,6 +63,7 @@ func _rebuild() -> void:
 		c.queue_free()
 	var skin: Dictionary = GameState.current_skin()
 	_row(tr("Скин"), str(skin.get("label", "—")), _next_skin)
+	_row(tr("Стиль"), GameState.style_pack.to_upper(), _next_style)
 	_row(tr("Сложность"), DIFF_NAMES.get(GameState.difficulty, "—"), _next_diff)
 	_row(tr("Управление"), CTRL_NAMES.get(GameState.control_mode, "—"), _next_ctrl)
 	_row(tr("Размер стика"), "%d%%" % int(GameState.joy_scale * 100.0), _next_joy)
@@ -141,4 +144,10 @@ func _next_track() -> void:
 	if GameState.music_track > 12:
 		GameState.music_track = -1
 	AudioManager.play_skin_music()
+	_save()
+
+
+func _next_style() -> void:
+	var i: int = STYLES.find(GameState.style_pack)
+	GameState.style_pack = STYLES[(i + 1) % STYLES.size()]
 	_save()
