@@ -67,3 +67,12 @@ static func mark_seen(i: int) -> void:
 		return
 	GameState.seen_lore[str(LIST[i]["id"])] = true
 	GameState.save_settings()
+
+
+const STYLES_BY_SKIN := ["epic", "space", "anime", "eurasia", "norse", "kids", "cyber", "dark"]
+
+static func style_for(i: int) -> String:
+	if i < 0 or i >= LIST.size():
+		return GameState.style_pack
+	var sk: int = int(LIST[i].get("skin", 0)) % STYLES_BY_SKIN.size()
+	return str(STYLES_BY_SKIN[sk])

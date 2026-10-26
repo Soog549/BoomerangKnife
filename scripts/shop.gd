@@ -45,6 +45,20 @@ func _on_coins(total: int) -> void:
 func _rebuild() -> void:
 	for child in items_box.get_children():
 		child.queue_free()
+	# Единый предпросмотр персонажа (полное тело, как в профиле)
+	var pv := TextureRect.new()
+	var hp := "res://assets/images/packs/%s/hero-front.png" % GameState.style_pack
+	if ResourceLoader.exists(hp):
+		pv.texture = load(hp)
+	pv.custom_minimum_size = Vector2(0, 240)
+	pv.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	pv.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	items_box.add_child(pv)
+	var pv_cap := Label.new()
+	pv_cap.text = tr("ТЕКУЩИЙ ОБРАЗ · %s") % GameState.style_pack.to_upper()
+	pv_cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	pv_cap.add_theme_font_size_override("font_size", 15)
+	items_box.add_child(pv_cap)
 	info_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	info_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	info_label.text = tr("Твой максимальный уровень: %d — проходи уровни, открывай цели или смотри рекламу за монеты:") % GameState.max_level_reached

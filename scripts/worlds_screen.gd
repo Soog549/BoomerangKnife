@@ -61,6 +61,9 @@ func _build()-> void:
 
 func _on_world(i: int) -> void:
 	AudioManager.play("click")
+	GameState.style_pack = Worlds.style_for(i)
+	GameState.save_settings()
+	Telemetry.event("world_open", {"index": i, "style": GameState.style_pack})
 	var pop := LorePopup.new()
 	add_child(pop)
 	pop.show_world(i)

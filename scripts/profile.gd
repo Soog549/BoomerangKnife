@@ -96,7 +96,11 @@ func _rebuild_preview() -> void:
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	preview_box.add_child(header)
 	var av := CharacterPreview.new()
-	av.avatar_texture = load(AVATAR_PATHS[clampi(GameState.avatar, 0, AVATAR_PATHS.size() - 1)])
+	var full := "res://assets/images/packs/%s/hero-front.png" % GameState.style_pack
+	if ResourceLoader.exists(full):
+		av.avatar_texture = load(full)
+	else:
+		av.avatar_texture = load(AVATAR_PATHS[clampi(GameState.avatar, 0, AVATAR_PATHS.size() - 1)])
 	av.size_flags_horizontal = SIZE_SHRINK_CENTER
 	preview_box.add_child(av)
 
