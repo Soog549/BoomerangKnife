@@ -12,13 +12,18 @@ extends Control
 @onready var quest_claim: Button = $QuestClaim
 
 func _ready() -> void:
-	var fb := Button.new()
-	fb.text = tr("🎲 ФОРТУНА (1 в день)")
-	fb.custom_minimum_size = Vector2(600, 56)
-	fb.position = Vector2(60, 1150)
-	fb.size = Vector2(600, 56)
-	fb.pressed.connect(_fortune_pressed)
-	add_child(fb)
+	var wheel := FortuneWheel.new()
+	wheel.position = Vector2(210, 880)
+	wheel.size = Vector2(300, 300)
+	wheel.finished.connect(_on_fortune_finished)
+	add_child(wheel)
+	var hint := Label.new()
+	hint.text = tr("ФОРТУНА · 1 прокрут в день (нажми на колесо)")
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.position = Vector2(0, 1190)
+	hint.size = Vector2(720, 24)
+	hint.add_theme_font_size_override("font_size", 15)
+	add_child(hint)
 	AudioManager.play("click")
 	# «Просыпаем» квест (сброс по дате, если нужно) и перерисовываемся
 	GameState.current_quest()
@@ -103,3 +108,10 @@ func _fortune_pressed() -> void:
 		return
 	AudioManager.play("level")
 	message_label.text = tr("Фортуна: %s") % str(r.get("label", ""))
+
+
+func _on_fortune_finished(reward: Dictionary) -> void:
+	if reward.is_empty():
+		message_label.text = tr("Фортуна уже использована сегодня. Возвращайся завтра!")
+		return
+	message_label.text = tr("Фортуна: %s") % str(reward.get("label", ""))

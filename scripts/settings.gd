@@ -78,6 +78,11 @@ func _add_footer() -> void:
 	pers.custom_minimum_size = Vector2(0, 48)
 	pers.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://scenes/my_game.tscn"))
 	vb.add_child(pers)
+	var diag := Button.new()
+	diag.text = tr("ДИАГНОСТИКА")
+	diag.custom_minimum_size = Vector2(0, 48)
+	diag.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://scenes/diagnostics.tscn"))
+	vb.add_child(diag)
 	var ver := Label.new()
 	var vstr: String = str(ProjectSettings.get_setting("application/config/version", "dev"))
 	ver.text = tr("Версия %s") % vstr
