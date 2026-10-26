@@ -780,12 +780,8 @@ func _draw() -> void:
 	draw_rect(Rect2(40, 60, W - 80, 26), glow_c.darkened(0.4), false, 2.0)
 	draw_rect(Rect2(40, 118, W - 80, 14), glow_c.darkened(0.4), false, 2.0)
 	draw_string(ThemeDB.fallback_font, Vector2(44, 46), tr("HP %d/%d   ЩИТ %d") % [int(hp), int(max_hp), int(shield)], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
-	draw_string(ThemeDB.fallback_font, Vector2(44, 160), tr("СЧЁТ %d   МОНЕТЫ %d   ВОЛНА %d") % [score, coins, wave], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
 	if combo > 1:
 		draw_string(ThemeDB.fallback_font, Vector2(0, 240), tr("КОМБО x%d") % combo, HORIZONTAL_ALIGNMENT_CENTER, W, 34, Color(1.0, 0.85, 0.3, minf(1.0, combo_t)))
-	if relics > 0:
-		draw_string(ThemeDB.fallback_font, Vector2(44, 214), "РЕЛИКВИИ %d" % relics, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.85, 0.75, 1.0))
-	draw_string(ThemeDB.fallback_font, Vector2(44, 236), "НОЖИ %d" % ammo, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(1.0, 0.9, 0.5))
 	if toast_t > 0.0:
 		draw_string(ThemeDB.fallback_font, Vector2(0, 300), toast_text, HORIZONTAL_ALIGNMENT_CENTER, W, 30, Color(toast_col.r, toast_col.g, toast_col.b, minf(1.0, toast_t)))
 	for r in rings:
@@ -797,6 +793,15 @@ func _draw() -> void:
 		hint = tr("Тяни в поле - движение · Тап - бросок ножа")
 	draw_string(ThemeDB.fallback_font, Vector2(44, 190), hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.9, 0.8))
 	draw_set_transform(Vector2.ZERO)
+	# НИЖНЯЯ ПАНЕЛЬ (заполняет пустоту снизу)
+	draw_rect(Rect2(0, H - 104.0, W, 104.0), Color(0.07, 0.09, 0.14, 0.92))
+	draw_line(Vector2(0, H - 104.0), Vector2(W, H - 104.0), glow_c.darkened(0.5), 2.0)
+	draw_string(ThemeDB.fallback_font, Vector2(24, H - 66.0), tr("СЧЁТ %d   МОНЕТЫ %d   ВОЛНА %d") % [score, coins, wave], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
+	draw_string(ThemeDB.fallback_font, Vector2(24, H - 30.0), "РЕЛИКВИИ %d   НОЖИ %d" % [relics, ammo], HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(1.0, 0.9, 0.5))
+	var cb_txt := ""
+	if combo > 1:
+		cb_txt = tr("КОМБО x%d") % combo
+	draw_string(ThemeDB.fallback_font, Vector2(W - 220.0, H - 30.0), cb_txt, HORIZONTAL_ALIGNMENT_RIGHT, 196, 18, Color(1.0, 0.85, 0.3))
 	if flash > 0.0:
 		draw_rect(Rect2(0, 0, W, H), Color(1.0, 0.15, 0.2, 0.35 * flash))
 	for dp in dmg_pop:
