@@ -314,7 +314,7 @@ func _add_player_character() -> void:
 	if ResourceLoader.exists(av):
 		spr.texture = load(av)
 	else:
-		var tp := "res://assets/images/packs/%s/bg.png" % GameState.style_pack
+		var tp := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
 		if ResourceLoader.exists(tp):
 			spr.texture = load(tp)
 	if spr.texture != null:

@@ -133,7 +133,7 @@ func _ready() -> void:
 		var pp := "res://assets/images/arena/proj-%s.png" % pk
 		if ResourceLoader.exists(pp):
 			proj_tex[pk] = load(pp)
-	var pbg := "res://assets/images/packs/%s/bg.png" % GameState.style_pack
+	var pbg := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
 	if ResourceLoader.exists(pbg):
 		arena_bg = load(pbg)
 	elif ResourceLoader.exists("res://assets/images/arena/arena-bg.png"):

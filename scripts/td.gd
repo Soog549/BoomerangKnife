@@ -50,7 +50,7 @@ func _ready() -> void:
 		core_tex = load("res://assets/images/td/core.png")
 	if ResourceLoader.exists("res://assets/images/arena/mob-runner-1.png"):
 		mob_td_tex = load("res://assets/images/arena/mob-runner-1.png")
-	var pbg := "res://assets/images/packs/%s/bg.png" % GameState.style_pack
+	var pbg := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
 	if ResourceLoader.exists(pbg):
 		bg_tex = load(pbg)
 	elif ResourceLoader.exists("res://assets/images/arena/arena-bg.png"):

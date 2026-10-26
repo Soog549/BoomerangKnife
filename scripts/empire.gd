@@ -10,7 +10,7 @@ func _ready() -> void:
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var tex := TextureRect.new()
-	var pbg := "res://assets/images/packs/%s/bg.png" % GameState.style_pack
+	var pbg := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
 	if ResourceLoader.exists(pbg):
 		tex.texture = load(pbg)
 		tex.set_anchors_preset(Control.PRESET_FULL_RECT)

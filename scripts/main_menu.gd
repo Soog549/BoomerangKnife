@@ -103,7 +103,7 @@ func _build_profile_panel() -> void:
 	vb.add_child(cls)
 
 func _show_splash() -> void:
-	var p := "res://assets/images/packs/%s/splash.png" % GameState.style_pack
+	var p := "res://assets/images/packs/%s/splash.jpg" % GameState.style_pack
 	if not ResourceLoader.exists(p):
 		p = "res://assets/images/ui/splash-hd-1440x2560.png"
 	if not ResourceLoader.exists(p):
@@ -181,7 +181,7 @@ func COINS_TABLO_build() -> void:
 
 func _apply_pack_bg() -> void:
 	var bg := get_node_or_null("Background")
-	var p := "res://assets/images/packs/%s/bg.png" % GameState.style_pack
+	var p := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
 	if bg != null and ResourceLoader.exists(p):
 		bg.texture = load(p)
 		if bg is TextureRect:

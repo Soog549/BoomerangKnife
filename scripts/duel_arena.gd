@@ -84,7 +84,7 @@ func _ready() -> void:
 	msg_label.text = tr("Левая половина — Игрок 1 • Правая — Игрок 2 • тап = бросок в точку, повторный в полёте = доворот")
 	var dbg := get_node_or_null("Background")
 	if dbg != null and dbg is TextureRect:
-		var pbg := "res://assets/images/packs/%s/bg.png" % GameState.style_pack
+		var pbg := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
 		if ResourceLoader.exists(pbg):
 			dbg.texture = load(pbg)
 	_banner_setup()
