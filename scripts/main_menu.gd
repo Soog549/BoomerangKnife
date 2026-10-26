@@ -10,7 +10,6 @@ const MENU_VIEWS := {
 		["go", "res://scenes/empire.tscn", "ИМПЕРИЯ"],
 		["sub", "rewards", "ЛИДЕРЫ И НАГРАДЫ"],
 		["go", "res://scenes/shop.tscn", "МАГАЗИН"],
-		["go", "res://scenes/my_game.tscn", "МОЯ ИГРА"],
 		["go", "res://scenes/collection.tscn", " КОЛЛЕКЦИЯ"],
 		["go", "res://scenes/settings.tscn", "НАСТРОЙКИ"],
 		["quit", "", "ВЫХОД"],

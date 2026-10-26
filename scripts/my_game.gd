@@ -9,7 +9,6 @@ const CTRL_NAMES := {"auto": "Авто", "touch": "Касание", "keyboard": 
 const JOYS := [0.8, 1.0, 1.25, 1.5]
 const LANGS := ["ru", "en"]
 
-const STYLES := ["epic", "space", "anime", "eurasia", "norse", "kids", "cyber", "dark"]
 var box: VBoxContainer
 
 func _ready() -> void:
@@ -69,7 +68,6 @@ func _rebuild() -> void:
 	_row(tr("Дроп с мобов"), "ВКЛ" if GameState.arena_drops else "ВЫКЛ", _toggle_drops)
 	_row(tr("Режим выживания"), "ВКЛ" if GameState.survival_mode else "ВЫКЛ", _toggle_survival)
 	_row(tr("Музыка"), "%d%%" % int(GameState.music_volume * 100.0), _music_plus)
-	_row(tr("Стиль"), GameState.style_pack.to_upper(), _next_style)
 	_row(tr("Трек"), tr("по скину") if GameState.music_track < 1 else str(GameState.music_track), _next_track)
 	_row(tr("Звуки"), "%d%%" % int(GameState.sfx_volume * 100.0), _sfx_plus)
 	_row(tr("Язык"), GameState.locale.to_upper(), _next_lang)
@@ -136,11 +134,6 @@ func _next_lang() -> void:
 	if i < 0:
 		i = 0
 	GameState.locale = LANGS[(i + 1) % LANGS.size()]
-	_save()
-
-func _next_style() -> void:
-	var i: int = STYLES.find(GameState.style_pack)
-	GameState.style_pack = STYLES[(i + 1) % STYLES.size()]
 	_save()
 
 func _next_track() -> void:

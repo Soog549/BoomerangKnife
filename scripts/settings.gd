@@ -1,5 +1,7 @@
 extends Control
 
+const APP_VERSION := "1.0.49"
+
 @onready var volume_label: Label = $Center/VBox/VolumeLabel
 @onready var volume_slider: HSlider = $Center/VBox/VolumeSlider
 @onready var music_label: Label = $Center/VBox/MusicLabel
@@ -65,6 +67,24 @@ const AVATAR_PATHS := [
 ]
 
 func _ready() -> void:
+	_add_footer()
+
+func _add_footer() -> void:
+	var vb := get_node_or_null("Center/VBox")
+	if vb == null:
+		return
+	var pers := Button.new()
+	pers.text = tr("ПЕРСОНАЛИЗАЦИЯ (моя игра)")
+	pers.custom_minimum_size = Vector2(0, 48)
+	pers.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://scenes/my_game.tscn"))
+	vb.add_child(pers)
+	var ver := Label.new()
+	ver.text = tr("Версия %s") % APP_VERSION
+	ver.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ver.add_theme_font_size_override("font_size", 14)
+	ver.add_theme_color_override("font_color", Color(0.6, 0.65, 0.75))
+	vb.add_child(ver)
+
 	AudioManager.play("click")
 	volume_slider.value = GameState.volume * 100.0
 	music_slider.value = GameState.music_volume * 100.0

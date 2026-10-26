@@ -8,24 +8,16 @@ extends Control
 
 func _ready() -> void:
 	AudioManager.play("click")
-	var shared_btn := Button.new()
-	shared_btn.text = tr("ОБЩИЙ: ПОЛЕ С ВРАГОМ")
-	shared_btn.pressed.connect(_on_accept_shared)
 	var train_btn := Button.new()
 	train_btn.text = tr("ТРЕНИРОВКА (СОЛО)")
 	train_btn.pressed.connect(_on_train)
 	var mob_btn := Button.new()
 	mob_btn.text = tr("ПРОТИВ МОБА")
 	mob_btn.pressed.connect(_on_mob)
-	var net_btn := Button.new()
-	net_btn.text = tr("ПО СЕТИ (скоро)")
-	net_btn.pressed.connect(_on_net)
 	var row := get_node_or_null("Center/Panel/VBox/BtnRow")
 	if row != null:
-		row.add_child(shared_btn)
 		row.add_child(train_btn)
 		row.add_child(mob_btn)
-		row.add_child(net_btn)
 	# Случайный соперник и его сообщение
 	var rivals := [tr("Богатырь"), tr("Медведь"), tr("Космонавт"), tr("Шаман"), tr("Разбойник"), tr("Атаман")]
 	var rival: String = rivals[randi() % rivals.size()]
@@ -44,17 +36,8 @@ func _on_mob() -> void:
 	GameState.save_settings()
 	get_tree().change_scene_to_file("res://scenes/duel_arena.tscn")
 
-func _on_net() -> void:
-	AudioManager.play("click")
-	GameState.duel_config = {"variant": "net", "rounds": 3, "segments": 5, "speed": 1.0}
-	GameState.save_settings()
-	get_tree().change_scene_to_file("res://scenes/duel_arena.tscn")
 
-func _on_accept() -> void:
-	_accept("split")
 
-func _on_accept_shared() -> void:
-	_accept("shared")
 
 func _accept(variant: String) -> void:
 	AudioManager.play("click")
