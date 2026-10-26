@@ -31,9 +31,13 @@ func _build()-> void:
 		var w: Dictionary = Worlds.LIST[i]
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(0, 54)
+		var art_path := "res://assets/images/worlds/%s.png" % str(w.get("art", ""))
+		if ResourceLoader.exists(art_path):
+			b.icon = load(art_path)
+			b.expand_icon = true
 		if Worlds.is_unlocked(i):
 			var mark := "" if i == cur else ("" if i < cur else "")
-			b.text = "%s %s" % [mark, str(w["name"])]
+			b.text = "Глава %d · %s %s" % [i + 1, str(w["name"]), mark]
 			b.pressed.connect(_on_world.bind(i))
 		else:
 			b.text = " %s — ур. %d" % [str(w["name"]), int(w["unlock"])]

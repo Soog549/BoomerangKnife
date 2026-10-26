@@ -102,8 +102,11 @@ func _cell(row: Array, path: String, idx: int, by_ach: bool) -> Control:
 	var v := VBoxContainer.new()
 	v.custom_minimum_size = Vector2(310, 470)
 	var tex := TextureRect.new()
-	if ResourceLoader.exists(path):
-		tex.texture = load(path)
+	var use_path := path
+	if not by_ach:
+		use_path = "res://assets/images/packs/%s/card-%d.png" % [GameState.style_pack, (idx % 3) + 1]
+	if ResourceLoader.exists(use_path):
+		tex.texture = load(use_path)
 	tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	tex.custom_minimum_size = Vector2(310, 400)

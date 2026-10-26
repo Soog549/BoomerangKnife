@@ -105,6 +105,7 @@ var music_track := -1
 var style_pack := "base"
 var seen_lore: Dictionary = {}
 var is_supporter := false
+var fortune_day := ""
 var arena_drops := true
 var survival_mode := false
 var extra_knives := 0
@@ -977,6 +978,7 @@ func load_settings() -> void:
 	if sl is Dictionary:
 		seen_lore = sl
 	is_supporter = bool(cfg.get_value("settings", "supporter", false))
+	fortune_day = str(cfg.get_value("settings", "fortune_day", ""))
 	arena_drops = cfg.get_value("settings", "arena_drops", true)
 	survival_mode = cfg.get_value("settings", "survival_mode", false)
 	extra_knives = cfg.get_value("settings", "extra_knives", 0)
@@ -1097,6 +1099,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "style_pack", style_pack)
 	cfg.set_value("settings", "seen_lore", seen_lore)
 	cfg.set_value("settings", "supporter", is_supporter)
+	cfg.set_value("settings", "fortune_day", fortune_day)
 	cfg.set_value("settings", "arena_drops", arena_drops)
 	cfg.set_value("settings", "survival_mode", survival_mode)
 	cfg.set_value("settings", "extra_knives", extra_knives)
@@ -1185,3 +1188,26 @@ func mark_supporter() -> void:
 		return
 	is_supporter = true
 	save_settings()
+
+
+func fortune_available() -> bool:
+	var d := Time.get_date_string_from_system()
+	return fortune_day != d
+
+
+func claim_fortune() -> Dictionary:
+	if not fortune_available():
+		return {}
+	fortune_day = Time.get_date_string_from_system()
+	save_settings()
+	var roll := randi() % 4
+	if roll == 0:
+		add_coins(60)
+		return {"kind": "coins", "amount": 60, "label": "+60 монет"}
+	if roll == 1:
+		add_coins(30)
+		return {"kind": "coins", "amount": 30, "label": "+30 монет"}
+	if roll == 2:
+		add_player_xp(50)
+		return {"kind": "xp", "amount": 50, "label": "+50 опыта"}
+	return {"kind": "booster", "label": "Одноразовый буст"}

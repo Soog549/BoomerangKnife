@@ -12,6 +12,13 @@ extends Control
 @onready var quest_claim: Button = $QuestClaim
 
 func _ready() -> void:
+	var fb := Button.new()
+	fb.text = tr("🎲 ФОРТУНА (1 в день)")
+	fb.custom_minimum_size = Vector2(600, 56)
+	fb.position = Vector2(60, 1150)
+	fb.size = Vector2(600, 56)
+	fb.pressed.connect(_fortune_pressed)
+	add_child(fb)
 	AudioManager.play("click")
 	# «Просыпаем» квест (сброс по дате, если нужно) и перерисовываемся
 	GameState.current_quest()
@@ -84,3 +91,15 @@ func _on_quest_claim_pressed() -> void:
 func _on_back_pressed() -> void:
 	AudioManager.play("click")
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+
+func _fortune_pressed() -> void:
+	AudioManager.play("click")
+	if not GameState.fortune_available():
+		message_label.text = tr("Фортуна уже использована сегодня. Возвращайся завтра!")
+		return
+	var r := GameState.claim_fortune()
+	if r.is_empty():
+		return
+	AudioManager.play("level")
+	message_label.text = tr("Фортуна: %s") % str(r.get("label", ""))

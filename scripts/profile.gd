@@ -134,11 +134,14 @@ func _armed_name() -> String:
 
 func _add_stat(label_text: String, value: String) -> void:
 	var row := HBoxContainer.new()
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var lbl := Label.new()
-	lbl.custom_minimum_size = Vector2(430, 0)
+	lbl.custom_minimum_size = Vector2(250, 0)
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lbl.text = label_text
 	var val := Label.new()
 	val.text = value
+	val.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	val.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	val.size_flags_horizontal = SIZE_EXPAND_FILL
 	row.add_child(lbl)

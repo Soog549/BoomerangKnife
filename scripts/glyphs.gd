@@ -34,8 +34,20 @@ func _make_row(g: Dictionary) -> VBoxContainer:
 	var equipped := GameState.glyph_equipped(glyph_id)
 
 	var glvl := GameState.glyph_level(glyph_id)
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 8)
+	var rune_tex := TextureRect.new()
+	rune_tex.custom_minimum_size = Vector2(56, 56)
+	rune_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	rune_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var gi: int = Economy.GLYPHS.find(g) + 1
+	var rp := "res://assets/images/glyphs/rune-%02d.png" % gi
+	if ResourceLoader.exists(rp):
+		rune_tex.texture = load(rp)
+	top.add_child(rune_tex)
 	var label := Label.new()
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	if active:
 		if g.type == "T":
 			label.text = tr("%s — %s  (активен, осталось %d)") % [tr(g.label), tr(g.desc), GameState.temp_glyph_runs(glyph_id)]
@@ -43,7 +55,8 @@ func _make_row(g: Dictionary) -> VBoxContainer:
 			label.text = tr("%s — %s  (вечный, ур. %d)") % [tr(g.label), tr(g.desc), glvl]
 	else:
 		label.text = tr("%s — %s  (ур. %d, %d м.)") % [tr(g.label), tr(g.desc), glvl, int(g.price)]
-	box.add_child(label)
+	top.add_child(label)
+	box.add_child(top)
 
 	var btns := HBoxContainer.new()
 	btns.add_theme_constant_override("separation", 8)
