@@ -19,7 +19,7 @@ func _rebuild() -> void:
 	for child in items_box.get_children():
 		child.queue_free()
 	wallet_label.text = tr("Монеты: %d") % GameState.coins
-	for obj: Dictionary in Objectives.LIST:
+	for obj: Dictionary in Objectives.all():
 		items_box.add_child(_make_row(obj))
 
 func _make_row(obj: Dictionary) -> HBoxContainer:

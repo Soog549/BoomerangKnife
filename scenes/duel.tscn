@@ -41,12 +41,6 @@ autowrap_mode = 2
 alignment = 1
 theme_override_constants/separation = 24
 
-[node name="AcceptBtn" type="Button" parent="Center/Panel/VBox/BtnRow"]
-text = " ПРИНЯТЬ"
-
-[node name="DeclineBtn" type="Button" parent="Center/Panel/VBox/BtnRow"]
-text = " ОТКЛОНИТЬ"
-
 [node name="BackButton" type="Button" parent="."]
 anchor_top = 1.0
 anchor_right = 1.0
@@ -57,6 +51,4 @@ offset_right = -10.0
 offset_bottom = -10.0
 text = " НАЗАД"
 
-[connection signal="pressed" from="Center/Panel/VBox/BtnRow/AcceptBtn" to="." method="_on_accept"]
-[connection signal="pressed" from="Center/Panel/VBox/BtnRow/DeclineBtn" to="." method="_on_decline"]
 [connection signal="pressed" from="BackButton" to="." method="_on_back"]

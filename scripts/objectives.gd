@@ -27,3 +27,33 @@ static func is_done(obj: Dictionary) -> bool:
 ## Забрана ли награда.
 static func is_claimed(obj: Dictionary) -> bool:
 	return GameState.is_objective_claimed(obj.id)
+
+
+## Полный список целей: базовые + сгенерированные до 509.
+static func all() -> Array:
+	var out: Array = []
+	for o: Dictionary in LIST:
+		out.append(o)
+	var kinds := [
+		["total_hits", 250, "попаданий"],
+		["total_catches", 50, "ловель"],
+		["total_levels", 10, "уровней"],
+		["total_ads_watched", 5, "роликов"],
+	]
+	var i: int = out.size()
+	var tier: int = 1
+	while out.size() < 509:
+		var k: Array = kinds[(i) % kinds.size()]
+		var target: int = int(k[1]) * (tier + 1)
+		var reward: int = 20 + tier * 10
+		out.append({
+			"id": "gen_%d" % i,
+			"stat": k[0],
+			"target": target,
+			"reward": reward,
+			"label": "%d %s" % [target, k[2]],
+		})
+		i += 1
+		if i % kinds.size() == 0:
+			tier += 1
+	return out

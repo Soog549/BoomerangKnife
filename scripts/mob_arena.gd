@@ -725,38 +725,40 @@ func _draw() -> void:
 			draw_texture_rect(knife_tex, Rect2(kx - 18.0, ky - 18.0, 36.0, 36.0), false)
 		else:
 			draw_circle(Vector2(kx, ky), 10.0, Color(0.95, 0.8, 0.3))
-	# игрок
+	# игрок (масштаб 1.45 — корабль не должен проигрывать мобам)
 	var sk: Dictionary = GameState.current_skin()
 	var hull: Color = sk.get("blade", Color(0.35, 0.75, 1.0))
 	var glow_c: Color = sk.get("blade", Color(0.5, 0.9, 1.0)).lightened(0.35)
+	draw_set_transform(Vector2(px, py), 0.0, Vector2(1.45, 1.45))
 	# выхлоп
 	for k in 3:
-		var fy := py + 26.0 + k * 10.0
-		draw_circle(Vector2(px, fy), 9.0 - k * 2.0, Color(1.0, 0.65, 0.2, 0.55))
+		draw_circle(Vector2(0.0, 26.0 + k * 10.0), 9.0 - k * 2.0, Color(1.0, 0.65, 0.2, 0.55))
 	# корпус
 	draw_colored_polygon(PackedVector2Array([
-		Vector2(px, py - 34.0), Vector2(px + 22.0, py + 14.0), Vector2(px + 8.0, py + 10.0),
-		Vector2(px + 12.0, py + 26.0), Vector2(px, py + 18.0), Vector2(px - 12.0, py + 26.0),
-		Vector2(px - 8.0, py + 10.0), Vector2(px - 22.0, py + 14.0)]), hull.darkened(0.25))
+		Vector2(0.0, -34.0), Vector2(22.0, 14.0), Vector2(8.0, 10.0),
+		Vector2(12.0, 26.0), Vector2(0.0, 18.0), Vector2(-12.0, 26.0),
+		Vector2(-8.0, 10.0), Vector2(-22.0, 14.0)]), hull.darkened(0.25))
 	# крылья
 	draw_colored_polygon(PackedVector2Array([
-		Vector2(px - 18.0, py + 8.0), Vector2(px - 34.0, py + 24.0), Vector2(px - 14.0, py + 22.0)]), hull.darkened(0.5))
+		Vector2(-18.0, 8.0), Vector2(-34.0, 24.0), Vector2(-14.0, 22.0)]), hull.darkened(0.5))
 	draw_colored_polygon(PackedVector2Array([
-		Vector2(px + 18.0, py + 8.0), Vector2(px + 34.0, py + 24.0), Vector2(px + 14.0, py + 22.0)]), hull.darkened(0.5))
+		Vector2(18.0, 8.0), Vector2(34.0, 24.0), Vector2(14.0, 22.0)]), hull.darkened(0.5))
 	# кабина
 	draw_colored_polygon(PackedVector2Array([
-		Vector2(px, py - 20.0), Vector2(px + 9.0, py + 4.0), Vector2(px, py + 8.0), Vector2(px - 9.0, py + 4.0)]), glow_c)
+		Vector2(0.0, -20.0), Vector2(9.0, 4.0), Vector2(0.0, 8.0), Vector2(-9.0, 4.0)]), glow_c)
 	# двигатели
-	draw_line(Vector2(px - 10.0, py + 24.0), Vector2(px - 10.0, py + 34.0), Color(1.0, 0.6, 0.2, 0.8), 4.0)
-	draw_line(Vector2(px + 10.0, py + 24.0), Vector2(px + 10.0, py + 34.0), Color(1.0, 0.6, 0.2, 0.8), 4.0)
+	draw_line(Vector2(-10.0, 24.0), Vector2(-10.0, 34.0), Color(1.0, 0.6, 0.2, 0.8), 4.0)
+	draw_line(Vector2(10.0, 24.0), Vector2(10.0, 34.0), Color(1.0, 0.6, 0.2, 0.8), 4.0)
 	# контур корпуса
-	draw_arc(Vector2(px, py - 2.0), 30.0, 0.0, TAU, 24, glow_c.lightened(0.15), 2.0)
+	draw_arc(Vector2(0.0, -2.0), 30.0, 0.0, TAU, 24, glow_c.lightened(0.15), 2.0)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	# ЩИТ = аура вокруг (не перекрывает обзор)
 	if shield > 0.0:
-		if shield_tex:
-			var sa: float = clampf(shield / max_shield, 0.25, 1.0)
-			draw_texture_rect(shield_tex, Rect2(px - 56.0, py - 96.0, 112.0, 112.0), false, Color(1, 1, 1, sa))
-		else:
-			draw_arc(Vector2(px, py - 6.0), 46.0, PI + 0.25, TAU - 0.25, 28, Color(0.35, 0.8, 1.0, 0.85), 5.0)
+		var sa: float = clampf(shield / max_shield, 0.15, 1.0)
+		var pulse: float = 1.0 + 0.05 * sin(Time.get_ticks_msec() / 260.0)
+		draw_circle(Vector2(px, py), 54.0 * pulse, Color(glow_c.r, glow_c.g, glow_c.b, 0.10 * sa))
+		draw_arc(Vector2(px, py), 54.0 * pulse, 0.0, TAU, 40, Color(glow_c.r, glow_c.g, glow_c.b, 0.55 * sa), 3.0)
+		draw_arc(Vector2(px, py), 60.0 * pulse, 0.0, TAU, 40, Color(1, 1, 1, 0.22 * sa), 2.0)
 	# ПЛАВАЮЩИЙ ДЖОЙСТИК (только пока тронут)
 	if joy_on:
 		draw_circle(joy_origin, stick_r, Color(0.15, 0.18, 0.25, 0.55))
