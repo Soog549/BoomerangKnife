@@ -738,12 +738,19 @@ func _draw() -> void:
 		Vector2(px, py - 34.0), Vector2(px + 22.0, py + 14.0), Vector2(px + 8.0, py + 10.0),
 		Vector2(px + 12.0, py + 26.0), Vector2(px, py + 18.0), Vector2(px - 12.0, py + 26.0),
 		Vector2(px - 8.0, py + 10.0), Vector2(px - 22.0, py + 14.0)]), hull.darkened(0.25))
+	# крылья
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(px - 18.0, py + 8.0), Vector2(px - 34.0, py + 24.0), Vector2(px - 14.0, py + 22.0)]), hull.darkened(0.5))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(px + 18.0, py + 8.0), Vector2(px + 34.0, py + 24.0), Vector2(px + 14.0, py + 22.0)]), hull.darkened(0.5))
 	# кабина
 	draw_colored_polygon(PackedVector2Array([
 		Vector2(px, py - 20.0), Vector2(px + 9.0, py + 4.0), Vector2(px, py + 8.0), Vector2(px - 9.0, py + 4.0)]), glow_c)
-	# крылья-подсветка
-	draw_line(Vector2(px - 18.0, py + 10.0), Vector2(px - 8.0, py + 2.0), glow_c, 3.0)
-	draw_line(Vector2(px + 18.0, py + 10.0), Vector2(px + 8.0, py + 2.0), glow_c, 3.0)
+	# двигатели
+	draw_line(Vector2(px - 10.0, py + 24.0), Vector2(px - 10.0, py + 34.0), Color(1.0, 0.6, 0.2, 0.8), 4.0)
+	draw_line(Vector2(px + 10.0, py + 24.0), Vector2(px + 10.0, py + 34.0), Color(1.0, 0.6, 0.2, 0.8), 4.0)
+	# контур корпуса
+	draw_arc(Vector2(px, py - 2.0), 30.0, 0.0, TAU, 24, glow_c.lightened(0.15), 2.0)
 	if shield > 0.0:
 		if shield_tex:
 			var sa: float = clampf(shield / max_shield, 0.25, 1.0)
@@ -766,7 +773,9 @@ func _draw() -> void:
 		col = Color(0.95, 0.75, 0.25)
 	draw_rect(Rect2(42, 62, (W - 84) * ratio, 22), col)
 	draw_rect(Rect2(40, 118, W - 80, 14), Color(0.10, 0.12, 0.20))
-	draw_rect(Rect2(42, 120, (W - 84) * (shield / max_shield), 10), Color(0.35, 0.75, 1.0))
+	draw_rect(Rect2(42, 120, (W - 84) * (shield / max_shield), 10), glow_c)
+	draw_rect(Rect2(40, 60, W - 80, 26), glow_c.darkened(0.4), false, 2.0)
+	draw_rect(Rect2(40, 118, W - 80, 14), glow_c.darkened(0.4), false, 2.0)
 	draw_string(ThemeDB.fallback_font, Vector2(44, 46), tr("HP %d/%d   ЩИТ %d") % [int(hp), int(max_hp), int(shield)], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
 	draw_string(ThemeDB.fallback_font, Vector2(44, 160), tr("СЧЁТ %d   МОНЕТЫ %d   ВОЛНА %d") % [score, coins, wave], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
 	if combo > 1:
