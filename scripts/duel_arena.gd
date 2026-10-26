@@ -125,11 +125,35 @@ func _banner_setup() -> void:
 func _exit_tree() -> void:
 	AdService.hide_banner()
 
+var _drag_touch := -1
+var _drag_start := Vector2.ZERO
+var _drag_prev := Vector2.ZERO
+var _drag_len := 0.0
+
 func _unhandled_input(event: InputEvent) -> void:
 	if game_over or paused:
 		return
-	if event is InputEventScreenTouch and event.pressed:
-		_handle_tap(_aim_from_event(event))
+	if event is InputEventScreenTouch:
+		var tp: Vector2 = (get_canvas_transform().affine_inverse() * event.position) as Vector2
+		if event.pressed:
+			if _drag_touch < 0:
+				_drag_touch = event.index
+				_drag_start = tp
+				_drag_prev = tp
+				_drag_len = 0.0
+		else:
+			if event.index == _drag_touch:
+				if _drag_len < 16.0:
+					_handle_tap(_drag_start)
+				_drag_touch = -1
+	elif event is InputEventScreenDrag:
+		if event.index == _drag_touch:
+			var dp: Vector2 = (get_canvas_transform().affine_inverse() * event.position) as Vector2
+			_drag_len += dp.distance_to(_drag_prev)
+			if spawn_p1 != null:
+				spawn_p1.position.x = clampf(spawn_p1.position.x + (dp.x - _drag_prev.x), 40.0, 680.0)
+				spawn_p1.position.y = clampf(spawn_p1.position.y + (dp.y - _drag_prev.y), 780.0, 1130.0)
+			_drag_prev = dp
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_handle_tap(_aim_from_event(event))
 
