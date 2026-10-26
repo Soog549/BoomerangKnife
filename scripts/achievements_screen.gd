@@ -1,6 +1,6 @@
 extends Control
 
-## Экран ачивок: показывает все достижения, статус и награду.
+## Экран ачивок: AI-медальоны, статус, награда.
 
 @onready var info_label: Label = $InfoLabel
 @onready var items_box: VBoxContainer = $Scroll/Items
@@ -17,20 +17,27 @@ func _rebuild() -> void:
 		if Achievements.is_unlocked(a):
 			unlocked_count += 1
 	info_label.text = tr("Открыто: %d из %d") % [unlocked_count, Achievements.LIST.size()]
-	for a in Achievements.LIST:
-		items_box.add_child(_make_row(a))
+	for i in Achievements.LIST.size():
+		items_box.add_child(_make_row(Achievements.LIST[i], i))
 
-func _make_row(a: Dictionary) -> HBoxContainer:
+func _make_row(a: Dictionary, idx: int) -> HBoxContainer:
 	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
 	var unlocked := Achievements.is_unlocked(a)
 
-	var icon := Label.new()
-	icon.custom_minimum_size = Vector2(40, 0)
-	icon.text = "" if unlocked else ""
-	row.add_child(icon)
+	var tex := TextureRect.new()
+	tex.custom_minimum_size = Vector2(72, 72)
+	tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var p := "res://assets/images/fanclub/achievements/ach-%02d.png" % (idx + 1)
+	if ResourceLoader.exists(p):
+		tex.texture = load(p)
+	tex.modulate = Color(1, 1, 1, 1) if unlocked else Color(0.35, 0.35, 0.42, 1)
+	row.add_child(tex)
 
 	var label := Label.new()
-	label.custom_minimum_size = Vector2(460, 0)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	if unlocked:
 		var reward_text := tr("+%d монет") % a.reward
 		if a.has("crystals") and a.crystals > 0:
@@ -41,9 +48,10 @@ func _make_row(a: Dictionary) -> HBoxContainer:
 	row.add_child(label)
 
 	var status := Label.new()
-	status.text = "" if unlocked else "…"
-	status.custom_minimum_size = Vector2(40, 0)
+	status.custom_minimum_size = Vector2(48, 0)
 	status.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	status.text = "✓" if unlocked else "🔒"
+	status.add_theme_color_override("font_color", Color(0.4, 0.9, 0.6) if unlocked else Color(0.5, 0.5, 0.6))
 	row.add_child(status)
 	return row
 
