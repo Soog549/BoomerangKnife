@@ -26,6 +26,8 @@ var t_anim := 0.0
 var tow_tex: Array = []
 var core_tex: Texture2D = null
 var mob_td_tex: Texture2D = null
+var mob_texs: Array = []
+var boss_tex: Texture2D = null
 var bg_tex: Texture2D = null
 var replay_btn: Button
 var paused := false
@@ -50,6 +52,13 @@ func _ready() -> void:
 		core_tex = load("res://assets/images/td/core.png")
 	if ResourceLoader.exists("res://assets/images/arena/mob-runner-1.png"):
 		mob_td_tex = load("res://assets/images/arena/mob-runner-1.png")
+	for i in range(1, 4):
+		var smp := "res://assets/images/packs/%s/mob-%d.png" % [GameState.style_pack, i]
+		if ResourceLoader.exists(smp):
+			mob_texs.append(load(smp))
+	var bmp := "res://assets/images/packs/%s/boss-front.png" % GameState.style_pack
+	if ResourceLoader.exists(bmp):
+		boss_tex = load(bmp)
 	var pbg := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
 	if ResourceLoader.exists(pbg):
 		bg_tex = load(pbg)
@@ -184,7 +193,7 @@ func _process(dt: float) -> void:
 				hp *= 5.0
 				spd *= 0.6
 				rr_m = 88.0
-			mobs.append({"t": 0.0, "hp": hp, "max": hp, "speed": spd, "r": rr_m, "boss": is_boss})
+			mobs.append({"t": 0.0, "hp": hp, "max": hp, "speed": spd, "r": rr_m, "boss": is_boss, "v": randi() % 3})
 	# мобы
 	var keep_m: Array = []
 	for m in mobs:
@@ -279,9 +288,15 @@ func _draw() -> void:
 		var mp := _mob_pos(m)
 		var mr: float = float(m.get("r", 14.0))
 		var mc := Color(0.9, 0.25, 0.35) if bool(m.get("boss", false)) else Color(0.9, 0.3, 0.4)
-		if mob_td_tex:
+		if not mob_texs.is_empty() or boss_tex != null or mob_td_tex:
 			var msz: float = mr * 3.2
-			draw_texture_rect(mob_td_tex, Rect2(mp.x - msz * 0.5, mp.y - msz * 0.5, msz, msz), false)
+			var mtex: Texture2D = mob_td_tex
+			if bool(m.get("boss", false)) and boss_tex != null:
+				mtex = boss_tex
+			elif not mob_texs.is_empty():
+				mtex = mob_texs[int(m.get("v", 0)) % mob_texs.size()]
+			if mtex:
+				draw_texture_rect(mtex, Rect2(mp.x - msz * 0.5, mp.y - msz * 0.5, msz, msz), false)
 		else:
 			draw_circle(mp, mr, mc)
 			if bool(m.get("boss", false)):
