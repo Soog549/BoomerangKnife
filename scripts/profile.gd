@@ -9,13 +9,29 @@ extends Control
 @onready var stats_box: VBoxContainer = $Scroll/VBox/StatsBox
 var preview_box: VBoxContainer = null
 
-const AVATAR_TYPES := ["Мужчина", "Женщина", "Робот", "Домовой", "Осминог"]
+const AVATAR_TYPES := ["Воин", "Разбойник", "Маг", "Лучник", "Рыцарь", "Берсерк", "Ассасин", "Паладин", "Друид", "Монах", "Пират", "Самурай", "Ниндзя", "Викинг", "Стрелок", "Алхимик", "Некромант", "Инженер", "Охотник", "Шаман", "Чемпион"]
 const AVATAR_PATHS := [
 	"res://assets/images/avatars/avatar_0.png",
 	"res://assets/images/avatars/avatar_1.png",
 	"res://assets/images/avatars/avatar_2.png",
 	"res://assets/images/avatars/avatar_3.png",
 	"res://assets/images/avatars/avatar_4.png",
+	"res://assets/images/avatars/avatar_5.png",
+	"res://assets/images/avatars/avatar_6.png",
+	"res://assets/images/avatars/avatar_7.png",
+	"res://assets/images/avatars/avatar_8.png",
+	"res://assets/images/avatars/avatar_9.png",
+	"res://assets/images/avatars/avatar_10.png",
+	"res://assets/images/avatars/avatar_11.png",
+	"res://assets/images/avatars/avatar_12.png",
+	"res://assets/images/avatars/avatar_13.png",
+	"res://assets/images/avatars/avatar_14.png",
+	"res://assets/images/avatars/avatar_15.png",
+	"res://assets/images/avatars/avatar_16.png",
+	"res://assets/images/avatars/avatar_17.png",
+	"res://assets/images/avatars/avatar_18.png",
+	"res://assets/images/avatars/avatar_19.png",
+	"res://assets/images/avatars/avatar_20.png",
 ]
 
 func _ready() -> void:

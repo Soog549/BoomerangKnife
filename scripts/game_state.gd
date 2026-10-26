@@ -102,7 +102,7 @@ var owned_avatars: Array = [0]
 var relics_total := 0
 var arena_tutorial_done := false
 var music_track := -1
-var style_pack := "epic"
+var style_pack := "base"
 var seen_lore: Dictionary = {}
 var is_supporter := false
 var arena_drops := true
@@ -972,7 +972,7 @@ func load_settings() -> void:
 	relics_total = cfg.get_value("settings", "relics_total", 0)
 	arena_tutorial_done = cfg.get_value("settings", "arena_tutorial_done", false)
 	music_track = cfg.get_value("settings", "music_track", -1)
-	style_pack = str(cfg.get_value("settings", "style_pack", "epic"))
+	style_pack = str(cfg.get_value("settings", "style_pack", "base"))
 	var sl: Variant = cfg.get_value("settings", "seen_lore", {})
 	if sl is Dictionary:
 		seen_lore = sl
