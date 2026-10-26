@@ -1,6 +1,6 @@
 extends Control
 
-const APP_VERSION := "1.0.49"
+const APP_VERSION := ""
 
 @onready var volume_label: Label = $Center/VBox/VolumeLabel
 @onready var volume_slider: HSlider = $Center/VBox/VolumeSlider
@@ -79,7 +79,8 @@ func _add_footer() -> void:
 	pers.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://scenes/my_game.tscn"))
 	vb.add_child(pers)
 	var ver := Label.new()
-	ver.text = tr("Версия %s") % APP_VERSION
+	var vstr: String = str(ProjectSettings.get_setting("application/config/version", "dev"))
+	ver.text = tr("Версия %s") % vstr
 	ver.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	ver.add_theme_font_size_override("font_size", 14)
 	ver.add_theme_color_override("font_color", Color(0.6, 0.65, 0.75))
