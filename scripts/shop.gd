@@ -570,6 +570,7 @@ func _build_donations() -> void:
 		btn.pressed.connect(func() -> void:
 			AudioManager.play("level")
 			GameState.mark_supporter()
+			Telemetry.event("donate_click", {"channel": str(d.label)})
 			OS.shell_open(str(d.url))
 			_note("Спасибо за поддержку! Вы — Меценат Империи.")
 			_rebuild())

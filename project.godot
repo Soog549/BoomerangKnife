@@ -17,12 +17,13 @@ Assets="*res://scripts/asset_manager.gd"
 OnlineService="*res://scripts/online_service.gd"
 PurchaseService="*res://scripts/purchase_service.gd"
 Notifications="*res://scripts/notifications.gd"
+Telemetry="*res://scripts/telemetry.gd"
 Toast="*res://scripts/toast.gd"
 UIPressFX="*res://scripts/ui_fx.gd"
 
 [application]
 
-config/version="1.0.61"
+config/version="1.0.62"
 config/name="BoomerangKnife"
 config/description="Hypercasual boomerang knife arcade: arena, tower defense, duels, endless."
 run/main_scene="res://scenes/main_menu.tscn"

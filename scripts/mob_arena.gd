@@ -462,6 +462,7 @@ func _process(dt: float) -> void:
 				hp -= dmg
 			if hp <= 0.0:
 				hp = 0.0
+				Telemetry.event("arena_end", {"wave": wave, "score": score, "coins": coins})
 				if not damaged and GameState.unlock_arena_ach("no_damage"):
 					_ach_toast(tr("Без единой царапины"))
 				over = true

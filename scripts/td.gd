@@ -203,6 +203,7 @@ func _process(dt: float) -> void:
 			if core_hp <= 0:
 				core_hp = 0
 				if not over:
+					Telemetry.event("td_end", {"wave": wave, "hp": core_hp})
 					AudioManager.play("defeat")
 					GameState.add_coins(10 + 5 * int(wave))
 					GameState.save_settings()
