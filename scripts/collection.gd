@@ -29,23 +29,32 @@ func _ready() -> void:
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var title := Label.new()
-	title.text = tr("КОЛЛЕКЦИЯ")
+	title.text = tr("BOOMERANGKNIFE")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 30)
+	title.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
 	title.position = Vector2(0, 14)
 	title.size = Vector2(720, 38)
 	add_child(title)
+	var intro := Label.new()
+	intro.text = tr("Империя ZWS · собери реликвии, открой историю")
+	intro.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	intro.add_theme_font_size_override("font_size", 16)
+	intro.add_theme_color_override("font_color", Color(0.75, 0.8, 0.9))
+	intro.position = Vector2(0, 50)
+	intro.size = Vector2(720, 22)
+	add_child(intro)
 	var info := Label.new()
 	info.text = tr("Реликвии: %d") % GameState.relics_total
 	info.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	info.add_theme_font_size_override("font_size", 18)
-	info.position = Vector2(0, 50)
+	info.position = Vector2(0, 76)
 	info.size = Vector2(720, 26)
 	add_child(info)
 
 	var sc := ScrollContainer.new()
-	sc.position = Vector2(30, 86)
-	sc.size = Vector2(660, 990)
+	sc.position = Vector2(30, 108)
+	sc.size = Vector2(660, 1000)
 	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(sc)
 	var col := VBoxContainer.new()

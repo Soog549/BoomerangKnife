@@ -25,8 +25,9 @@ func _rebuild() -> void:
 	for g: Dictionary in Economy.GLYPHS:
 		rows.add_child(_make_row(g))
 
-func _make_row(g: Dictionary) -> HBoxContainer:
-	var row := HBoxContainer.new()
+func _make_row(g: Dictionary) -> VBoxContainer:
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 4)
 	var glyph_id: String = g.id
 	var owned := GameState.has_glyph(glyph_id)
 	var active := GameState.glyph_active(glyph_id)
@@ -34,7 +35,7 @@ func _make_row(g: Dictionary) -> HBoxContainer:
 
 	var glvl := GameState.glyph_level(glyph_id)
 	var label := Label.new()
-	label.custom_minimum_size = Vector2(400, 0)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	if active:
 		if g.type == "T":
 			label.text = tr("%s — %s  (активен, осталось %d)") % [tr(g.label), tr(g.desc), GameState.temp_glyph_runs(glyph_id)]
@@ -42,15 +43,14 @@ func _make_row(g: Dictionary) -> HBoxContainer:
 			label.text = tr("%s — %s  (вечный, ур. %d)") % [tr(g.label), tr(g.desc), glvl]
 	else:
 		label.text = tr("%s — %s  (ур. %d, %d м.)") % [tr(g.label), tr(g.desc), glvl, int(g.price)]
-	row.add_child(label)
+	box.add_child(label)
 
+	var btns := HBoxContainer.new()
+	btns.add_theme_constant_override("separation", 8)
 	var info := Label.new()
-	info.custom_minimum_size = Vector2(60, 0)
-	if equipped:
-		info.text = tr("слот")
-	else:
-		info.text = ""
-	row.add_child(info)
+	info.custom_minimum_size = Vector2(90, 0)
+	info.text = tr("слот") if equipped else ""
+	btns.add_child(info)
 
 	var btn := Button.new()
 	if equipped:
@@ -74,10 +74,11 @@ func _make_row(g: Dictionary) -> HBoxContainer:
 			if GameState.purchase_glyph(glyph_id):
 				AudioManager.play("level")
 				_rebuild())
-	row.add_child(btn)
+	btns.add_child(btn)
 	if owned:
-		_add_upgrade_button(row, glyph_id, glvl)
-	return row
+		_add_upgrade_button(btns, glyph_id, glvl)
+	box.add_child(btns)
+	return box
 
 func _add_upgrade_button(row: HBoxContainer, glyph_id: String, glvl: int) -> void:
 	var upg := Button.new()
