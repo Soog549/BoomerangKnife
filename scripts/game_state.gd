@@ -929,10 +929,15 @@ func _auto_detect() -> void:
 		save_settings()
 
 # ---------- сохранение ----------
+const SAVE_VERSION := 1
+
 func load_settings() -> void:
 	var cfg := ConfigFile.new()
 	if cfg.load(SAVE_PATH) != OK:
 		return
+	var sv: int = int(cfg.get_value("meta", "save_v", 0))
+	if sv < SAVE_VERSION:
+		_migrate_save(sv)
 	volume = cfg.get_value("settings", "volume", 1.0)
 	music_volume = cfg.get_value("settings", "music_volume", 1.0)
 	sfx_volume = cfg.get_value("settings", "sfx_volume", 1.0)
@@ -1024,6 +1029,7 @@ func load_settings() -> void:
 func save_settings() -> void:
 	var cfg := ConfigFile.new()
 	_fill_cfg(cfg)
+	cfg.set_value("meta", "save_v", SAVE_VERSION)
 	cfg.save(SAVE_PATH)
 	settings_changed.emit()
 
@@ -1211,3 +1217,10 @@ func claim_fortune() -> Dictionary:
 		add_player_xp(50)
 		return {"kind": "xp", "amount": 50, "label": "+50 опыта"}
 	return {"kind": "booster", "label": "Одноразовый буст"}
+
+
+func _migrate_save(from_v: int) -> void:
+	# Каркас миграций: сюда добавляются шаги при изменении формата сохранений.
+	if from_v == 0:
+		pass
+	Telemetry.event("save_migrated", {"from": from_v, "to": SAVE_VERSION})

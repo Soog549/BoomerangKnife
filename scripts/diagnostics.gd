@@ -98,6 +98,7 @@ func _self_check() -> void:
 
 	add.call("Сцена меню доступна", ResourceLoader.exists("res://scenes/main_menu.tscn"))
 	add.call("Телеметрия активна", Telemetry != null)
+	add.call("Ассет-манифест на месте", ResourceLoader.exists("res://assets/manifest.json"))
 
 	lines.append("")
 	lines.append("ИТОГО: OK %d · FAIL %d" % [ok, fail])
