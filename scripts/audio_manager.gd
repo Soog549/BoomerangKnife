@@ -52,6 +52,10 @@ const MUSIC_FILES := {
 	"skin_14": "res://assets/audio/music12/music-14.ogg",
 	"skin_15": "res://assets/audio/music12/music-15.ogg",
 	"skin_16": "res://assets/audio/music12/music-16.ogg",
+	"skin_17": "res://assets/audio/music12/music-17.ogg",
+	"skin_18": "res://assets/audio/music12/music-18.ogg",
+	"skin_19": "res://assets/audio/music12/music-19.ogg",
+	"skin_20": "res://assets/audio/music12/music-20.ogg",
 }
 
 # Ротация вариаций меню/геймплея: каждый новый заход в режим играет другой луп.
@@ -224,7 +228,7 @@ func _noise(duration: float, gain: float) -> AudioStreamWAV:
 
 func play_skin_music() -> void:
 	var t := int(GameState.music_track)
-	if t >= 1 and t <= 16:
+	if t >= 1 and t <= 20:
 		play_music("skin_%d" % t)
 		return
 	var i: int = clampi(GameState.selected_skin, 0, 11)
