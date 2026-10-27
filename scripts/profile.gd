@@ -8,6 +8,7 @@ extends Control
 @onready var avatar_label: Label = $Scroll/VBox/AvatarPanel/HBox/Info/AvatarLabel
 @onready var stats_box: VBoxContainer = $Scroll/VBox/StatsBox
 var preview_box: VBoxContainer = null
+var _tier := 2  # 0 голова, 1 бюст, 2 тело
 
 const AVATAR_TYPES := ["Воин", "Разбойник", "Маг", "Лучник", "Рыцарь", "Берсерк", "Ассасин", "Паладин", "Друид", "Монах", "Пират", "Самурай", "Ниндзя", "Викинг", "Стрелок", "Алхимик", "Некромант", "Инженер", "Охотник", "Шаман", "Чемпион"]
 const AVATAR_PATHS := [
@@ -95,9 +96,29 @@ func _rebuild_preview() -> void:
 	header.text = tr("СНАРЯЖЕНИЕ НА ТЕЛЕ")
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	preview_box.add_child(header)
+	var tier_row := HBoxContainer.new()
+	tier_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	tier_row.add_theme_constant_override("separation", 8)
+	var names := ["ГОЛОВА", "БЮСТ", "ТЕЛО"]
+	for i in 3:
+		var b := Button.new()
+		b.text = tr(names[i])
+		b.custom_minimum_size = Vector2(150, 44)
+		b.disabled = i == _tier
+		b.pressed.connect(func() -> void:
+			_tier = i
+			AudioManager.play("click")
+			_rebuild_preview())
+		tier_row.add_child(b)
+	preview_box.add_child(tier_row)
+
 	var av := CharacterPreview.new()
+	var tier_names := ["warrior-head.png", "warrior-bust.png", "warrior-body.png"]
+	var tp := "res://assets/images/tiers/%s" % tier_names[_tier]
 	var full := "res://assets/images/packs/%s/hero-front.png" % GameState.style_pack
-	if ResourceLoader.exists(full):
+	if ResourceLoader.exists(tp):
+		av.avatar_texture = load(tp)
+	elif ResourceLoader.exists(full):
 		av.avatar_texture = load(full)
 	else:
 		av.avatar_texture = load(AVATAR_PATHS[clampi(GameState.avatar, 0, AVATAR_PATHS.size() - 1)])

@@ -23,7 +23,7 @@ UIPressFX="*res://scripts/ui_fx.gd"
 
 [application]
 
-config/version="1.0.73"
+config/version="1.0.74"
 config/name="BoomerangKnife"
 config/description="Hypercasual boomerang knife arcade: arena, tower defense, duels, endless."
 run/main_scene="res://scenes/main_menu.tscn"
