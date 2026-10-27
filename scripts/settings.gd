@@ -41,6 +41,7 @@ const AVATAR_TYPES := [
 	"Охотник",
 	"Шаман",
 	"Чемпион",
+	"Принцесса",
 ]
 const AVATAR_PATHS := [
 	"res://assets/images/avatars/avatar_0.png",
@@ -64,6 +65,7 @@ const AVATAR_PATHS := [
 	"res://assets/images/avatars/avatar_18.png",
 	"res://assets/images/avatars/avatar_19.png",
 	"res://assets/images/avatars/avatar_20.png",
+	"res://assets/images/avatars/avatar_21.png",
 ]
 
 func _ready() -> void:
