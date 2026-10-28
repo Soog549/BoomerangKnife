@@ -182,8 +182,8 @@ const CRYSTAL_AD_PACKS := [
 # биллинг на функции GameState.purchase_iap().
 const DONATIONS_ONLY := true
 const DONATIONS := [
-	{"label": "Boosty", "url": "https://boosty.to/imperiya-zws", "desc": "Подписка и разовые донаты"},
-	{"label": "DonationAlerts", "url": "https://www.donationalerts.com/r/imperiya_zws", "desc": "Разовый донат"},
+	{"label": "Boosty", "url": "https://boosty.to/wsoorld", "desc": "Подписка и разовые донаты"},
+	{"label": "DonationAlerts", "url": "https://www.donationalerts.com/r/wsoorld", "desc": "Разовый донат"},
 	{"label": "Telegram", "url": "https://t.me/imperiya_zws", "desc": "Сборы и новости"},
 ]
 const IAP_PACKS := [
