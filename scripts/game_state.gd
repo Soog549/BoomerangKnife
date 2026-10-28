@@ -106,6 +106,8 @@ var style_pack := "base"
 var seen_lore: Dictionary = {}
 var is_supporter := false
 var fortune_day := ""
+var login_streak := 0
+var last_login_unix := 0
 var arena_drops := true
 var survival_mode := false
 var extra_knives := 0
@@ -984,6 +986,8 @@ func load_settings() -> void:
 		seen_lore = sl
 	is_supporter = bool(cfg.get_value("settings", "supporter", false))
 	fortune_day = str(cfg.get_value("settings", "fortune_day", ""))
+	login_streak = int(cfg.get_value("settings", "login_streak", 0))
+	last_login_unix = int(cfg.get_value("settings", "last_login_unix", 0))
 	arena_drops = cfg.get_value("settings", "arena_drops", true)
 	survival_mode = cfg.get_value("settings", "survival_mode", false)
 	extra_knives = cfg.get_value("settings", "extra_knives", 0)
@@ -1106,6 +1110,8 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "seen_lore", seen_lore)
 	cfg.set_value("settings", "supporter", is_supporter)
 	cfg.set_value("settings", "fortune_day", fortune_day)
+	cfg.set_value("settings", "login_streak", login_streak)
+	cfg.set_value("settings", "last_login_unix", last_login_unix)
 	cfg.set_value("settings", "arena_drops", arena_drops)
 	cfg.set_value("settings", "survival_mode", survival_mode)
 	cfg.set_value("settings", "extra_knives", extra_knives)
@@ -1224,3 +1230,18 @@ func _migrate_save(from_v: int) -> void:
 	if from_v == 0:
 		pass
 	Telemetry.event("save_migrated", {"from": from_v, "to": SAVE_VERSION})
+
+
+func record_login() -> void:
+	var now := int(Time.get_unix_time_from_system())
+	var today := now / 86400
+	var last := last_login_unix / 86400
+	if today == last:
+		return
+	if today == last + 1:
+		login_streak += 1
+	else:
+		login_streak = 1
+	last_login_unix = now
+	save_settings()
+	Telemetry.event("login", {"streak": login_streak})

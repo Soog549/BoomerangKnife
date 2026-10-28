@@ -175,7 +175,7 @@ func _spawn_mob() -> void:
 			"col": pt["col"], "speed": float(pt["speed"]) * 0.7, "proj": str(pt["proj"]), "var": randi() % 2, "id": mob_seq,
 		})
 		return
-	if wave % 5 == 0 and not _boss_alive():
+	if wave % 3 == 0 and not _boss_alive():
 		var bt: Dictionary = MOB_TYPES["boss"]
 		mobs.append({
 			"kind": "boss", "x": W * 0.5, "y": -70.0,

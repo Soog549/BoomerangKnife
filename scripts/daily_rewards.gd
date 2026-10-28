@@ -12,6 +12,7 @@ extends Control
 @onready var quest_claim: Button = $QuestClaim
 
 func _ready() -> void:
+	GameState.record_login()
 	var wheel := FortuneWheel.new()
 	wheel.position = Vector2(210, 880)
 	wheel.size = Vector2(300, 300)
@@ -27,6 +28,7 @@ func _ready() -> void:
 	AudioManager.play("click")
 	# «Просыпаем» квест (сброс по дате, если нужно) и перерисовываемся
 	GameState.current_quest()
+	streak_label.text = tr("Серия дней: %d") % GameState.login_streak
 	_build_calendar()
 	_refresh()
 
@@ -46,6 +48,7 @@ func _build_calendar() -> void:
 		calendar.add_child(cell)
 
 func _refresh() -> void:
+	streak_label.text = tr("Серия дней: %d") % GameState.login_streak
 	streak_label.text = tr("Серия: %d дней") % GameState.daily_streak
 	if GameState.can_claim_daily():
 		claim_button.text = tr("ЗАБРАТЬ +%d монет") % GameState.current_daily_reward()
