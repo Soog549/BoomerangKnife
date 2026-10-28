@@ -45,6 +45,7 @@ var flash := 0.0
 var shake := 0.0
 var dmg_pop: Array = []
 var slowmo_t := 0.0
+var hitstop_t := 0.0
 var banner_t := 0.0
 var banner_n := 0
 var combo := 0
@@ -355,6 +356,10 @@ func _process(dt: float) -> void:
 		slowmo_t -= dt
 		if slowmo_t <= 0.0:
 			Engine.time_scale = 1.0
+	elif hitstop_t > 0.0:
+		hitstop_t -= dt / maxf(Engine.time_scale, 0.1)
+		if hitstop_t <= 0.0:
+			Engine.time_scale = 1.0
 	var dp2: Array = []
 	for dp in dmg_pop:
 		dp["t"] = float(dp["t"]) + dt
@@ -495,6 +500,7 @@ func _process(dt: float) -> void:
 			kn["hit"] = hits_b
 			if bd < 30.0:
 				ammo = mini(ammo + 1, max_knives)
+				AudioManager.play("return")
 				continue
 			kn["x"] = float(kn["x"]) + bx / bd * 1100.0 * dt
 			kn["y"] = float(kn["y"]) + by / bd * 1100.0 * dt
@@ -545,6 +551,8 @@ func _process(dt: float) -> void:
 				kn.erase("straight")
 			target["hp"] = float(target["hp"]) - 15.0
 			target["flash"] = 0.18
+			hitstop_t = 0.045
+			Engine.time_scale = 0.15
 			dmg_pop.append({"x": float(target["x"]), "y": float(target["y"]) - float(target["r"]), "txt": "15", "t": 0.0})
 			if float(target["hp"]) <= 0.0:
 				score += 10 + wave
