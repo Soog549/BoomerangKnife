@@ -9,6 +9,7 @@ extends Control
 @onready var rows: VBoxContainer = $Scroll/Rows
 
 func _ready() -> void:
+	UIKit.normalize(self)
 	AudioManager.play("click")
 	_rebuild()
 	GameState.economy_changed.connect(_rebuild)

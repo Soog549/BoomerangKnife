@@ -12,6 +12,7 @@ extends Control
 @onready var tour_timer: Label = $TournamentPanel/HBox/Info/TimerLabel
 
 func _ready() -> void:
+	UIKit.normalize(self)
 	AudioManager.play("click")
 	_refresh_tournament()
 	_rebuild()

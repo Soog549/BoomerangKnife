@@ -11,6 +11,7 @@ extends Control
 @onready var crystal_earn_btn: Button = $CrystalEarnButton
 
 func _ready() -> void:
+	UIKit.normalize(self)
 	AudioManager.play("click")
 	_fix_layout()
 	if GameState.claim_vip_daily():

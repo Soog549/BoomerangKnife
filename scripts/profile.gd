@@ -39,6 +39,7 @@ const AVATAR_PATHS := [
 ]
 
 func _ready() -> void:
+	UIKit.normalize(self)
 	_fix_avatar()
 	AudioManager.play("click")
 	_rebuild()

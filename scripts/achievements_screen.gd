@@ -6,6 +6,7 @@ extends Control
 @onready var items_box: VBoxContainer = $Scroll/Items
 
 func _ready() -> void:
+	UIKit.normalize(self)
 	AudioManager.play("click")
 	_rebuild()
 

@@ -12,6 +12,7 @@ var _page_label: Label = null
 
 
 func _ready() -> void:
+	UIKit.normalize(self)
 	AudioManager.play("click")
 	_build_nav()
 	_rebuild()

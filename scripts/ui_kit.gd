@@ -41,3 +41,21 @@ func back(root: Control, scene: String) -> void:
 	b.position = Vector2(M, H - M - BTN_H)
 	b.pressed.connect(func() -> void: get_tree().change_scene_to_file(scene))
 	root.add_child(b)
+
+
+func normalize(root: Node, top: float = 96.0) -> void:
+	var sc := root.get_node_or_null("Scroll")
+	if sc is ScrollContainer:
+		var s := sc as ScrollContainer
+		s.position = Vector2(M, top)
+		s.size = Vector2(W - M * 2.0, H - top - 132.0)
+		s.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	var items := root.get_node_or_null("Scroll/VBox")
+	if items == null:
+		items = root.get_node_or_null("Scroll/Items")
+	if items is Control:
+		(items as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var bb := root.get_node_or_null("BackButton")
+	if bb is Button:
+		(bb as Button).position = Vector2(M, H - M - BTN_H)
+		(bb as Button).size = Vector2(200.0, BTN_H)

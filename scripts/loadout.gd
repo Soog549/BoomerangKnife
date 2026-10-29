@@ -36,6 +36,7 @@ const AVATAR_PATHS := [
 ]
 
 func _ready() -> void:
+	UIKit.normalize(self)
 	AudioManager.play("click")
 	_build_preview()
 	_build_mode_buttons()
