@@ -68,6 +68,12 @@ func _ready() -> void:
 		var dv4 := get_node_or_null("Divider")
 		if dv4 != null:
 			dv4.visible = false
+		for child in get_children():
+			if "P2" in str(child.name):
+				child.visible = false
+		var bgp2 := get_node_or_null("BackgroundP2")
+		if bgp2 != null:
+			bgp2.visible = false
 		var bg24 := get_node_or_null("BackgroundP2")
 		if bg24 != null:
 			bg24.visible = false
@@ -166,6 +172,13 @@ func _aim_from_event(event: InputEvent) -> Vector2:
 	return Vector2(360, 300)
 
 func _handle_tap(world_pos: Vector2) -> void:
+	if _duel_variant == "solo":
+		if knife_p1 != null and is_instance_valid(knife_p1):
+			if knife_p1.is_held():
+				knife_p1.throw_toward(world_pos)
+			else:
+				knife_p1.rethrow_now(world_pos)
+		return
 	if world_pos.x < 360.0:
 		if knife_p1 != null and is_instance_valid(knife_p1):
 			if knife_p1.is_held():

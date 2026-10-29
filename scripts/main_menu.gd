@@ -112,7 +112,8 @@ func _show_splash() -> void:
 	s.texture = load(p)
 	s.set_anchors_preset(Control.PRESET_FULL_RECT)
 	s.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	s.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	s.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	s.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	s.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(s)
 	var tw := create_tween()
