@@ -31,6 +31,9 @@ var speed_mult := 1.0
 @onready var banner_demo: Control = $UI/BannerDemo
 
 func _ready() -> void:
+	var hb2 := get_node_or_null("UI/HomeButton")
+	if hb2 != null:
+		hb2.visible = false
 	_add_player_character()
 	_add_player_arms()
 	randomize()

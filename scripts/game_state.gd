@@ -682,7 +682,7 @@ func add_duel_shards(amount: int) -> int:
 
 ## Сколько слотов под активные глифы (прокачивается уровнем персонажа).
 func glyph_slots() -> int:
-	return 1 + (player_level / 10)  # 1..6 слотов
+	return 2 + (player_level / 10)  # 2..7 слотов
 
 ## Активен ли глиф в слоте (экипирован).
 func glyph_equipped(glyph_id: String) -> bool:

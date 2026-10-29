@@ -86,7 +86,13 @@ func _make_row(g: Dictionary) -> VBoxContainer:
 		btn.pressed.connect(func() -> void:
 			if GameState.purchase_glyph(glyph_id):
 				AudioManager.play("level")
-				_rebuild())
+				_rebuild()
+			elif GameState.coins < int(g.price):
+				AudioManager.play("deny")
+				slots_label.text = tr("Не хватает монет: нужно %d") % int(g.price)
+			else:
+				AudioManager.play("deny")
+				slots_label.text = tr("Не удалось купить (уже есть?)"))
 	btns.add_child(btn)
 	if owned:
 		_add_upgrade_button(btns, glyph_id, glvl)

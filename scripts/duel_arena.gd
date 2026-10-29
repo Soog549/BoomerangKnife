@@ -37,6 +37,9 @@ var _shared_target := false
 @onready var banner_demo: Control = $UI/BannerDemo
 
 func _ready() -> void:
+	var hb := get_node_or_null("UI/HomeButton")
+	if hb != null:
+		hb.visible = false
 	randomize()
 	rounds_total = int(GameState.duel_config.get("rounds", 3))
 	var variant := str(GameState.duel_config.get("variant", "split"))
