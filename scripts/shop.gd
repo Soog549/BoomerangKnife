@@ -59,6 +59,7 @@ func _rebuild() -> void:
 	pv_cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	pv_cap.add_theme_font_size_override("font_size", 15)
 	items_box.add_child(pv_cap)
+	_build_class_weapons()
 	info_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	info_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	info_label.text = tr("Твой максимальный уровень: %d — проходи уровни, открывай цели или смотри рекламу за монеты:") % GameState.max_level_reached
@@ -599,3 +600,42 @@ func _note(text: String) -> void:
 	l.add_theme_font_size_override("font_size", 16)
 	l.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
 	items_box.add_child(l)
+
+
+const CLASS_WPN := [
+	["warrior", "Воин"], ["rogue", "Разбойник"], ["mage", "Маг"], ["archer", "Лучник"],
+	["knight", "Рыцарь"], ["berserker", "Берсерк"], ["assassin", "Ассасин"], ["paladin", "Паладин"],
+	["druid", "Друид"], ["monk", "Монах"], ["pirate", "Пират"], ["samurai", "Самурай"],
+	["ninja", "Ниндзя"], ["viking", "Викинг"], ["gunslinger", "Стрелок"], ["alchemist", "Алхимик"],
+	["necromancer", "Некромант"], ["engineer", "Инженер"], ["bounty_hunter", "Охотник"], ["shaman", "Шаман"],
+	["champion", "Чемпион"], ["princess", "Принцесса"],
+]
+
+
+func _build_class_weapons() -> void:
+	var head := Label.new()
+	head.text = tr("ОРУЖИЕ КЛАССОВ")
+	head.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	head.add_theme_font_size_override("font_size", 20)
+	items_box.add_child(head)
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 10)
+	items_box.add_child(grid)
+	for pair in CLASS_WPN:
+		var cell := VBoxContainer.new()
+		cell.custom_minimum_size = Vector2(300, 150)
+		var tex := TextureRect.new()
+		tex.custom_minimum_size = Vector2(120, 120)
+		tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		var wp := "res://assets/images/weapons/%s.png" % str(pair[0])
+		if ResourceLoader.exists(wp):
+			tex.texture = load(wp)
+		cell.add_child(tex)
+		var nm := Label.new()
+		nm.text = tr(str(pair[1]))
+		nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		cell.add_child(nm)
+		grid.add_child(cell)
