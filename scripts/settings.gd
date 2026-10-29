@@ -83,6 +83,7 @@ func _add_personal_rows() -> void:
 	vb.add_child(_prow(tr("КЛАСС"), AVATAR_TYPES[clampi(GameState.avatar, 0, AVATAR_TYPES.size() - 1)], _cycle_class))
 	vb.add_child(_prow(tr("СТИЛЬ"), GameState.style_pack.to_upper(), _cycle_style))
 	vb.add_child(_prow(tr("СЛОЖНОСТЬ"), tr(GameState.difficulty.to_upper()), _cycle_diff))
+	vb.add_child(_prow(tr("СКИН"), str(GameState.current_skin().get("label", "—")), _cycle_skin))
 
 
 func _prow(title: String, value: String, cb: Callable) -> HBoxContainer:
@@ -138,7 +139,19 @@ func _cycle_diff(d: int) -> void:
 	_rebuild_settings()
 
 
+func _cycle_skin(d: int) -> void:
+	var n: int = GameState.SKINS.size()
+	if n <= 0:
+		return
+	GameState.selected_skin = (GameState.selected_skin + d + n) % n
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
 func _rebuild_settings() -> void:
+	if _row_values.size() >= 4:
+		_row_values[3].text = str(GameState.current_skin().get("label", "—"))
 	if _row_values.size() >= 3:
 		_row_values[0].text = AVATAR_TYPES[clampi(GameState.avatar, 0, AVATAR_TYPES.size() - 1)]
 		_row_values[1].text = GameState.style_pack.to_upper()

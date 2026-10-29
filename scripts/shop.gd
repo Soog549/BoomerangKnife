@@ -47,8 +47,12 @@ func _rebuild() -> void:
 		child.queue_free()
 	# Единый предпросмотр персонажа (полное тело, как в профиле)
 	var pv := TextureRect.new()
+	var cls_idx: int = clampi(GameState.avatar, 0, CLASS_WPN.size() - 1) if CLASS_WPN.size() > 0 else 0
+	var cp := "res://assets/images/classes/%s.png" % str(CLASS_WPN[cls_idx][0])
 	var hp := "res://assets/images/packs/%s/hero-front.png" % GameState.style_pack
-	if ResourceLoader.exists(hp):
+	if ResourceLoader.exists(cp):
+		pv.texture = load(cp)
+	elif ResourceLoader.exists(hp):
 		pv.texture = load(hp)
 	pv.custom_minimum_size = Vector2(0, 240)
 	pv.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
