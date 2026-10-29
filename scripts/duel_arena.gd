@@ -77,9 +77,6 @@ func _ready() -> void:
 		var bgp2 := get_node_or_null("BackgroundP2")
 		if bgp2 != null:
 			bgp2.visible = false
-		var bg24 := get_node_or_null("BackgroundP2")
-		if bg24 != null:
-			bg24.visible = false
 		spawn_p1.position = Vector2(360, 1050)
 		msg_label.text = tr("ТРЕНИРОВКА (соло): бросай нож, отрабатывай точность.")
 	elif variant == "mob":
