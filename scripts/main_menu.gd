@@ -76,7 +76,11 @@ func _build_profile_panel() -> void:
 	hb.add_theme_constant_override("separation", 10)
 	panel.add_child(hb)
 	var av := TextureRect.new()
-	var p := "res://assets/images/avatars/avatar_%d.png" % GameState.avatar
+	var cfiles: Array = ["warrior", "rogue", "mage", "archer", "knight", "berserker", "assassin", "paladin", "druid", "monk", "pirate", "samurai", "ninja", "viking", "gunslinger", "alchemist", "necromancer", "engineer", "bounty_hunter", "shaman", "champion", "princess"]
+	var cf: String = str(cfiles[clampi(GameState.avatar, 0, cfiles.size() - 1)])
+	var p := "res://assets/images/classes/%s.png" % cf
+	if not ResourceLoader.exists(p):
+		p = "res://assets/images/avatars/avatar_%d.png" % GameState.avatar
 	if ResourceLoader.exists(p):
 		av.texture = load(p)
 	av.custom_minimum_size = Vector2(68, 68)

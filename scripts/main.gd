@@ -102,25 +102,18 @@ func _connect_ui() -> void:
 ## Расходует экипированный бустер на этот забег и тикает временные глифы.
 func _apply_boosters() -> void:
 	GameState.tick_temp_glyphs()
-	match GameState.armed_booster:
-		"heart":
-			if GameState.consume_booster("heart"):
-				ScoreManager.set_lives(ScoreManager.lives + 1)
-				AudioManager.play("level")
-		"shield":
-			if GameState.consume_booster("shield"):
-				shield_active = true
-				AudioManager.play("return")
-		"magnet":
-			if GameState.consume_booster("magnet"):
-				ScoreManager.booster_magnet = true
-				AudioManager.play("return")
-		"talisman":
-			if GameState.consume_booster("talisman"):
-				ScoreManager.booster_talisman = true
-				AudioManager.play("level")
-		_:
-			pass
+	if GameState.consume_booster("heart"):
+		ScoreManager.set_lives(ScoreManager.lives + 1)
+		AudioManager.play("level")
+	if GameState.consume_booster("shield"):
+		shield_active = true
+		AudioManager.play("return")
+	if GameState.consume_booster("magnet"):
+		ScoreManager.booster_magnet = true
+		AudioManager.play("return")
+	if GameState.consume_booster("talisman"):
+		ScoreManager.booster_talisman = true
+		AudioManager.play("level")
 	# Бустер одноразовый — снимаем после применения.
 	GameState.armed_booster = ""
 	GameState.save_settings()
