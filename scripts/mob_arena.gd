@@ -800,16 +800,8 @@ func _draw() -> void:
 	elif GameState.control_mode == "touch":
 		hint = tr("Тяни в поле - движение · Тап - бросок ножа")
 	draw_string(ThemeDB.fallback_font, Vector2(44, 190), hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.9, 0.8))
+	draw_string(ThemeDB.fallback_font, Vector2(44, 150), tr("СЧЁТ %d · МОНЕТЫ %d · ВОЛНА %d · НОЖИ %d") % [score, coins, wave, ammo], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
 	draw_set_transform(Vector2.ZERO)
-	# НИЖНЯЯ ПАНЕЛЬ (заполняет пустоту снизу)
-	draw_rect(Rect2(0, H - 104.0, W, 104.0), Color(0.07, 0.09, 0.14, 0.92))
-	draw_line(Vector2(0, H - 104.0), Vector2(W, H - 104.0), glow_c.darkened(0.5), 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(24, H - 66.0), tr("СЧЁТ %d   МОНЕТЫ %d   ВОЛНА %d") % [score, coins, wave], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
-	draw_string(ThemeDB.fallback_font, Vector2(24, H - 30.0), "РЕЛИКВИИ %d   НОЖИ %d" % [relics, ammo], HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(1.0, 0.9, 0.5))
-	var cb_txt := ""
-	if combo > 1:
-		cb_txt = tr("КОМБО x%d") % combo
-	draw_string(ThemeDB.fallback_font, Vector2(W - 220.0, H - 30.0), cb_txt, HORIZONTAL_ALIGNMENT_RIGHT, 196, 18, Color(1.0, 0.85, 0.3))
 	if flash > 0.0:
 		draw_rect(Rect2(0, 0, W, H), Color(1.0, 0.15, 0.2, 0.35 * flash))
 	for dp in dmg_pop:

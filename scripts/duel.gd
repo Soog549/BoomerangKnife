@@ -7,6 +7,9 @@ extends Control
 @onready var rules_label: Label = $Center/Panel/VBox/RulesLabel
 
 func _ready() -> void:
+	var _hb := get_node_or_null("UI/HomeButton")
+	if _hb != null:
+		_hb.visible = false
 	AudioManager.play("click")
 	var train_btn := Button.new()
 	train_btn.text = tr("ТРЕНИРОВКА (СОЛО)")

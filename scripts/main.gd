@@ -31,6 +31,9 @@ var paused := false
 @onready var art_background: TextureRect = $ArtBackground
 
 func _ready() -> void:
+	var _hb := get_node_or_null("UI/HomeButton")
+	if _hb != null:
+		_hb.visible = false
 	_add_character_preview()
 	randomize()
 	speed_mult = GameState.knife_speed_mult()

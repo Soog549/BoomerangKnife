@@ -41,6 +41,9 @@ const TOWER_TYPES := [
 ]
 
 func _ready() -> void:
+	var _hb := get_node_or_null("UI/HomeButton")
+	if _hb != null:
+		_hb.visible = false
 	for idx in range(3):
 		var pp := "res://assets/images/packs/%s/tower-%d.png" % [GameState.style_pack, idx + 1]
 		var p := "res://assets/images/td/tower-%s.png" % ["arrow", "frost", "energy"][idx]
