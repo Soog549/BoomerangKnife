@@ -5,14 +5,18 @@ extends Control
 
 const MENU_VIEWS := {
 	"root": [
-		["sub", "play", "ИГРАТЬ"],
-		["sub", "character", "ПЕРСОНАЖ"],
-		["go", "res://scenes/empire.tscn", "ИМПЕРИЯ"],
-		["sub", "rewards", "ЛИДЕРЫ И НАГРАДЫ"],
+		["sub", "empire", "ИМПЕРИЯ"],
 		["go", "res://scenes/shop.tscn", "МАГАЗИН"],
-		["go", "res://scenes/collection.tscn", " КОЛЛЕКЦИЯ"],
+		["go", "res://scenes/collection.tscn", "КОЛЛЕКЦИЯ"],
 		["go", "res://scenes/settings.tscn", "НАСТРОЙКИ"],
 		["quit", "", "ВЫХОД"],
+	],
+	"empire": [
+		["sub", "play", "ИГРАТЬ"],
+		["sub", "character", "ПЕРСОНАЖ"],
+		["sub", "rewards", "ЛИДЕРЫ И НАГРАДЫ"],
+		["go", "res://scenes/empire.tscn", "МИРЫ И ХАБ"],
+		["back", "", "НАЗАД"],
 	],
 	"play": [
 		["go", "res://scenes/game.tscn", "КАМПАНИЯ"],

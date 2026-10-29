@@ -913,6 +913,7 @@ func _build_shop() -> void:
 	vb.add_child(_shop_btn(tr("ЩИТ +50 — 100"), func() -> void: _shop_buy("shield")))
 	vb.add_child(_shop_btn(tr("HP +50 — 150"), func() -> void: _shop_buy("hp")))
 	vb.add_child(_shop_btn(tr("НАЧАТЬ"), func() -> void: _start_round()))
+	vb.add_child(_shop_btn(tr("В МЕНЮ"), func() -> void: _to_menu()))
 	_refresh_shop()
 	shop_panel.visible = GameState.arena_tutorial_done
 
@@ -966,7 +967,7 @@ func _start_round() -> void:
 
 func _build_pause() -> void:
 	_pl = CanvasLayer.new()
-	_pl.layer = 10
+	_pl.layer = 12
 	_pl.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_pl)
 	_pm = Control.new()
