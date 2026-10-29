@@ -105,6 +105,12 @@ func _build_profile_panel() -> void:
 	cls.text = str(GameState.current_skin().get("label", "—"))
 	cls.add_theme_font_size_override("font_size", 14)
 	vb.add_child(cls)
+	if GameState.login_streak > 1:
+		var st := Label.new()
+		st.text = "СЕРИЯ: %d дн." % GameState.login_streak
+		st.add_theme_font_size_override("font_size", 14)
+		st.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
+		vb.add_child(st)
 
 func _show_splash() -> void:
 	var p := "res://assets/images/packs/%s/splash.jpg" % GameState.style_pack
