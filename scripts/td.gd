@@ -290,7 +290,7 @@ func _draw() -> void:
 		var mr: float = float(m.get("r", 14.0))
 		var mc := Color(0.9, 0.25, 0.35) if bool(m.get("boss", false)) else Color(0.9, 0.3, 0.4)
 		if not mob_texs.is_empty() or boss_tex != null or mob_td_tex:
-			var msz: float = mr * 3.2
+			var msz: float = minf(mr * 3.2, 672.0 * 0.30)
 			var mtex: Texture2D = mob_td_tex
 			if bool(m.get("boss", false)) and boss_tex != null:
 				mtex = boss_tex

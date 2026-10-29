@@ -670,7 +670,7 @@ func _draw() -> void:
 		var texs = mob_tex.get(str(m["kind"]), [])
 		if not texs.is_empty():
 			var tx: Texture2D = texs[int(m.get("var", 0)) % texs.size()]
-			var msz: float = mr * 3.2
+			var msz: float = minf(mr * 3.2, W * 0.30)
 			draw_texture_rect(tx, Rect2(mx - msz * 0.5, my - msz * 0.5, msz, msz), false)
 		else:
 			draw_circle(Vector2(mx, my), mr, m["col"])
