@@ -1,193 +1,153 @@
 extends Control
-
-## Экран инвентаря: бустеры, расходники и снаряжение.
-## Бустеры/расходники показываются с количеством, снаряжение — с кнопками надеть/снять.
+## Экран инвентаря на едином UI-каркасе (компактные строки, отступы, переносы).
 
 @onready var wallet_label: Label = $WalletLabel
 @onready var rows: VBoxContainer = $Scroll/Rows
 @onready var armed_label: Label = $ArmedLabel
+
 
 func _ready() -> void:
 	AudioManager.play("click")
 	_fix_layout()
 	_rebuild()
 	GameState.economy_changed.connect(_rebuild)
-	GameState.coins_changed.connect(func(t): wallet_label.text = tr("Монеты: %d • Кристаллы: %d") % [t, GameState.crystals])
+	GameState.coins_changed.connect(func(t: int) -> void:
+		wallet_label.text = tr("Монеты: %d • Кристаллы: %d") % [t, GameState.crystals])
+
 
 func _fix_layout() -> void:
 	var sc := get_node_or_null("Scroll")
 	if sc != null:
-		sc.offset_bottom = -310.0
+		sc.position = Vector2(UIKit.M, 112)
+		sc.size = Vector2(UIKit.W - UIKit.M * 2.0, 1030)
 		sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	var hint := get_node_or_null("HintLabel")
 	if hint != null:
-		hint.position = Vector2(16, 926)
+		hint.position = Vector2(UIKit.M, 30)
 	var spots := {
-		"ShopButton": Vector2(20, 978),
-		"ClearButton": Vector2(250, 978),
-		"GlyphsBtn": Vector2(480, 978),
-		"BackButton": Vector2(20, 1044),
+		"ShopButton": Vector2(UIKit.M, 1152),
+		"ClearButton": Vector2(UIKit.M + 216, 1152),
+		"GlyphsBtn": Vector2(UIKit.M + 432, 1152),
+		"BackButton": Vector2(UIKit.M, 1204),
 	}
 	var sizes := {
-		"ShopButton": Vector2(220, 56),
-		"ClearButton": Vector2(220, 56),
-		"GlyphsBtn": Vector2(220, 56),
-		"BackButton": Vector2(680, 56),
+		"ShopButton": Vector2(200, 40),
+		"ClearButton": Vector2(200, 40),
+		"GlyphsBtn": Vector2(200, 40),
+		"BackButton": Vector2(UIKit.W - UIKit.M * 2.0, 44),
 	}
 	for n in spots:
 		var b := get_node_or_null(n)
 		if b != null:
-			b.anchor_top = 0.0
-			b.anchor_bottom = 0.0
 			b.anchor_left = 0.0
+			b.anchor_top = 0.0
 			b.anchor_right = 0.0
+			b.anchor_bottom = 0.0
 			b.position = spots[n]
 			b.size = sizes[n]
+
 
 func _rebuild() -> void:
 	wallet_label.text = tr("Монеты: %d • Кристаллы: %d") % [GameState.coins, GameState.crystals]
 	armed_label.text = tr("В лоадауте: %s") % _armed_name()
 	for child in rows.get_children():
 		child.queue_free()
-	_build_section(tr("БУСТЕРЫ"), _booster_rows())
-	_build_section(tr("ПРЕДМЕТЫ"), _consumable_rows())
-	_build_section(tr("СНАРЯЖЕНИЕ"), _equipment_rows())
-	_build_section(tr("ГЛИФЫ"), _glyph_rows())
+	_build_boosters()
+	_build_consumables()
+	_build_equipment()
+	_build_glyphs()
 
-func _build_section(title: String, rows_data: Array) -> void:
-	if rows_data.is_empty():
-		return
-	var h := Label.new()
-	h.text = "— %s —" % title
-	h.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	rows.add_child(h)
-	for row in rows_data:
-		rows.add_child(row)
 
-func _glyph_rows() -> Array:
-	var out: Array = []
-	for g: Dictionary in Economy.GLYPHS:
-		var active := GameState.glyph_active(g.id)
-		var row := VBoxContainer.new()
-		var label := Label.new()
-		label.custom_minimum_size = Vector2(0, 0)
-		if active:
-			if g.type == "T":
-				label.text = tr("%s — %s  (активен, осталось %d забегов)") % [g.label, g.desc, GameState.temp_glyph_runs(g.id)]
-			else:
-				label.text = tr("%s — %s  (вечный)") % [g.label, g.desc]
-		else:
-			label.text = "%s — %s" % [tr(g.label), tr(g.desc)]
-			label.modulate = Color(0.7, 0.7, 0.7, 1)
-		row.add_child(label)
-		var btn := Button.new()
-		if active:
-			btn.text = tr("АКТИВЕН ")
-			btn.disabled = true
-		else:
-			btn.text = tr("КУПИТЬ В МАГАЗИН")
-			btn.pressed.connect(func() -> void:
-				AudioManager.play("click")
-				get_tree().change_scene_to_file("res://scenes/shop.tscn"))
-		row.add_child(btn)
-		out.append(row)
-	return out
-
-func _booster_rows() -> Array:
-	var out: Array = []
+func _build_boosters() -> void:
+	var any := false
 	for b: Dictionary in Economy.BOOSTER_ITEMS:
-		var count := GameState.booster_count(b.id)
-		if count <= 0 and GameState.armed_booster != b.id:
+		if GameState.booster_count(b.id) > 0:
+			any = true
+	if not any:
+		return
+	UIKit.section(rows, tr("БУСТЕРЫ"))
+	for b: Dictionary in Economy.BOOSTER_ITEMS:
+		var cnt := GameState.booster_count(b.id)
+		if cnt <= 0:
 			continue
-		var row := VBoxContainer.new()
-		var label := Label.new()
-		label.custom_minimum_size = Vector2(0, 0)
-		label.text = "%s — %s  (x%d)" % [tr(b.label), tr(b.desc), count]
-		row.add_child(label)
-		var btn := Button.new()
-		if GameState.armed_booster == b.id:
-			btn.text = tr("ГОТОВ ")
-			btn.disabled = true
-		elif count > 0:
-			btn.text = tr("В ЛОАДАУТ")
-			btn.pressed.connect(func() -> void:
-				GameState.armed_booster = b.id
-				GameState.save_settings()
-				AudioManager.play("click")
-				_rebuild())
-		else:
-			btn.text = tr("В МАГАЗИН")
-			btn.pressed.connect(func() -> void:
-				AudioManager.play("click")
-				get_tree().change_scene_to_file("res://scenes/shop.tscn"))
-		row.add_child(btn)
-		out.append(row)
-	return out
+		var txt := "%s — %s  (x%d)" % [tr(b.label), tr(b.desc), cnt]
+		UIKit.item(rows, txt, tr("В ЛОАДАУТ"), func() -> void:
+			GameState.armed_booster = b.id
+			GameState.save_settings()
+			AudioManager.play("click")
+			_rebuild())
 
-func _consumable_rows() -> Array:
-	var out: Array = []
+
+func _build_consumables() -> void:
+	var any := false
 	for c: Dictionary in Economy.CONSUMABLE_ITEMS:
-		var count := GameState.consumable_count(c.id)
-		var row := VBoxContainer.new()
-		var label := Label.new()
-		label.custom_minimum_size = Vector2(0, 0)
-		label.text = "%s — %s  (x%d)" % [tr(c.label), tr(c.desc), count]
-		row.add_child(label)
-		var btn := Button.new()
-		if count > 0:
-			btn.text = tr("ИСПОЛЬЗОВАТЬ")
-			btn.pressed.connect(func() -> void:
-				GameState.armed_booster = ""  # золотой нож не зависит от лоадаута бустеров
-				GameState.save_settings()
-				AudioManager.play("click"))
-		else:
-			btn.text = tr("КУПИТЬ ЗА КРИСТАЛЛЫ")
-			btn.pressed.connect(func() -> void:
-				AudioManager.play("click")
-				get_tree().change_scene_to_file("res://scenes/shop.tscn"))
-		row.add_child(btn)
-		out.append(row)
-	return out
-
-func _equipment_rows() -> Array:
-	var out: Array = []
-	for it in Economy.all_equipment():
-		var eq_id: String = it.id
-		var owned := GameState.is_equipment_owned(eq_id)
-		if not owned:
+		if GameState.consumable_count(c.id) > 0:
+			any = true
+	if not any:
+		return
+	UIKit.section(rows, tr("ПРЕДМЕТЫ"))
+	for c: Dictionary in Economy.CONSUMABLE_ITEMS:
+		var cnt := GameState.consumable_count(c.id)
+		if cnt <= 0:
 			continue
-		var row := VBoxContainer.new()
-		var label := Label.new()
-		label.custom_minimum_size = Vector2(0, 0)
-		if GameState.equipped_in(it.slot) == eq_id:
-			label.text = "%s — %s  " % [tr(it.label), tr(it.desc)]
-		else:
-			label.text = "%s — %s" % [tr(it.label), tr(it.desc)]
-		row.add_child(label)
-		var btn := Button.new()
-		if GameState.equipped_in(it.slot) == eq_id:
-			btn.text = tr("СНЯТЬ")
-			btn.pressed.connect(func() -> void:
+		var txt := "%s — %s  (x%d)" % [tr(c.label), tr(c.desc), cnt]
+		UIKit.item(rows, txt, tr("ИСПОЛЬЗОВАТЬ"), func() -> void:
+			AudioManager.play("click"))
+
+
+func _build_equipment() -> void:
+	var owned_items: Array = []
+	for it in Economy.all_equipment():
+		if GameState.is_equipment_owned(it.id):
+			owned_items.append(it)
+	if owned_items.is_empty():
+		return
+	UIKit.section(rows, tr("СНАРЯЖЕНИЕ"))
+	var counts := {}
+	for it in owned_items:
+		counts[it.slot] = int(counts.get(it.slot, 0)) + 1
+	var summary := ""
+	for slot in counts:
+		summary += "%s: %d  " % [tr(str(slot)), counts[slot]]
+	UIKit.item(rows, tr("Всего: ") + summary, "—", func() -> void: pass, true)
+	for it in owned_items:
+		var eq_id: String = it.id
+		var equipped := GameState.equipped_in(it.slot) == eq_id
+		var txt := "%s — %s" % [tr(it.label), tr(it.desc)]
+		if equipped:
+			UIKit.item(rows, txt, tr("СНЯТЬ"), func() -> void:
 				GameState.unequip_slot(it.slot)
 				AudioManager.play("click")
 				_rebuild())
 		else:
-			btn.text = tr("НАДЕТЬ")
-			btn.pressed.connect(func() -> void:
+			UIKit.item(rows, txt, tr("НАДЕТЬ"), func() -> void:
 				GameState.equip_item(eq_id)
 				AudioManager.play("level")
 				_rebuild())
-		row.add_child(btn)
-		out.append(row)
-	return out
+
+
+func _build_glyphs() -> void:
+	UIKit.section(rows, tr("ГЛИФЫ"))
+	for g: Dictionary in Economy.GLYPHS:
+		var active := GameState.glyph_active(g.id)
+		var txt := "%s — %s" % [tr(g.label), tr(g.desc)]
+		if active:
+			txt += tr("  (активен)")
+		UIKit.item(rows, txt, tr("АКТИВЕН") if active else tr("В МАГАЗИН"),
+			func() -> void:
+				AudioManager.play("click")
+				get_tree().change_scene_to_file("res://scenes/shop.tscn"),
+			active)
+
 
 func _armed_name() -> String:
 	if GameState.armed_booster == "":
-		return tr("— (нет, экипируй в инвентаре или лоадауте)")
+		return tr("— (не выбран)")
 	for b: Dictionary in Economy.BOOSTER_ITEMS:
 		if b.id == GameState.armed_booster:
-			return b.label
+			return str(b.label)
 	return GameState.armed_booster
+
 
 func _on_clear_pressed() -> void:
 	GameState.armed_booster = ""
@@ -195,13 +155,16 @@ func _on_clear_pressed() -> void:
 	AudioManager.play("click")
 	_rebuild()
 
+
 func _on_shop_pressed() -> void:
 	AudioManager.play("click")
 	get_tree().change_scene_to_file("res://scenes/shop.tscn")
 
+
 func _on_glyphs_pressed() -> void:
 	AudioManager.play("click")
 	get_tree().change_scene_to_file("res://scenes/glyphs.tscn")
+
 
 func _on_back_pressed() -> void:
 	AudioManager.play("click")
