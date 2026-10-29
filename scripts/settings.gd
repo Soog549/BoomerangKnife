@@ -1,6 +1,9 @@
 extends Control
 
 const APP_VERSION := ""
+const STYLE_ORDER := ["base", "imperial", "epic", "space", "anime", "eurasia", "norse", "kids", "cyber", "dark"]
+var _row_values: Array = []
+const DIFF_ORDER := ["easy", "normal", "hard", "survival"]
 
 @onready var volume_label: Label = $Center/VBox/VolumeLabel
 @onready var volume_slider: HSlider = $Center/VBox/VolumeSlider
@@ -69,7 +72,78 @@ const AVATAR_PATHS := [
 ]
 
 func _ready() -> void:
+	_add_personal_rows()
 	_add_footer()
+
+func _add_personal_rows() -> void:
+	_row_values.clear()
+	var vb := get_node_or_null("Center/VBox")
+	if vb == null:
+		return
+	vb.add_child(_prow(tr("КЛАСС"), AVATAR_TYPES[clampi(GameState.avatar, 0, AVATAR_TYPES.size() - 1)], _cycle_class))
+	vb.add_child(_prow(tr("СТИЛЬ"), GameState.style_pack.to_upper(), _cycle_style))
+	vb.add_child(_prow(tr("СЛОЖНОСТЬ"), tr(GameState.difficulty.to_upper()), _cycle_diff))
+
+
+func _prow(title: String, value: String, cb: Callable) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var l := Label.new()
+	l.text = title
+	l.custom_minimum_size = Vector2(180, 0)
+	row.add_child(l)
+	var prev_b := Button.new()
+	prev_b.text = "◀"
+	prev_b.custom_minimum_size = Vector2(56, 44)
+	prev_b.pressed.connect(func() -> void: cb.call(-1))
+	row.add_child(prev_b)
+	var v := Label.new()
+	v.text = value
+	v.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(v)
+	var next_b := Button.new()
+	next_b.text = "▶"
+	next_b.custom_minimum_size = Vector2(56, 44)
+	next_b.pressed.connect(func() -> void: cb.call(1))
+	row.add_child(next_b)
+	_row_values.append(v)
+	return row
+
+
+func _cycle_class(d: int) -> void:
+	var owned: Array = GameState.owned_avatars
+	if owned.is_empty():
+		owned = [0]
+	var idx: int = owned.find(GameState.avatar)
+	GameState.avatar = int(owned[(idx + d + owned.size()) % owned.size()])
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _cycle_style(d: int) -> void:
+	var i: int = STYLE_ORDER.find(GameState.style_pack)
+	GameState.style_pack = STYLE_ORDER[(i + d + STYLE_ORDER.size()) % STYLE_ORDER.size()]
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _cycle_diff(d: int) -> void:
+	var i: int = DIFF_ORDER.find(GameState.difficulty)
+	GameState.difficulty = DIFF_ORDER[(i + d + DIFF_ORDER.size()) % DIFF_ORDER.size()]
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _rebuild_settings() -> void:
+	if _row_values.size() >= 3:
+		_row_values[0].text = AVATAR_TYPES[clampi(GameState.avatar, 0, AVATAR_TYPES.size() - 1)]
+		_row_values[1].text = GameState.style_pack.to_upper()
+		_row_values[2].text = tr(GameState.difficulty.to_upper())
+
 
 func _add_footer() -> void:
 	var vb := get_node_or_null("Center/VBox")
