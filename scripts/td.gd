@@ -81,7 +81,7 @@ func _ready() -> void:
 		path = _path_variant(randi() % 3)
 		_start_wave())
 	add_child(replay_btn)
-	position.y = 70.0
+	position.y = 30.0
 	_start_wave()
 	_build_pause()
 

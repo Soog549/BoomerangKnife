@@ -22,7 +22,7 @@ func _ready() -> void:
 
 func _build_nav() -> void:
 	_nav = HBoxContainer.new()
-	_nav.position = Vector2(20, 1030)
+	_nav.position = Vector2(20, 1170)
 	_nav.size = Vector2(680, 56)
 	_nav.add_theme_constant_override("separation", 10)
 	add_child(_nav)
