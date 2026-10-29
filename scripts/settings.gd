@@ -72,8 +72,26 @@ const AVATAR_PATHS := [
 ]
 
 func _ready() -> void:
+	_normalize_layout()
 	_add_personal_rows()
 	_add_footer()
+
+func _normalize_layout() -> void:
+	var center := get_node_or_null("Center")
+	if center is Control:
+		(center as Control).position = Vector2(UIKit.M, 36)
+		(center as Control).size = Vector2(UIKit.W - UIKit.M * 2.0, UIKit.H - 72.0)
+	var vb := get_node_or_null("Center/VBox")
+	if vb is Control:
+		(vb as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var bb := get_node_or_null("Center/VBox/BackButton")
+	if bb is Button:
+		var b := bb as Button
+		b.get_parent().remove_child(b)
+		add_child(b)
+		b.position = Vector2(UIKit.M, UIKit.H - UIKit.M - UIKit.BTN_H)
+		b.size = Vector2(200.0, UIKit.BTN_H)
+
 
 func _add_personal_rows() -> void:
 	_row_values.clear()

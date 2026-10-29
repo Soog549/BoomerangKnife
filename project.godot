@@ -24,7 +24,7 @@ UIKit="*res://scripts/ui_kit.gd"
 
 [application]
 
-config/version="1.0.107"
+config/version="1.0.108"
 config/name="BoomerangKnife"
 config/description="Hypercasual boomerang knife arcade: arena, tower defense, duels, endless."
 run/main_scene="res://scenes/main_menu.tscn"

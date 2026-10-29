@@ -55,7 +55,7 @@ func _rebuild() -> void:
 		pv.texture = load(cp)
 	elif ResourceLoader.exists(hp):
 		pv.texture = load(hp)
-	pv.custom_minimum_size = Vector2(0, 240)
+	pv.custom_minimum_size = Vector2(0, 170)
 	pv.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	pv.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	items_box.add_child(pv)
@@ -630,9 +630,9 @@ func _build_class_weapons() -> void:
 	items_box.add_child(grid)
 	for pair in CLASS_WPN:
 		var cell := VBoxContainer.new()
-		cell.custom_minimum_size = Vector2(300, 150)
+		cell.custom_minimum_size = Vector2(300, 130)
 		var tex := TextureRect.new()
-		tex.custom_minimum_size = Vector2(120, 120)
+		tex.custom_minimum_size = Vector2(96, 96)
 		tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		var wp := "res://assets/images/weapons/%s.png" % str(pair[0])
