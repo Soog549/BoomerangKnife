@@ -115,6 +115,11 @@ func _build_profile_panel() -> void:
 		st.add_theme_font_size_override("font_size", 14)
 		st.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
 		vb.add_child(st)
+	var go_char := Button.new()
+	go_char.text = "▸ ПЕРСОНАЖ"
+	go_char.custom_minimum_size = Vector2(0, 34)
+	go_char.pressed.connect(func(): _go("res://scenes/profile.tscn"))
+	vb.add_child(go_char)
 
 func _show_splash() -> void:
 	var p := "res://assets/images/packs/%s/splash.jpg" % GameState.style_pack
