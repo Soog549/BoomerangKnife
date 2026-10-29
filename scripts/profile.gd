@@ -10,6 +10,8 @@ extends Control
 var preview_box: VBoxContainer = null
 var _tier := 2  # 0 голова, 1 бюст, 2 тело
 
+const CLASS_FILES := ["warrior", "rogue", "mage", "archer", "knight", "berserker", "assassin", "paladin", "druid", "monk", "pirate", "samurai", "ninja", "viking", "gunslinger", "alchemist", "necromancer", "engineer", "bounty_hunter", "shaman", "champion", "princess"]
+
 const AVATAR_TYPES := ["Воин", "Разбойник", "Маг", "Лучник", "Рыцарь", "Берсерк", "Ассасин", "Паладин", "Друид", "Монах", "Пират", "Самурай", "Ниндзя", "Викинг", "Стрелок", "Алхимик", "Некромант", "Инженер", "Охотник", "Шаман", "Чемпион"]
 const AVATAR_PATHS := [
 	"res://assets/images/avatars/avatar_0.png",
@@ -116,6 +118,10 @@ func _rebuild_preview() -> void:
 	var av := CharacterPreview.new()
 	var tier_names := ["warrior-head.png", "warrior-bust.png", "warrior-body.png"]
 	var tp := "res://assets/images/tiers/%s" % tier_names[_tier]
+	var ci: int = clampi(GameState.avatar, 0, CLASS_FILES.size() - 1)
+	var cp := "res://assets/images/classes/%s.png" % CLASS_FILES[ci]
+	if _tier == 2 and ResourceLoader.exists(cp):
+		tp = cp
 	var full := "res://assets/images/packs/%s/hero-front.png" % GameState.style_pack
 	if ResourceLoader.exists(tp):
 		av.avatar_texture = load(tp)
