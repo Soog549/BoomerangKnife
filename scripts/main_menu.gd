@@ -132,6 +132,12 @@ func _build_view(view: String) -> void:
 	var items: Array = MENU_VIEWS.get(view, [])
 	if items.is_empty():
 		return
+	if view == "root" and GameState.last_mode_scene != "" and ResourceLoader.exists(GameState.last_mode_scene):
+		var cont := Button.new()
+		cont.custom_minimum_size = Vector2(0, 64)
+		cont.text = "ПРОДОЛЖИТЬ"
+		cont.pressed.connect(func(): _go(GameState.last_mode_scene))
+		menu_list.add_child(cont)
 	for item: Array in items:
 		var btn := Button.new()
 		btn.custom_minimum_size = Vector2(0, 64)
@@ -151,8 +157,15 @@ func _build_view(view: String) -> void:
 					btn.visible = false
 		menu_list.add_child(btn)
 
+const MODE_SCENES := ["game", "endless", "duel", "mob_arena", "td"]
+
 func _go(path: String) -> void:
 	AudioManager.play("click")
+	for m in MODE_SCENES:
+		if path.ends_with("/%s.tscn" % m):
+			GameState.last_mode_scene = path
+			GameState.save_settings()
+			break
 	get_tree().change_scene_to_file(path)
 
 func _on_quit_pressed() -> void:
