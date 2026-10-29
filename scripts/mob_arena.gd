@@ -171,7 +171,7 @@ func _spawn_mob() -> void:
 		var ph: float = float(pt["hp"]) + float(wave) * 4.0
 		mobs.append({
 			"kind": _practice_kind, "x": randf_range(90.0, W - 90.0), "y": -40.0,
-			"hp": ph, "max": ph, "cd": float(pt["cd"]) + 0.8, "t": 0.0, "r": float(pt["r"]),
+			"hp": ph, "max": ph, "cd": (float(pt["cd"]) + 0.8) * _diff_cd_mult(), "t": 0.0, "r": float(pt["r"]),
 			"col": pt["col"], "speed": float(pt["speed"]) * 0.7, "proj": str(pt["proj"]), "var": randi() % 2, "id": mob_seq,
 		})
 		return
@@ -180,7 +180,7 @@ func _spawn_mob() -> void:
 		mobs.append({
 			"kind": "boss", "x": W * 0.5, "y": -70.0,
 			"hp": float(bt["hp"]) + float(wave) * 18.0, "max": float(bt["hp"]) + float(wave) * 18.0,
-			"cd": float(bt["cd"]), "t": 0.0, "r": float(bt["r"]),
+			"cd": float(bt["cd"]) * _diff_cd_mult(), "t": 0.0, "r": float(bt["r"]),
 			"col": bt["col"], "speed": float(bt["speed"]), "proj": str(bt["proj"]), "var": randi() % 2, "id": mob_seq,
 		})
 		return
@@ -200,7 +200,7 @@ func _spawn_mob() -> void:
 	mobs.append({
 		"kind": k, "x": randf_range(90.0, W - 90.0), "y": -40.0,
 		"hp": base_hp, "max": base_hp,
-		"cd": float(t["cd"]), "t": 0.0, "r": float(t["r"]),
+		"cd": float(t["cd"]) * _diff_cd_mult(), "t": 0.0, "r": float(t["r"]),
 		"col": t["col"], "speed": float(t["speed"]), "proj": str(t["proj"]), "var": randi() % 2, "id": mob_seq,
 	})
 
@@ -856,6 +856,17 @@ func _reward_mult() -> float:
 			return 1.5
 		"survival":
 			return 1.3
+		_:
+			return 1.0
+
+func _diff_cd_mult() -> float:
+	match GameState.difficulty:
+		"easy":
+			return 1.35
+		"hard":
+			return 0.80
+		"survival":
+			return 0.72
 		_:
 			return 1.0
 
