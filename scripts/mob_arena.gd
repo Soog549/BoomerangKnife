@@ -984,11 +984,12 @@ func _build_pause() -> void:
 	vb.add_child(b2)
 	var pb := Button.new()
 	pb.text = "II"
-	pb.position = Vector2(W - 84.0, 24.0)
-	pb.size = Vector2(56, 44)
+	pb.position = Vector2(W - 94.0, 96.0)
+	pb.size = Vector2(64, 48)
 	pb.process_mode = Node.PROCESS_MODE_ALWAYS
+	pb.z_index = 100
 	pb.pressed.connect(_toggle_pause)
-	add_child(pb)
+	_pl.add_child(pb)
 
 func _toggle_pause() -> void:
 	paused = not paused
