@@ -426,6 +426,10 @@ func _process(dt: float) -> void:
 			toast_text = tr("100 ВОЛН! ПОСТОЯННЫЙ НОЖ +1")
 			toast_col = Color(1.0, 0.85, 0.3)
 			toast_t = 3.0
+		if wave == 5 and GameState.chapter_quest == "mobs":
+			GameState.chapter_quest = "shop"
+			GameState.save_settings()
+			_toast_line(tr("ЗАЙДИ В МАГАЗИН: МЕЧ · БРОНЯ · ЩИТ"))
 		if wave == 5 and GameState.unlock_arena_ach("wave5"):
 			_ach_toast(tr("ВОЛНА 5"))
 		if wave == 10 and GameState.unlock_arena_ach("wave10"):
@@ -1097,3 +1101,9 @@ func _melee() -> void:
 			break
 	if not hit_any:
 		rings.append({"x": px, "y": py, "t": 0.25, "rad": 70.0})
+
+
+func _toast_line(txt: String) -> void:
+	toast_text = txt
+	toast_col = Color(1.0, 0.85, 0.3)
+	toast_t = 3.0

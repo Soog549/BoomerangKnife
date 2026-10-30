@@ -385,6 +385,19 @@ func _show_campaign_intro() -> void:
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.add_theme_font_size_override("font_size", 18)
 		vb.add_child(l)
+	var ci: int = GameState.chapter_index()
+	if ci > 0 and GameState.CHAPTER_STORY.has(ci):
+		var sep := Label.new()
+		sep.text = "— ГЛАВА %d —" % (ci + 1)
+		sep.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		sep.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
+		vb.add_child(sep)
+		for sl in GameState.CHAPTER_STORY[ci]:
+			var sl_l := Label.new()
+			sl_l.text = str(sl)
+			sl_l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			sl_l.add_theme_font_size_override("font_size", 17)
+			vb.add_child(sl_l)
 	var b := Button.new()
 	b.text = "НАЧАТЬ ПУТЬ"
 	b.custom_minimum_size = Vector2(0, 56)
