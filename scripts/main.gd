@@ -78,7 +78,10 @@ func _save_screenshot() -> void:
 	print("SCRENSHOT:", ProjectSettings.globalize_path(path))
 
 func _try_load_background() -> void:
-	var tex := Assets.load_tex("background", "bg_main")
+	var sp := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
+	var tex: Texture2D = Assets.load_tex("background", "bg_main")
+	if ResourceLoader.exists(sp):
+		tex = load(sp)
 	if tex != null:
 		art_background.texture = tex
 		art_background.stretch_mode = TextureRect.STRETCH_SCALE
