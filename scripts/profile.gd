@@ -10,9 +10,9 @@ extends Control
 var preview_box: VBoxContainer = null
 var _tier := 2  # 0 голова, 1 бюст, 2 тело
 
-const CLASS_FILES := ["warrior", "rogue", "mage", "archer", "knight", "berserker", "assassin", "paladin", "druid", "monk", "pirate", "samurai", "ninja", "viking", "gunslinger", "alchemist", "necromancer", "engineer", "bounty_hunter", "shaman", "champion", "princess"]
+const CLASS_FILES := ["warrior", "rogue", "mage", "archer", "knight", "berserker", "assassin", "paladin", "druid", "monk", "pirate", "samurai", "ninja", "viking", "gunslinger", "alchemist", "necromancer", "engineer", "bounty_hunter", "shaman", "champion", "princess", "fist"]
 
-const AVATAR_TYPES := ["Воин", "Разбойник", "Маг", "Лучник", "Рыцарь", "Берсерк", "Ассасин", "Паладин", "Друид", "Монах", "Пират", "Самурай", "Ниндзя", "Викинг", "Стрелок", "Алхимик", "Некромант", "Инженер", "Охотник", "Шаман", "Чемпион"]
+const AVATAR_TYPES := ["Воин", "Разбойник", "Маг", "Лучник", "Рыцарь", "Берсерк", "Ассасин", "Паладин", "Друид", "Монах", "Пират", "Самурай", "Ниндзя", "Викинг", "Стрелок", "Алхимик", "Некромант", "Инженер", "Охотник", "Шаман", "Чемпион", "Принцесса", "Кулачный"]
 const AVATAR_PATHS := [
 	"res://assets/images/avatars/avatar_0.png",
 	"res://assets/images/avatars/avatar_1.png",

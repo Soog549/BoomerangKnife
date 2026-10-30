@@ -45,6 +45,7 @@ const AVATAR_TYPES := [
 	"Шаман",
 	"Чемпион",
 	"Принцесса",
+	"Кулачный",
 ]
 const AVATAR_PATHS := [
 	"res://assets/images/avatars/avatar_0.png",

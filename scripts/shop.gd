@@ -618,7 +618,7 @@ const CLASS_WPN := [
 	["druid", "Друид"], ["monk", "Монах"], ["pirate", "Пират"], ["samurai", "Самурай"],
 	["ninja", "Ниндзя"], ["viking", "Викинг"], ["gunslinger", "Стрелок"], ["alchemist", "Алхимик"],
 	["necromancer", "Некромант"], ["engineer", "Инженер"], ["bounty_hunter", "Охотник"], ["shaman", "Шаман"],
-	["champion", "Чемпион"], ["princess", "Принцесса"],
+	["champion", "Чемпион"], ["princess", "Принцесса"], ["fist", "Кулачный"],
 ]
 
 
