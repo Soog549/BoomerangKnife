@@ -39,6 +39,9 @@ var coins := 0
 var wave := 1
 var wave_t := 0.0
 var spawn_t := 0.0
+var wave_quota := 0
+var wave_killed := 0
+var wave_gap := 0.0
 var over := false
 var t_anim := 0.0
 var flash := 0.0
@@ -302,6 +305,10 @@ func _restart() -> void:
 	started = false
 	wave_t = 0.0
 	spawn_t = 0.0
+	wave_quota = 0
+	wave_killed = 0
+	wave_gap = 0.0
+	wave = 0
 	px = W * 0.5
 	py = 1160.0
 	mobs.clear()
@@ -399,7 +406,7 @@ func _process(dt: float) -> void:
 	py = clamp(py + mv.y * MOVE_SPEED * dt, AREA_TOP, field_bottom)
 
 	wave_t += dt
-	if wave_t > 15.0:
+	if false and wave_t > 15.0:
 		wave_t = 0.0
 		wave += 1
 		if not damaged and GameState.unlock_arena_ach("no_damage"):
@@ -422,9 +429,35 @@ func _process(dt: float) -> void:
 		banner_t = 1.6
 		AudioManager.play("level")
 	spawn_t += dt
-	if spawn_t > max(0.9, 2.2 - float(wave) * 0.12) and mobs.size() < 9:
+	if wave_quota <= 0:
+		wave += 1
+		wave_quota = mini(3 + wave, 12)
+		wave_killed = 0
+		banner_n = wave
+		banner_t = 1.6
+		AudioManager.play("level")
+		if wave == 5 and GameState.unlock_arena_ach("wave5"):
+			_ach_toast(tr("ВОЛНА 5"))
+		if wave == 10 and GameState.unlock_arena_ach("wave10"):
+			_ach_toast(tr("ВОЛНА 10"))
+		if wave == 20 and GameState.unlock_arena_ach("wave20"):
+			_ach_toast(tr("ОПЕРАТОР"))
+		if wave == 100:
+			GameState.extra_knives = mini(GameState.extra_knives + 1, 4)
+			GameState.save_settings()
+			ammo += 1
+	if wave_killed < wave_quota and mobs.size() < mini(wave_quota, 6) and spawn_t > 0.55:
 		spawn_t = 0.0
 		_spawn_mob()
+		wave_killed += 1
+	if mobs.is_empty() and wave_killed >= wave_quota:
+		wave_gap += dt
+		if wave_gap > 1.8:
+			wave_gap = 0.0
+			wave_quota = 0
+			if not damaged and GameState.unlock_arena_ach("no_damage"):
+				_ach_toast(tr("Без единой царапины"))
+			damaged = false
 
 	for m in mobs:
 		m["y"] = float(m["y"]) + float(m["speed"]) * dt
