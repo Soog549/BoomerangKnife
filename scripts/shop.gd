@@ -657,7 +657,7 @@ const CLASS_WPN := [
 	["druid", "Друид"], ["monk", "Монах"], ["pirate", "Пират"], ["samurai", "Самурай"],
 	["ninja", "Ниндзя"], ["viking", "Викинг"], ["gunslinger", "Стрелок"], ["alchemist", "Алхимик"],
 	["necromancer", "Некромант"], ["engineer", "Инженер"], ["bounty_hunter", "Охотник"], ["shaman", "Шаман"],
-	["champion", "Чемпион"], ["princess", "Принцесса"],  ["kinetic", "Кинетик"], ["pyro", "Пиромант"], ["cryo", "Криомант"], ["psion", "Псайкер"], ["telekinetic", "Телекинетик"], ["kimaster", "Мастер КИ"], ["aurate", "Аурат"], ["graviton", "Гравитоник"], ["symbiote", "Симбиот"], ["empath", "Эмпат"],
+	["champion", "Чемпион"], ["princess", "Принцесса"],  ["kinetic", "Кинетик"], ["pyro", "Пиромант"], ["cryo", "Криомант"], ["psion", "Псайкер"], ["telekinetic", "Телекинетик"], ["kimaster", "Мастер КИ"], ["aurate", "Аурат"], ["graviton", "Гравитоник"], ["symbiote", "Симбиот"], ["empath", "Эмпат"], ["fist", "Кулачный"],
 ]
 
 
