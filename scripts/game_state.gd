@@ -55,6 +55,7 @@ var last_mode_scene := ""
 var btn_side := "right"
 var frontier_mode := false
 var campaign_intro_seen := false
+var chapter_quest := ""
 
 const CHAPTERS := [
 	{"n": "ПРОБУЖДЕНИЕ", "unlock": 1},

@@ -245,6 +245,12 @@ func _on_target_cleared() -> void:
 		tutorial_overlay.on_target_cleared()
 	ScoreManager.next_level()
 	levels_completed += 1
+	if levels_completed == 3 or levels_completed == 4:
+		Toast.show(tr("ТРЕНИРОВКА: %d/5 мишеней") % levels_completed)
+	if levels_completed == 5:
+		GameState.chapter_quest = "guild"
+		GameState.save_settings()
+		Toast.show(tr("ПЕРВОЕ ЗАДАНИЕ: ГИЛЬДИЯ ЖДЁТ (см. Карту Империи)"))
 	GameState.report_level(ScoreManager.level)
 	GameState.record_level()
 	GameState.add_coins(Economy.level_reward())
