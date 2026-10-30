@@ -43,6 +43,9 @@ func _fix_layout() -> void:
 func _on_coins(total: int) -> void:
 	wallet_label.text = tr("Монеты: %d • %d • %d") % [total, GameState.crystals, GameState.shards]
 
+var _slot_filter := ""
+
+
 func _rebuild() -> void:
 	for child in items_box.get_children():
 		child.queue_free()
@@ -347,7 +350,26 @@ func _build_equipment() -> void:
 	header.text = tr("— СНАРЯЖЕНИЕ —")
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	items_box.add_child(header)
+	var frow := HBoxContainer.new()
+	frow.add_theme_constant_override("separation", 6)
+	var fdefs := [["", "ВСЕ"], ["helmet", "ШЛЕМ"], ["armor", "БРОНЯ"], ["boots", "БОТЫ"],
+		["weapon", "ОРУЖИЕ"], ["ring", "КОЛЬЦА"], ["shield", "ЩИТ"]]
+	for fd in fdefs:
+		var fb := Button.new()
+		fb.text = tr(str(fd[1]))
+		fb.custom_minimum_size = Vector2(0, 40)
+		fb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fb.disabled = _slot_filter == str(fd[0])
+		var fk: String = str(fd[0])
+		fb.pressed.connect(func() -> void:
+			_slot_filter = fk
+			AudioManager.play("click")
+			_rebuild())
+		frow.add_child(fb)
+	items_box.add_child(frow)
 	for slot: String in Economy.EQUIPMENT:
+		if _slot_filter != "" and str(slot) != _slot_filter:
+			continue
 		var slot_title := Label.new()
 		var own_cnt := 0
 		for _it in Economy.items(str(slot)):
