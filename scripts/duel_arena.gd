@@ -37,6 +37,7 @@ var _shared_target := false
 @onready var banner_demo: Control = $UI/BannerDemo
 
 func _ready() -> void:
+	PauseUI.normalize(get_node_or_null("UI/PauseMenu"))
 	var hb := get_node_or_null("UI/HomeButton")
 	if hb != null:
 		hb.visible = false

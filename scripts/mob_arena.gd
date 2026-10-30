@@ -155,6 +155,7 @@ func _ready() -> void:
 	if ResourceLoader.exists(ap):
 		avatar_tex = load(ap)
 	_build_pause()
+	PauseUI.normalize(_pm)
 	_build_shop()
 	replay_btn = Button.new()
 	replay_btn.text = tr("ПОВТОР")

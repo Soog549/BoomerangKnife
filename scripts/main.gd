@@ -31,6 +31,7 @@ var paused := false
 @onready var art_background: TextureRect = $ArtBackground
 
 func _ready() -> void:
+	PauseUI.normalize(get_node_or_null("UI/PauseMenu"))
 	var _hb := get_node_or_null("UI/HomeButton")
 	if _hb != null:
 		_hb.visible = false
