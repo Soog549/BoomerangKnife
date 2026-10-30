@@ -46,6 +46,12 @@ func _on_coins(total: int) -> void:
 func _rebuild() -> void:
 	for child in items_box.get_children():
 		child.queue_free()
+	var trust := Label.new()
+	trust.text = tr("БЕЗ РЕКЛАМЫ · ОФЛАЙН · ПРОГРЕСС СОХРАНЯЕТСЯ")
+	trust.add_theme_font_size_override("font_size", 13)
+	trust.add_theme_color_override("font_color", Color(0.55, 0.9, 0.75, 0.9))
+	trust.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	items_box.add_child(trust)
 	# Единый предпросмотр персонажа (полное тело, как в профиле)
 	var pv := TextureRect.new()
 	var cls_idx: int = clampi(GameState.avatar, 0, CLASS_WPN.size() - 1) if CLASS_WPN.size() > 0 else 0
