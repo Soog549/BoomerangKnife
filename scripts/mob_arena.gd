@@ -95,6 +95,8 @@ var aim_idx := -1
 var field_bottom := 1180.0
 var damaged := false
 var _ground_mode := false
+var _rush_mode := false
+var _survival_arena := false
 var _anim_t := 0.0
 var _rig_state := "idle"
 var _rig_t := 0.0
@@ -171,6 +173,14 @@ func _ready() -> void:
 	if _ground_mode:
 		GameState.difficulty = "hard"
 		GameState.frontier_mode = false
+	if GameState.rush_mode:
+		_rush_mode = true
+		GameState.rush_mode = false
+		_ground_mode = true
+	if GameState.survival_arena:
+		_survival_arena = true
+		GameState.survival_arena = false
+		_ground_mode = true
 	replay_btn = Button.new()
 	replay_btn.text = tr("ПОВТОР")
 	replay_btn.position = Vector2(W * 0.5 - 120.0, H * 0.38 + 160.0)
@@ -205,6 +215,8 @@ func _spawn_mob() -> void:
 	if wave >= 3:
 		kinds.append("anomaly")
 	var k: String = str(kinds[randi() % kinds.size()])
+	if _rush_mode:
+		k = "boss"
 	var t: Dictionary = MOB_TYPES[k]
 	var diff := 1.0
 	if GameState.difficulty == "easy":
@@ -447,7 +459,7 @@ func _process(dt: float) -> void:
 	spawn_t += dt
 	if wave_quota <= 0:
 		wave += 1
-		wave_quota = mini(3 + wave, 12)
+		wave_quota = 1 if _rush_mode else mini(3 + wave, 12)
 		wave_killed = 0
 		banner_n = wave
 		banner_t = 1.6

@@ -54,6 +54,8 @@ var selected_skin := 0
 var last_mode_scene := ""
 var btn_side := "right"
 var frontier_mode := false
+var rush_mode := false
+var survival_arena := false
 var campaign_intro_seen := false
 var chapter_quest := ""
 
