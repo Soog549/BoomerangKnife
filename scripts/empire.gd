@@ -52,6 +52,7 @@ func _ready() -> void:
 	for n in NODES:
 		_add_node(n)
 
+	_add_special()
 	UIKit.back(self, "res://scenes/main_menu.tscn")
 
 
@@ -75,3 +76,43 @@ func _add_node(n: Dictionary) -> void:
 	dot.size = Vector2(6, 6)
 	dot.position = b.position + Vector2(92, 90)
 	add_child(dot)
+
+
+func _add_special() -> void:
+	var g := Button.new()
+	g.text = "ГИЛЬДИЯ"
+	g.size = Vector2(190, 84)
+	g.position = Vector2(0.10 * 720.0, 0.70 * 1280.0)
+	g.add_theme_font_size_override("font_size", 15)
+	g.pressed.connect(_guild_pressed)
+	add_child(g)
+
+	var zones := [
+		{"t": "ОКРАИНА\n(easy)", "d": "easy", "x": 0.40},
+		{"t": "ПУСТОШЬ\n(normal)", "d": "normal", "x": 0.58},
+		{"t": "РУБЕЖ\n(hard)", "d": "hard", "x": 0.76},
+	]
+	for z in zones:
+		var b := Button.new()
+		b.text = str(z["t"])
+		b.size = Vector2(120, 76)
+		b.position = Vector2(float(z["x"]) * 720.0 - 60.0, 0.70 * 1280.0)
+		b.add_theme_font_size_override("font_size", 13)
+		var dd: String = str(z["d"])
+		b.pressed.connect(func() -> void:
+			GameState.difficulty = dd
+			GameState.save_settings()
+			AudioManager.play("click")
+			GameState.last_mode_scene = "res://scenes/mob_arena.tscn"
+			get_tree().change_scene_to_file("res://scenes/mob_arena.tscn"))
+		add_child(b)
+
+
+func _guild_pressed() -> void:
+	AudioManager.play("click")
+	if GameState.chapter_quest == "guild":
+		GameState.chapter_quest = "mobs"
+		GameState.save_settings()
+		Toast.show(tr("ЗАДАНИЕ: зачисти 3 зоны карты (Окраина → Пустошь → Рубеж)"))
+	else:
+		Toast.show(tr("Сейчас заданий нет. Пройди тренировку 5 мишеней в Кампании."))
