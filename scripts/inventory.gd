@@ -101,6 +101,10 @@ func _build_equipment() -> void:
 		if GameState.is_equipment_owned(it.id):
 			owned_items.append(it)
 	if owned_items.is_empty():
+		UIKit.section(rows, tr("СНАРЯЖЕНИЕ"))
+		UIKit.item(rows, tr("Пока пусто — загляни в магазин"), tr("МАГАЗИН"), func() -> void:
+			AudioManager.play("click")
+			get_tree().change_scene_to_file("res://scenes/shop.tscn"), true)
 		return
 	UIKit.section(rows, tr("СНАРЯЖЕНИЕ"))
 	var counts := {}
