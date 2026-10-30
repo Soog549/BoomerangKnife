@@ -96,6 +96,8 @@ var field_bottom := 1180.0
 var damaged := false
 var _ground_mode := false
 var _anim_t := 0.0
+var _rig_state := "idle"
+var _rig_t := 0.0
 var avatar_tex: Texture2D = null
 var stick_r := 62.0
 
@@ -341,6 +343,7 @@ func _throw_at(target: Vector2) -> void:
 		dir = Vector2.UP
 	ammo -= 1
 	AudioManager.play("throw")
+	rig_play("attack")
 	knives.append({"x": from.x, "y": from.y, "sx": from.x, "sy": from.y, "vx": dir.x * 950.0 * GameState.class_bonus("throw"), "vy": dir.y * 950.0 * GameState.class_bonus("throw"), "straight": true})
 
 func _throw_auto() -> void:
@@ -502,6 +505,7 @@ func _process(dt: float) -> void:
 			shake = 3.5
 			AudioManager.play("hit")
 			if shield > 0.0:
+				rig_play("block")
 				shield -= dmg
 				blocked_dmg += dmg
 				if blocked_dmg >= 1000.0 and GameState.unlock_arena_ach("shield_master"):
@@ -512,6 +516,7 @@ func _process(dt: float) -> void:
 					shield = 0.0
 			else:
 				damaged = true
+				rig_play("hurt")
 				hp -= dmg
 			if hp <= 0.0:
 				hp = 0.0
@@ -784,21 +789,7 @@ func _draw() -> void:
 			draw_circle(Vector2(kx, ky), 10.0, Color(0.95, 0.8, 0.3))
 	# игрок (масштаб 1.45 — корабль не должен проигрывать мобам)
 	if _ground_mode and avatar_tex != null:
-		var gh: float = 150.0
-		var gw: float = gh * 0.7
-		var ts: Vector2 = avatar_tex.get_size()
-		var bob: float = sin(_anim_t * 4.2) * 2.6
-		var sway: float = sin(_anim_t * 5.4) * 2.2
-		var lean: float = -abs(sin(_anim_t * 2.1)) * 1.5
-		# ноги (низ) — качаются
-		draw_texture_rect_region(avatar_tex, Rect2(px - gw * 0.5 + sway, py - gh * 0.40 + bob * 0.3, gw, gh * 0.44),
-			Rect2(ts.x * 0.10, ts.y * 0.58, ts.x * 0.80, ts.y * 0.42))
-		# торс (середина) — дыхание
-		draw_texture_rect_region(avatar_tex, Rect2(px - gw * 0.5, py - gh * 0.80 + bob + lean, gw, gh * 0.46),
-			Rect2(ts.x * 0.08, ts.y * 0.24, ts.x * 0.84, ts.y * 0.40))
-		# голова (верх) — кивает
-		draw_texture_rect_region(avatar_tex, Rect2(px - gw * 0.5, py - gh * 0.98 + bob * 1.5 + lean * 1.6, gw, gh * 0.28),
-			Rect2(ts.x * 0.10, ts.y * 0.00, ts.x * 0.80, ts.y * 0.26))
+		_draw_rig(px, py, 150.0, 150.0 * 0.7, avatar_tex.get_size())
 	if _ground_mode:
 		if shield > 0.0:
 			var gsa: float = clampf(shield / max_shield, 0.15, 1.0)
@@ -1122,3 +1113,65 @@ func _toast_line(txt: String) -> void:
 	toast_text = txt
 	toast_col = Color(1.0, 0.85, 0.3)
 	toast_t = 3.0
+
+
+func rig_play(state: String) -> void:
+	_rig_state = state
+	_rig_t = 0.0
+
+
+func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
+	_rig_t += get_process_delta_time()
+	var breathing: float = sin(_anim_t * 4.2) * 2.6
+	var sway: float = sin(_anim_t * 5.4) * 2.2
+	var lean: float = -abs(sin(_anim_t * 2.1)) * 1.5
+	var s_legs := Vector2(sway, breathing * 0.3)
+	var s_torso := Vector2(0.0, breathing + lean)
+	var s_head := Vector2(0.0, breathing * 1.5 + lean * 1.6)
+	var r_head := 0.0
+	var r_torso := 0.0
+	var crouch := 0.0
+	match _rig_state:
+		"attack":
+			var k: float = clampf(_rig_t / 0.28, 0.0, 1.0)
+			var punch: float = sin(k * PI)
+			s_torso.x += 14.0 * punch
+			s_head.x += 18.0 * punch
+			r_torso = 0.10 * punch
+			r_head = 0.16 * punch
+			s_legs.y -= 4.0 * punch
+			if _rig_t > 0.32:
+				rig_play("idle")
+		"block":
+			crouch = 8.0
+			s_torso.x -= 5.0
+			r_torso = -0.05
+			s_head.y += 3.0
+			if _rig_t > 0.6:
+				rig_play("idle")
+		"hurt":
+			var sh: float = sin(_rig_t * 60.0) * 6.0 * clampf(1.0 - _rig_t / 0.4, 0.0, 1.0)
+			s_torso.x += sh
+			s_head.x += sh * 1.4
+			r_torso = 0.12 * clampf(1.0 - _rig_t / 0.4, 0.0, 1.0)
+			if _rig_t > 0.45:
+				rig_play("idle")
+		"win":
+			s_head.y -= 6.0 + sin(_anim_t * 8.0) * 2.0
+			s_torso.y -= 4.0
+			if _rig_t > 1.2:
+				rig_play("idle")
+	var base_y: float = py + crouch
+	# ноги
+	draw_texture_rect_region(avatar_tex, Rect2(px - gw * 0.5 + s_legs.x, base_y - gh * 0.40 + s_legs.y, gw, gh * 0.44),
+		Rect2(ts.x * 0.10, ts.y * 0.58, ts.x * 0.80, ts.y * 0.42))
+	# торс (с наклоном вокруг таза)
+	draw_set_transform(Vector2(px + s_torso.x, base_y - gh * 0.36), r_torso, Vector2.ONE)
+	draw_texture_rect_region(avatar_tex, Rect2(-gw * 0.5, -gh * 0.44 + s_torso.y, gw, gh * 0.46),
+		Rect2(ts.x * 0.08, ts.y * 0.24, ts.x * 0.84, ts.y * 0.40))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	# голова
+	draw_set_transform(Vector2(px + s_head.x, base_y - gh * 0.80), r_head, Vector2.ONE)
+	draw_texture_rect_region(avatar_tex, Rect2(-gw * 0.5, -gh * 0.18 + s_head.y, gw, gh * 0.28),
+		Rect2(ts.x * 0.10, ts.y * 0.00, ts.x * 0.80, ts.y * 0.26))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
