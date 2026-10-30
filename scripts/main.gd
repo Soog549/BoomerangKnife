@@ -31,6 +31,9 @@ var paused := false
 @onready var art_background: TextureRect = $ArtBackground
 
 func _ready() -> void:
+	if not GameState.campaign_intro_seen:
+		_show_campaign_intro()
+		return
 	PauseUI.normalize(get_node_or_null("UI/PauseMenu"))
 	var _hb := get_node_or_null("UI/HomeButton")
 	if _hb != null:
@@ -343,3 +346,44 @@ func _unhandled_input(event: InputEvent) -> void:
 		_throw(_aim_from_event(event))
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_throw(_aim_from_event(event))
+
+
+func _show_campaign_intro() -> void:
+	var cl := CanvasLayer.new()
+	cl.layer = 30
+	cl.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(cl)
+	var dim := ColorRect.new()
+	dim.color = Color(0.02, 0.03, 0.06, 0.96)
+	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	cl.add_child(dim)
+	var vb := VBoxContainer.new()
+	vb.position = Vector2(40, 120)
+	vb.size = Vector2(640, 900)
+	vb.add_theme_constant_override("separation", 14)
+	cl.add_child(vb)
+	var t1 := Label.new()
+	t1.text = "ИМПЕРИЯ ZWS"
+	t1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	t1.add_theme_font_size_override("font_size", 30)
+	vb.add_child(t1)
+	for line in [
+		"Мир — останки павших империй. Мрамор, неон и пепел.",
+		"Ты — последний Оператор Круга. Твой клинок всегда возвращается.",
+		"Собери реликвии, подними Империю из праха и защити людей.",
+		"Нео-кибер синтез, коммунизм, космос — Империя ждёт решения.",
+		"Дальше — только твой выбор: строй, торгуй, сражайся.",
+	]:
+		var l := Label.new()
+		l.text = line
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.add_theme_font_size_override("font_size", 18)
+		vb.add_child(l)
+	var b := Button.new()
+	b.text = "НАЧАТЬ ПУТЬ"
+	b.custom_minimum_size = Vector2(0, 56)
+	b.pressed.connect(func() -> void:
+		GameState.campaign_intro_seen = true
+		GameState.save_settings()
+		get_tree().reload_current_scene())
+	vb.add_child(b)

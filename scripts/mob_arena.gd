@@ -94,6 +94,7 @@ var move_idx := -1
 var aim_idx := -1
 var field_bottom := 1180.0
 var damaged := false
+var _ground_mode := false
 var avatar_tex: Texture2D = null
 var stick_r := 62.0
 
@@ -161,7 +162,8 @@ func _ready() -> void:
 	PauseUI.normalize(_pm)
 	_build_action_buttons()
 	_build_shop()
-	if GameState.frontier_mode:
+	_ground_mode = GameState.frontier_mode
+	if _ground_mode:
 		GameState.difficulty = "hard"
 		GameState.frontier_mode = false
 	replay_btn = Button.new()
@@ -773,6 +775,14 @@ func _draw() -> void:
 		else:
 			draw_circle(Vector2(kx, ky), 10.0, Color(0.95, 0.8, 0.3))
 	# игрок (масштаб 1.45 — корабль не должен проигрывать мобам)
+	if _ground_mode and avatar_tex != null:
+		var gh: float = 150.0
+		draw_texture_rect(avatar_tex, Rect2(px - gh * 0.35, py - gh * 0.78, gh * 0.7, gh), false)
+	if _ground_mode:
+		if shield > 0.0:
+			var gsa: float = clampf(shield / max_shield, 0.15, 1.0)
+			draw_arc(Vector2(px, py), 54.0, 0.0, TAU, 40, Color(0.55, 0.9, 1.0, 0.5 * gsa), 3.0)
+		return
 	var sk: Dictionary = GameState.current_skin()
 	var hull: Color = sk.get("blade", Color(0.35, 0.75, 1.0))
 	var glow_c: Color = sk.get("blade", Color(0.5, 0.9, 1.0)).lightened(0.35)
