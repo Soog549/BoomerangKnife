@@ -142,9 +142,9 @@ func _unhandled_input(e: InputEvent) -> void:
 			_start_wave()
 			return
 		# выбор типа башни (низ экрана)
-		if p.y > 1120.0:
+		if p.y < 96.0:
 			for i in 3:
-				var r := Rect2(16.0 + float(i) * 216.0, 1140.0, 200.0, 58.0)
+				var r := Rect2(14.0 + float(i) * 200.0, 34.0, 190.0, 52.0)
 				if r.has_point(p):
 					sel_type = i
 					return
@@ -223,7 +223,7 @@ func _process(dt: float) -> void:
 		var tt: Dictionary = TOWER_TYPES[int(tw["type"])]
 		var lvl: int = int(tw.get("lvl", 1))
 		var rng: float = float(tt["range"]) + 18.0 * float(lvl - 1)
-		var dmg: float = float(tt["dmg"]) * (1.0 + 0.6 * float(lvl - 1))
+		var dmg: float = float(tt["dmg"]) * 0.9 * (1.0 + 0.6 * float(lvl - 1))
 		var best: Dictionary = {}
 		var bd: float = 1e9
 		for m in mobs:
@@ -327,7 +327,7 @@ func _draw() -> void:
 	# кнопки типов
 	for i in 3:
 		var tt: Dictionary = TOWER_TYPES[i]
-		var r := Rect2(16.0 + float(i) * 216.0, 1140.0, 200.0, 58.0)
+		var r := Rect2(14.0 + float(i) * 200.0, 34.0, 190.0, 52.0)
 		draw_rect(r, Color(0.16, 0.20, 0.28) if i != sel_type else Color(0.25, 0.45, 0.65))
 		draw_rect(r, tt["col"], false, 3.0)
 		draw_string(ThemeDB.fallback_font, Vector2(r.position.x + 8.0, r.position.y + 26.0), tr(str(tt["name"])), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(1, 1, 1))
