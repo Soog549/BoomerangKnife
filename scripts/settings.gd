@@ -101,6 +101,10 @@ func _add_personal_rows() -> void:
 	vb.add_child(_prow(tr("КЛАСС"), AVATAR_TYPES[clampi(GameState.avatar, 0, AVATAR_TYPES.size() - 1)], _cycle_class))
 	vb.add_child(_prow(tr("СТИЛЬ"), GameState.style_pack.to_upper(), _cycle_style))
 	vb.add_child(_prow(tr("СЛОЖНОСТЬ"), tr(GameState.difficulty.to_upper()), _cycle_diff))
+	vb.add_child(_prow(tr("УПРАВЛЕНИЕ"), tr(GameState.control_mode.to_upper()), _cycle_mode))
+	vb.add_child(_prow(tr("АВТОПРИЦЕЛ"), tr("ВКЛ") if GameState.auto_aim else tr("ВЫКЛ"), _cycle_aim))
+	vb.add_child(_prow(tr("ДРОП"), tr("ВКЛ") if GameState.arena_drops else tr("ВЫКЛ"), _cycle_drop))
+	vb.add_child(_prow(tr("ВЫЖИВАНИЕ"), tr("ВКЛ") if GameState.survival_mode else tr("ВЫКЛ"), _cycle_surv))
 	vb.add_child(_prow(tr("КНОПКИ"), tr("СПРАВА") if GameState.btn_side == "right" else tr("СЛЕВА"), _cycle_btn_side))
 	vb.add_child(_prow(tr("СКИН"), str(GameState.current_skin().get("label", "—")), _cycle_skin))
 
@@ -176,14 +180,16 @@ func _cycle_btn_side(d: int) -> void:
 
 
 func _rebuild_settings() -> void:
-	if _row_values.size() >= 5:
-		_row_values[4].text = tr("СПРАВА") if GameState.btn_side == "right" else tr("СЛЕВА")
-	if _row_values.size() >= 4:
-		_row_values[3].text = str(GameState.current_skin().get("label", "—"))
-	if _row_values.size() >= 3:
+	if _row_values.size() >= 9:
 		_row_values[0].text = AVATAR_TYPES[clampi(GameState.avatar, 0, AVATAR_TYPES.size() - 1)]
 		_row_values[1].text = GameState.style_pack.to_upper()
 		_row_values[2].text = tr(GameState.difficulty.to_upper())
+		_row_values[3].text = GameState.control_mode.to_upper()
+		_row_values[4].text = tr("ВКЛ") if GameState.auto_aim else tr("ВЫКЛ")
+		_row_values[5].text = tr("ВКЛ") if GameState.arena_drops else tr("ВЫКЛ")
+		_row_values[6].text = tr("ВКЛ") if GameState.survival_mode else tr("ВЫКЛ")
+		_row_values[7].text = tr("СПРАВА") if GameState.btn_side == "right" else tr("СЛЕВА")
+		_row_values[8].text = str(GameState.current_skin().get("label", "—"))
 
 
 func _add_footer() -> void:
@@ -316,3 +322,33 @@ func _on_name_focus_exited() -> void:
 func _on_back_pressed() -> void:
 	_on_name_submitted(name_edit.text)
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+
+func _cycle_mode(d: int) -> void:
+	var modes := ["auto", "touch", "keyboard"]
+	var i: int = modes.find(GameState.control_mode)
+	GameState.control_mode = str(modes[(i + d + modes.size()) % modes.size()])
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _cycle_aim(d: int) -> void:
+	GameState.auto_aim = not GameState.auto_aim
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _cycle_drop(d: int) -> void:
+	GameState.arena_drops = not GameState.arena_drops
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _cycle_surv(d: int) -> void:
+	GameState.survival_mode = not GameState.survival_mode
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
