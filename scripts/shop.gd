@@ -668,7 +668,7 @@ func _build_class_gallery() -> void:
 		cell.custom_minimum_size = Vector2(210, 190)
 		cell.flat = true
 		var vb := VBoxContainer.new()
-		vb.set_anchors_preset(Control.PRESET_FULL_RECT)
+		vb.custom_minimum_size = Vector2(200, 180)
 		cell.add_child(vb)
 		var tex := TextureRect.new()
 		tex.custom_minimum_size = Vector2(140, 140)
@@ -687,10 +687,26 @@ func _build_class_gallery() -> void:
 			nm.text = "★ " + nm.text
 		vb.add_child(nm)
 		var ci := i
-		cell.pressed.connect(func() -> void:
-			GameState.avatar = ci
-			GameState.save_settings()
-			AudioManager.play("level")
-			Toast.show(tr("Класс выбран"))
-			_rebuild())
+		if ci >= 8 and not (ci in GameState.owned_avatars):
+			var price := 20
+			var pl := Label.new()
+			pl.text = "🔒 %d 💎" % price
+			pl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			pl.add_theme_color_override("font_color", Color(0.6, 0.85, 1.0))
+			vb.add_child(pl)
+			cell.pressed.connect(func() -> void:
+				if GameState.buy_class(ci, price):
+					AudioManager.play("level")
+					Toast.show(tr("Класс открыт"))
+					_rebuild()
+				else:
+					AudioManager.play("deny")
+					Toast.show(tr("Не хватает кристаллов")))
+		else:
+			cell.pressed.connect(func() -> void:
+				GameState.avatar = ci
+				GameState.save_settings()
+				AudioManager.play("level")
+				Toast.show(tr("Класс выбран"))
+				_rebuild())
 		grid.add_child(cell)

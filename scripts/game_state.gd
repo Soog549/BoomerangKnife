@@ -1251,3 +1251,15 @@ func record_login() -> void:
 	last_login_unix = now
 	save_settings()
 	Telemetry.event("login", {"streak": login_streak})
+
+
+func buy_class(index: int, price: int) -> bool:
+	if index in owned_avatars:
+		return false
+	if not spend_crystals(price):
+		return false
+	owned_avatars.append(index)
+	avatar = index
+	save_settings()
+	economy_changed.emit()
+	return true
