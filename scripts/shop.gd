@@ -81,6 +81,7 @@ func _rebuild() -> void:
 		crystal_earn_btn.text = tr("Кристаллы: лимит на сегодня")
 		crystal_earn_btn.disabled = true
 	_build_class_weapons()
+	_build_class_gallery()
 	_build_iap()
 	_build_crystal_ad_packs()
 	_build_skins()
@@ -647,4 +648,49 @@ func _build_class_weapons() -> void:
 		nm.text = tr(str(pair[1]))
 		nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		cell.add_child(nm)
+		grid.add_child(cell)
+
+
+func _build_class_gallery() -> void:
+	var head := Label.new()
+	head.text = tr("КЛАССЫ (выбери своего)")
+	head.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	head.add_theme_font_size_override("font_size", 20)
+	items_box.add_child(head)
+	var grid := GridContainer.new()
+	grid.columns = 3
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 8)
+	items_box.add_child(grid)
+	for i in CLASS_WPN.size():
+		var pair: Array = CLASS_WPN[i]
+		var cell := Button.new()
+		cell.custom_minimum_size = Vector2(210, 190)
+		cell.flat = true
+		var vb := VBoxContainer.new()
+		vb.set_anchors_preset(Control.PRESET_FULL_RECT)
+		cell.add_child(vb)
+		var tex := TextureRect.new()
+		tex.custom_minimum_size = Vector2(140, 140)
+		tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		var cp := "res://assets/images/classes/%s.png" % str(pair[0])
+		if ResourceLoader.exists(cp):
+			tex.texture = load(cp)
+		vb.add_child(tex)
+		var nm := Label.new()
+		nm.text = tr(str(pair[1]))
+		nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		nm.add_theme_font_size_override("font_size", 14)
+		if i == GameState.avatar:
+			nm.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
+			nm.text = "★ " + nm.text
+		vb.add_child(nm)
+		var ci := i
+		cell.pressed.connect(func() -> void:
+			GameState.avatar = ci
+			GameState.save_settings()
+			AudioManager.play("level")
+			Toast.show(tr("Класс выбран"))
+			_rebuild())
 		grid.add_child(cell)
