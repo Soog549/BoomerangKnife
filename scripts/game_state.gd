@@ -57,6 +57,31 @@ var frontier_mode := false
 var campaign_intro_seen := false
 var chapter_quest := ""
 
+const CLASS_BONUS := {
+	0: {"hp": 1.15},            # Воин — живучесть
+	1: {"move": 1.10},          # Разбойник — скорость
+	2: {"throw": 1.12},         # Маг — сила броска
+	3: {"throw": 1.08, "move": 1.04},  # Лучник
+	4: {"hp": 1.20, "move": 0.95},     # Рыцарь
+	5: {"dmg": 1.10, "hp": 0.95},      # Берсерк
+	6: {"move": 1.14, "hp": 0.92},     # Ассасин
+	7: {"hp": 1.18, "dmg": 1.05},      # Паладин
+	8: {"hp": 1.10, "throw": 1.05},    # Друид
+	9: {"dmg": 1.15, "hp": 0.95},      # Монах (КИ)
+	10: {"move": 1.08, "dmg": 1.06},   # Пират
+	11: {"dmg": 1.12},                 # Самурай
+	12: {"move": 1.16, "hp": 0.90},    # Ниндзя
+	13: {"hp": 1.22, "move": 0.94},    # Викинг
+	14: {"throw": 1.14},               # Стрелок
+	15: {"hp": 1.08, "throw": 1.08},   # Алхимик
+	16: {"dmg": 1.14, "hp": 0.93},     # Некромант
+	17: {"hp": 1.12, "dmg": 1.05},     # Инженер
+	18: {"throw": 1.10, "move": 1.05}, # Охотник
+	19: {"hp": 1.10, "dmg": 1.10, "move": 0.96}, # Шаман (аура)
+	20: {"dmg": 1.12, "hp": 1.10},     # Чемпион
+	21: {"throw": 1.12, "move": 1.06}, # Принцесса
+}
+
 const CHAPTERS := [
 	{"n": "ПРОБУЖДЕНИЕ", "unlock": 1},
 	{"n": "НЕОНОВЫЙ РАЗЛОМ", "unlock": 3},
@@ -1298,3 +1323,8 @@ func chapter_next_unlock() -> int:
 	if i + 1 < CHAPTERS.size():
 		return int(CHAPTERS[i + 1]["unlock"])
 	return 0
+
+
+func class_bonus(key: String) -> float:
+	var b: Dictionary = CLASS_BONUS.get(GameState.avatar, {})
+	return float(b.get(key, 1.0))

@@ -155,6 +155,8 @@ func _ready() -> void:
 	ammo = max_knives
 	_spawn_mob()
 	field_bottom = float(H) - 110.0
+	max_hp *= GameState.class_bonus("hp")
+	hp = max_hp
 	var ap := "res://assets/images/avatars/avatar_%d.png" % GameState.avatar
 	if ResourceLoader.exists(ap):
 		avatar_tex = load(ap)
@@ -338,7 +340,7 @@ func _throw_at(target: Vector2) -> void:
 		dir = Vector2.UP
 	ammo -= 1
 	AudioManager.play("throw")
-	knives.append({"x": from.x, "y": from.y, "sx": from.x, "sy": from.y, "vx": dir.x * 950.0, "vy": dir.y * 950.0, "straight": true})
+	knives.append({"x": from.x, "y": from.y, "sx": from.x, "sy": from.y, "vx": dir.x * 950.0 * GameState.class_bonus("throw"), "vy": dir.y * 950.0 * GameState.class_bonus("throw"), "straight": true})
 
 func _throw_auto() -> void:
 	if ammo <= 0:
