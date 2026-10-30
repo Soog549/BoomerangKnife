@@ -120,7 +120,9 @@ func _rebuild_preview() -> void:
 	var tier_names := ["warrior-head.png", "warrior-bust.png", "warrior-body.png"]
 	var tp := "res://assets/images/tiers/%s" % tier_names[_tier]
 	var ci: int = clampi(GameState.avatar, 0, CLASS_FILES.size() - 1)
-	var cp := "res://assets/images/classes/%s.png" % CLASS_FILES[ci]
+	var cp := "res://assets/images/classes_full/%s.png" % CLASS_FILES[ci]
+	if not ResourceLoader.exists(cp):
+		cp = "res://assets/images/classes/%s.png" % CLASS_FILES[ci]
 	if _tier == 2 and ResourceLoader.exists(cp):
 		tp = cp
 	var full := "res://assets/images/packs/%s/hero-front.png" % GameState.style_pack

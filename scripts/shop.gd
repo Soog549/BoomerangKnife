@@ -49,7 +49,7 @@ func _rebuild() -> void:
 	# Единый предпросмотр персонажа (полное тело, как в профиле)
 	var pv := TextureRect.new()
 	var cls_idx: int = clampi(GameState.avatar, 0, CLASS_WPN.size() - 1) if CLASS_WPN.size() > 0 else 0
-	var cp := "res://assets/images/classes/%s.png" % str(CLASS_WPN[cls_idx][0])
+	var cp := "res://assets/images/classes_full/%s.png" % str(CLASS_WPN[cls_idx][0])
 	var hp := "res://assets/images/packs/%s/hero-front.png" % GameState.style_pack
 	if ResourceLoader.exists(cp):
 		pv.texture = load(cp)
@@ -677,7 +677,7 @@ func _build_class_gallery() -> void:
 		tex.custom_minimum_size = Vector2(140, 140)
 		tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		var cp := "res://assets/images/classes/%s.png" % str(pair[0])
+		var cp := "res://assets/images/classes_full/%s.png" % str(pair[0])
 		if ResourceLoader.exists(cp):
 			tex.texture = load(cp)
 		vb.add_child(tex)
