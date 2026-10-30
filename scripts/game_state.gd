@@ -1339,3 +1339,39 @@ func chapter_next_unlock() -> int:
 func class_bonus(key: String) -> float:
 	var b: Dictionary = CLASS_BONUS.get(GameState.avatar, {})
 	return float(b.get(key, 1.0))
+
+func export_profile() -> String:
+	save_settings()
+	var dst := "user://bk_profile_backup.cfg"
+	var src := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	if src == null:
+		return ""
+	var data := src.get_buffer(src.get_length())
+	src.close()
+	var out := FileAccess.open(dst, FileAccess.WRITE)
+	if out == null:
+		return ""
+	out.store_buffer(data)
+	out.close()
+	return ProjectSettings.globalize_path(dst)
+
+
+func export_profile_to_downloads() -> String:
+	var p := export_profile()
+	if p == "":
+		return ""
+	var dl := OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS)
+	if dl == "":
+		return p
+	var target := dl.path_join("boomerangknife_profile.cfg")
+	var src := FileAccess.open(p, FileAccess.READ)
+	if src == null:
+		return p
+	var data := src.get_buffer(src.get_length())
+	src.close()
+	var out := FileAccess.open(target, FileAccess.WRITE)
+	if out == null:
+		return p
+	out.store_buffer(data)
+	out.close()
+	return target

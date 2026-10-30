@@ -108,6 +108,51 @@ func _add_personal_rows() -> void:
 	vb.add_child(_prow(tr("ВЫЖИВАНИЕ"), tr("ВКЛ") if GameState.survival_mode else tr("ВЫКЛ"), _cycle_surv))
 	vb.add_child(_prow(tr("КНОПКИ"), tr("СПРАВА") if GameState.btn_side == "right" else tr("СЛЕВА"), _cycle_btn_side))
 	vb.add_child(_prow(tr("СКИН"), str(GameState.current_skin().get("label", "—")), _cycle_skin))
+	vb.add_child(_profile_row())
+
+
+func _profile_row() -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var exp_b := Button.new()
+	exp_b.text = tr("СОХРАНИТЬ ПРОФИЛЬ")
+	exp_b.custom_minimum_size = Vector2(0, 44)
+	exp_b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	exp_b.pressed.connect(func() -> void:
+		var p := GameState.export_profile_to_downloads()
+		var msg := tr("Профиль сохранён") if p != "" else tr("Не удалось сохранить")
+		_show_toast(msg + ((": " + p) if p != "" else "")))
+	row.add_child(exp_b)
+	var imp_b := Button.new()
+	imp_b.text = tr("ЗАГРУЗИТЬ")
+	imp_b.custom_minimum_size = Vector2(0, 44)
+	imp_b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	imp_b.pressed.connect(func() -> void:
+		var dl := OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS)
+		var path := dl.path_join("boomerangknife_profile.cfg") if dl != "" else "user://bk_profile_backup.cfg"
+		if GameState.import_profile(path):
+			_show_toast(tr("Профиль загружен"))
+			get_tree().reload_current_scene()
+		else:
+			_show_toast(tr("Файл профиля не найден")))
+	row.add_child(imp_b)
+	return row
+
+
+func _show_toast(txt: String) -> void:
+	var l := Label.new()
+	l.text = txt
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
+	l.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	l.offset_top = -120
+	l.offset_bottom = -40
+	l.offset_left = -400
+	l.offset_right = 400
+	add_child(l)
+	get_tree().create_timer(3.0).timeout.connect(func() -> void:
+		if is_instance_valid(l):
+			l.queue_free())
 
 
 func _prow(title: String, value: String, cb: Callable) -> HBoxContainer:
