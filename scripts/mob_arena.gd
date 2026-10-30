@@ -161,6 +161,9 @@ func _ready() -> void:
 	PauseUI.normalize(_pm)
 	_build_action_buttons()
 	_build_shop()
+	if GameState.frontier_mode:
+		GameState.difficulty = "hard"
+		GameState.frontier_mode = false
 	replay_btn = Button.new()
 	replay_btn.text = tr("ПОВТОР")
 	replay_btn.position = Vector2(W * 0.5 - 120.0, H * 0.38 + 160.0)
@@ -848,7 +851,7 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, Vector2(0, H * 0.72 + 50), tr("ВОЛНА %d") % banner_n, HORIZONTAL_ALIGNMENT_CENTER, W, 38, Color(0.55, 0.95, 0.75, a))
 	if not GameState.arena_tutorial_done:
 		draw_rect(Rect2(0, 0, W, H), Color(0, 0, 0, 0.62))
-		draw_string(ThemeDB.fallback_font, Vector2(0, 420), tr("АРЕНА РАЗЛОМА"), HORIZONTAL_ALIGNMENT_CENTER, W, 40, Color(0.6, 0.95, 0.8))
+		draw_string(ThemeDB.fallback_font, Vector2(0, 420), tr("ЗАЩИТА РУБЕЖА") if GameState.frontier_mode else tr("АРЕНА РАЗЛОМА"), HORIZONTAL_ALIGNMENT_CENTER, W, 40, Color(0.6, 0.95, 0.8))
 		draw_string(ThemeDB.fallback_font, Vector2(0, 500), tr("Тяни по полю — движение"), HORIZONTAL_ALIGNMENT_CENTER, W, 26, Color(1, 1, 1))
 		draw_string(ThemeDB.fallback_font, Vector2(0, 545), tr("Тап — бросок ножа"), HORIZONTAL_ALIGNMENT_CENTER, W, 26, Color(1, 1, 1))
 		draw_string(ThemeDB.fallback_font, Vector2(0, 590), tr("II / ESC — пауза"), HORIZONTAL_ALIGNMENT_CENTER, W, 26, Color(1, 1, 1))

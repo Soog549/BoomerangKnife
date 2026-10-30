@@ -31,6 +31,9 @@ var speed_mult := 1.0
 @onready var banner_demo: Control = $UI/BannerDemo
 
 func _ready() -> void:
+	GameState.frontier_mode = true
+	get_tree().call_deferred("change_scene_to_file", "res://scenes/mob_arena.tscn")
+	return
 	PauseUI.normalize(get_node_or_null("UI/PauseMenu"))
 	var hb2 := get_node_or_null("UI/HomeButton")
 	if hb2 != null:

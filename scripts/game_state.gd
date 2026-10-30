@@ -53,6 +53,7 @@ var difficulty := "normal"
 var selected_skin := 0
 var last_mode_scene := ""
 var btn_side := "right"
+var frontier_mode := false
 var selected_modes: Array[String] = []
 var gold_knife_active := false  # флаг забега: золотой нож даёт 2 сегмента за удар
 var boosters: Dictionary = {"heart": 0, "shield": 0, "magnet": 0, "talisman": 0}  # инвентарь
