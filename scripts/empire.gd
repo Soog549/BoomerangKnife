@@ -55,6 +55,14 @@ func _ready() -> void:
 	_add_special()
 	UIKit.back(self, "res://scenes/main_menu.tscn")
 
+	var rec := Label.new()
+	rec.text = "РАШ: %d  ·  ВЫЖ: %d" % [GameState.best_rush_waves, GameState.best_survival_waves]
+	rec.add_theme_font_size_override("font_size", 16)
+	rec.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
+	rec.position = Vector2(24, 1280.0 - 60.0)
+	add_child(rec)
+
+
 
 func _add_node(n: Dictionary) -> void:
 	var b := Button.new()

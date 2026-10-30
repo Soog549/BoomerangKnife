@@ -195,6 +195,8 @@ var earned_today := 0
 var claimed_objectives: Array[String] = []
 var unlocked_achievements: Array[String] = []
 var endless_best_wave := 0
+var best_rush_waves := 0
+var best_survival_waves := 0
 var endless_play_count := 0
 var best_score_total := 0  # лучший суммарный счёт за все режимы
 var leaderboard: Array = []   # [{name, score, mode}], топ-10 по убыванию
@@ -1082,6 +1084,8 @@ func load_settings() -> void:
 	earned_today = cfg.get_value("settings", "earned_today", 0)
 	unlocked_achievements = cfg.get_value("settings", "unlocked_achievements", [])
 	endless_best_wave = cfg.get_value("settings", "endless_best_wave", 0)
+	best_rush_waves = cfg.get_value("settings", "best_rush_waves", 0)
+	best_survival_waves = cfg.get_value("settings", "best_survival_waves", 0)
 	endless_play_count = cfg.get_value("settings", "endless_play_count", 0)
 	best_score_total = cfg.get_value("settings", "best_score_total", 0)
 	leaderboard = cfg.get_value("settings", "leaderboard", [])
@@ -1139,6 +1143,8 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "particles_enabled", particles_enabled)
 	cfg.set_value("settings", "landscape_mode", landscape_mode)
 	cfg.set_value("settings", "high_score", high_score)
+	cfg.set_value("settings", "best_rush_waves", best_rush_waves)
+	cfg.set_value("settings", "best_survival_waves", best_survival_waves)
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
 	cfg.set_value("settings", "last_mode_scene", last_mode_scene)
@@ -1377,3 +1383,17 @@ func export_profile_to_downloads() -> String:
 	out.store_buffer(data)
 	out.close()
 	return target
+
+
+func record_mode_wave(rush: bool, waves: int) -> bool:
+	if rush:
+		if waves > best_rush_waves:
+			best_rush_waves = waves
+			save_settings()
+			return true
+	else:
+		if waves > best_survival_waves:
+			best_survival_waves = waves
+			save_settings()
+			return true
+	return false

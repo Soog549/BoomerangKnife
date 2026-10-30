@@ -534,6 +534,13 @@ func _process(dt: float) -> void:
 			if hp <= 0.0:
 				hp = 0.0
 				Telemetry.event("arena_end", {"wave": wave, "score": score, "coins": coins})
+
+				if (_rush_mode or _survival_arena) and wave > 1:
+					var rec: bool = GameState.record_mode_wave(_rush_mode, wave - 1)
+					if rec:
+						toast_text = tr("НОВЫЙ РЕКОРД: %d") % (wave - 1)
+						toast_col = Color(1.0, 0.85, 0.3)
+						toast_t = 3.0
 				if not damaged and GameState.unlock_arena_ach("no_damage"):
 					_ach_toast(tr("Без единой царапины"))
 				over = true
