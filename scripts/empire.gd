@@ -1,130 +1,77 @@
 extends Control
-## ХАБ ИМПЕРИИ — мета-экран: база растёт от прогресса игрока.
-## Показывает: уровень Империи, прогресс реликвий, миры (закрытые/открытые), статистику.
+## КАРТА ИМПЕРИИ — интерактивное меню: иконки-переходы по «территории».
 
-var _worlds: Array = []
+const NODES := [
+	{"t": "КАМПАНИЯ", "s": "res://scenes/game.tscn", "x": 0.18, "y": 0.16},
+	{"t": "АРЕНА", "s": "res://scenes/mob_arena.tscn", "x": 0.52, "y": 0.12},
+	{"t": "ОБОРОНА", "s": "res://scenes/td.tscn", "x": 0.82, "y": 0.20},
+	{"t": "ДУЭЛЬ", "s": "res://scenes/duel.tscn", "x": 0.30, "y": 0.34},
+	{"t": "МИРЫ", "s": "res://scenes/worlds.tscn", "x": 0.70, "y": 0.38},
+	{"t": "МАГАЗИН", "s": "res://scenes/shop.tscn", "x": 0.18, "y": 0.56},
+	{"t": "КОЛЛЕКЦИЯ", "s": "res://scenes/collection.tscn", "x": 0.52, "y": 0.60},
+	{"t": "ПЕРСОНАЖ", "s": "res://scenes/profile.tscn", "x": 0.80, "y": 0.54},
+	{"t": "НАСТРОЙКИ", "s": "res://scenes/settings.tscn", "x": 0.36, "y": 0.74},
+]
+
 
 func _ready() -> void:
-	var bg := ColorRect.new()
-	bg.color = Color(0.05, 0.06, 0.10, 1)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(bg)
-	var tex := TextureRect.new()
+	AudioManager.play("click")
+	AudioManager.play_music("menu")
+	var bg := TextureRect.new()
 	var pbg := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
 	if ResourceLoader.exists(pbg):
-		tex.texture = load(pbg)
-		tex.set_anchors_preset(Control.PRESET_FULL_RECT)
-		tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		tex.modulate = Color(1, 1, 1, 0.35)
-		add_child(tex)
+		bg.texture = load(pbg)
+	else:
+		bg.texture = load("res://assets/images/ui/splash-hd-1440x2560.png") if ResourceLoader.exists("res://assets/images/ui/splash-hd-1440x2560.png") else null
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	bg.modulate = Color(1, 1, 1, 0.55)
+	add_child(bg)
+	var dim := ColorRect.new()
+	dim.color = Color(0.03, 0.04, 0.07, 0.45)
+	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(dim)
 
-	var rank: int = _empire_rank()
 	var title := Label.new()
-	title.text = "ИМПЕРИЯ ZWS"
+	title.text = "КАРТА ИМПЕРИИ"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 34)
-	title.position = Vector2(0, 40)
-	title.size = Vector2(720, 42)
+	title.add_theme_font_size_override("font_size", 28)
+	title.position = Vector2(0, UIKit.M)
+	title.size = Vector2(UIKit.W, 36)
 	add_child(title)
+
 	var lvl := Label.new()
-	lvl.text = "Уровень Империи: %d" % rank
+	lvl.text = "Уровень Империи: %d · Реликвии: %d" % [1 + GameState.max_level_reached / 5, GameState.relics_total]
 	lvl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lvl.add_theme_font_size_override("font_size", 20)
-	lvl.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
-	lvl.position = Vector2(0, 86)
-	lvl.size = Vector2(720, 28)
+	lvl.add_theme_font_size_override("font_size", 15)
+	lvl.position = Vector2(0, UIKit.M + 40)
+	lvl.size = Vector2(UIKit.W, 22)
 	add_child(lvl)
 
-	var stats := Label.new()
-	stats.text = "Монеты %d   ·   Реликвии %d   ·   Ачивки %d/12   ·   Скины %d" % [
-		GameState.coins, GameState.relics_total, GameState.arena_ach.size(), GameState.owned_skins.size()]
-	stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	stats.add_theme_font_size_override("font_size", 16)
-	stats.position = Vector2(0, 122)
-	stats.size = Vector2(720, 24)
-	add_child(stats)
-	if GameState.is_supporter:
-		var sup := Label.new()
-		sup.text = "★ МЕЦЕНАТ ИМПЕРИИ"
-		sup.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		sup.add_theme_font_size_override("font_size", 18)
-		sup.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
-		sup.position = Vector2(0, 144)
-		sup.size = Vector2(720, 24)
-		add_child(sup)
+	for n in NODES:
+		_add_node(n)
 
-	var bar_bg := ColorRect.new()
-	bar_bg.color = Color(0.1, 0.12, 0.18)
-	bar_bg.position = Vector2(60, 158)
-	bar_bg.size = Vector2(600, 18)
-	add_child(bar_bg)
-	var prog := float(GameState.max_level_reached) / 25.0
-	var bar_fill := ColorRect.new()
-	bar_fill.color = Color(1.0, 0.8, 0.25)
-	bar_fill.position = Vector2(60, 158)
-	bar_fill.size = Vector2(600.0 * clampf(prog, 0.0, 1.0), 18)
-	add_child(bar_fill)
-	var cap := Label.new()
-	cap.text = "Прогресс: %d / 25 (открывает миры)" % GameState.max_level_reached
-	cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	cap.add_theme_font_size_override("font_size", 14)
-	cap.position = Vector2(0, 182)
-	cap.size = Vector2(720, 20)
-	add_child(cap)
-
-	# Миры
-	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.position = Vector2(40, 214)
-	grid.size = Vector2(640, 480)
-	grid.add_theme_constant_override("h_separation", 12)
-	grid.add_theme_constant_override("v_separation", 12)
-	add_child(grid)
-	var unlocked := GameState.max_level_reached
-	var cur := Worlds.current_index()
-	for i in range(Worlds.LIST.size()):
-		var w: Dictionary = Worlds.LIST[i]
-		var b := Button.new()
-		b.custom_minimum_size = Vector2(308, 64)
-		var lock: bool = unlocked < int(w["unlock"])
-		if lock:
-			b.text = "🔒 %s  (ур. %d)" % [str(w["name"]), int(w["unlock"])]
-			b.disabled = true
-		else:
-			var tag := "  ★" if i == cur else ""
-			b.text = "%s%s" % [str(w["name"]), tag]
-			b.pressed.connect(_open_world.bind(i))
-		grid.add_child(b)
-
-	# Кнопки
-	var vb := VBoxContainer.new()
-	vb.position = Vector2(60, 712)
-	vb.size = Vector2(600, 0)
-	vb.add_theme_constant_override("separation", 10)
-	add_child(vb)
-	var daily := Button.new()
-	daily.text = "ЕЖЕДНЕВНАЯ НАГРАДА"
-	daily.custom_minimum_size = Vector2(600, 52)
-	daily.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://scenes/daily_rewards.tscn"))
-	vb.add_child(daily)
-	var col := Button.new()
-	col.text = "КОЛЛЕКЦИЯ И ДОСТИЖЕНИЯ"
-	col.custom_minimum_size = Vector2(600, 52)
-	col.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://scenes/collection.tscn"))
-	vb.add_child(col)
-	var back := Button.new()
-	back.text = "НАЗАД"
-	back.custom_minimum_size = Vector2(600, 52)
-	back.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
-	vb.add_child(back)
-
-	AudioManager.play_music("menu")
+	UIKit.back(self, "res://scenes/main_menu.tscn")
 
 
-func _empire_rank() -> int:
-	return 1 + int(Worlds.current_index()) + int(GameState.owned_skins.size() >= 6)
-
-
-func _open_world(i: int) -> void:
-	get_tree().change_scene_to_file("res://scenes/worlds.tscn")
+func _add_node(n: Dictionary) -> void:
+	var b := Button.new()
+	b.text = str(n["t"])
+	b.custom_minimum_size = Vector2(190, 84)
+	b.size = Vector2(190, 84)
+	b.position = Vector2(float(n["x"]) * 720.0 - 95.0, float(n["y"]) * 1280.0)
+	b.add_theme_font_size_override("font_size", 15)
+	b.modulate = Color(1, 1, 1, 0.92)
+	var path: String = str(n["s"])
+	b.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		GameState.last_mode_scene = path if path.contains("arena") or path.contains("td") or path.contains("duel") or path.contains("game") else GameState.last_mode_scene
+		get_tree().change_scene_to_file(path))
+	add_child(b)
+	# «дорога» под иконкой
+	var dot := ColorRect.new()
+	dot.color = Color(0.55, 0.85, 1.0, 0.35)
+	dot.size = Vector2(6, 6)
+	dot.position = b.position + Vector2(92, 90)
+	add_child(dot)
