@@ -776,19 +776,19 @@ func _draw() -> void:
 		draw_circle(joy_origin + joy_vec * stick_r, 22.0, Color(0.4, 0.8, 1.0, 0.85))
 	# HUD
 	draw_set_transform(Vector2(0, 40))
-	draw_rect(Rect2(40, 60, W - 80, 26), Color(0.12, 0.12, 0.18))
+	draw_rect(Rect2(40, 56, W - 80, 16), Color(0.12, 0.12, 0.18))
 	var ratio: float = hp / max_hp
 	var col := Color(0.9, 0.25, 0.25)
 	if ratio > 0.6:
 		col = Color(0.3, 0.85, 0.5)
 	elif ratio > 0.3:
 		col = Color(0.95, 0.75, 0.25)
-	draw_rect(Rect2(42, 62, (W - 84) * ratio, 22), col)
-	draw_rect(Rect2(40, 118, W - 80, 14), Color(0.10, 0.12, 0.20))
-	draw_rect(Rect2(42, 120, (W - 84) * (shield / max_shield), 10), glow_c)
-	draw_rect(Rect2(40, 60, W - 80, 26), glow_c.darkened(0.4), false, 2.0)
-	draw_rect(Rect2(40, 118, W - 80, 14), glow_c.darkened(0.4), false, 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(44, 46), tr("HP %d/%d   ЩИТ %d") % [int(hp), int(max_hp), int(shield)], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
+	draw_rect(Rect2(42, 58, (W - 84) * ratio, 12), col)
+	draw_rect(Rect2(40, 76, W - 80, 8), Color(0.10, 0.12, 0.20))
+	draw_rect(Rect2(42, 77, (W - 84) * (shield / max_shield), 6), glow_c)
+	draw_rect(Rect2(40, 56, W - 80, 16), glow_c.darkened(0.4), false, 2.0)
+	draw_rect(Rect2(40, 76, W - 80, 8), glow_c.darkened(0.4), false, 2.0)
+	draw_string(ThemeDB.fallback_font, Vector2(44, 44), tr("HP %d/%d   ЩИТ %d") % [int(hp), int(max_hp), int(shield)], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
 	if combo > 1:
 		draw_string(ThemeDB.fallback_font, Vector2(0, 240), tr("КОМБО x%d") % combo, HORIZONTAL_ALIGNMENT_CENTER, W, 34, Color(1.0, 0.85, 0.3, minf(1.0, combo_t)))
 	if toast_t > 0.0:

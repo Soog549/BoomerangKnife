@@ -50,6 +50,7 @@ const MENU_VIEWS := {
 var _view := "root"
 
 func _ready() -> void:
+	_add_shop_corner()
 	AudioManager.play("click")
 	_apply_pack_bg()
 	_show_splash()
@@ -220,3 +221,16 @@ func _apply_pack_bg() -> void:
 		if bg is TextureRect:
 			bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+
+
+func _add_shop_corner() -> void:
+	var b := Button.new()
+	b.name = "ShopCorner"
+	b.text = "🛒"
+	b.custom_minimum_size = Vector2(64, 56)
+	b.position = Vector2(UIKit.W - UIKit.M - 64.0, UIKit.M)
+	b.tooltip_text = tr("МАГАЗИН")
+	b.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		get_tree().change_scene_to_file("res://scenes/shop.tscn"))
+	add_child(b)
