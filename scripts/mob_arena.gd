@@ -95,6 +95,7 @@ var aim_idx := -1
 var field_bottom := 1180.0
 var damaged := false
 var _ground_mode := false
+var _anim_t := 0.0
 var avatar_tex: Texture2D = null
 var stick_r := 62.0
 
@@ -354,6 +355,7 @@ func _throw_auto() -> void:
 		knives.append({"x": px, "y": py - 30.0, "sx": px, "sy": py - 30.0, "vx": 0.0, "vy": -950.0, "straight": true})
 
 func _process(dt: float) -> void:
+	_anim_t += dt
 	if replay_btn != null:
 		replay_btn.visible = over
 	if over:
@@ -783,7 +785,20 @@ func _draw() -> void:
 	# игрок (масштаб 1.45 — корабль не должен проигрывать мобам)
 	if _ground_mode and avatar_tex != null:
 		var gh: float = 150.0
-		draw_texture_rect(avatar_tex, Rect2(px - gh * 0.35, py - gh * 0.78, gh * 0.7, gh), false)
+		var gw: float = gh * 0.7
+		var ts: Vector2 = avatar_tex.get_size()
+		var bob: float = sin(_anim_t * 4.2) * 2.6
+		var sway: float = sin(_anim_t * 5.4) * 2.2
+		var lean: float = -abs(sin(_anim_t * 2.1)) * 1.5
+		# ноги (низ) — качаются
+		draw_texture_rect_region(avatar_tex, Rect2(px - gw * 0.5 + sway, py - gh * 0.40 + bob * 0.3, gw, gh * 0.44),
+			Rect2(ts.x * 0.10, ts.y * 0.58, ts.x * 0.80, ts.y * 0.42))
+		# торс (середина) — дыхание
+		draw_texture_rect_region(avatar_tex, Rect2(px - gw * 0.5, py - gh * 0.80 + bob + lean, gw, gh * 0.46),
+			Rect2(ts.x * 0.08, ts.y * 0.24, ts.x * 0.84, ts.y * 0.40))
+		# голова (верх) — кивает
+		draw_texture_rect_region(avatar_tex, Rect2(px - gw * 0.5, py - gh * 0.98 + bob * 1.5 + lean * 1.6, gw, gh * 0.28),
+			Rect2(ts.x * 0.10, ts.y * 0.00, ts.x * 0.80, ts.y * 0.26))
 	if _ground_mode:
 		if shield > 0.0:
 			var gsa: float = clampf(shield / max_shield, 0.15, 1.0)
