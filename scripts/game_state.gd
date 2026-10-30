@@ -55,6 +55,17 @@ var last_mode_scene := ""
 var btn_side := "right"
 var frontier_mode := false
 var campaign_intro_seen := false
+
+const CHAPTERS := [
+	{"n": "ПРОБУЖДЕНИЕ", "unlock": 1},
+	{"n": "НЕОНОВЫЙ РАЗЛОМ", "unlock": 3},
+	{"n": "ЛЕДЯНОЙ БАСТИОН", "unlock": 5},
+	{"n": "РУБИНОВЫЕ ШАХТЫ", "unlock": 8},
+	{"n": "ТЕНЬ АРХИВОВ", "unlock": 12},
+	{"n": "ЭЛЕКТРО-СТЕПЬ", "unlock": 16},
+	{"n": "ТОКСИЧНЫЕ ТОПИ", "unlock": 20},
+	{"n": "КОСМИЧЕСКИЙ ОАЗИС", "unlock": 25},
+]
 var selected_modes: Array[String] = []
 var gold_knife_active := false  # флаг забега: золотой нож даёт 2 сегмента за удар
 var boosters: Dictionary = {"heart": 0, "shield": 0, "magnet": 0, "talisman": 0}  # инвентарь
@@ -1267,3 +1278,22 @@ func buy_class(index: int, price: int) -> bool:
 	save_settings()
 	economy_changed.emit()
 	return true
+
+
+func chapter_index() -> int:
+	var idx := 0
+	for i in CHAPTERS.size():
+		if max_level_reached >= int(CHAPTERS[i]["unlock"]):
+			idx = i
+	return idx
+
+
+func chapter_name() -> String:
+	return str(CHAPTERS[chapter_index()]["n"])
+
+
+func chapter_next_unlock() -> int:
+	var i := chapter_index()
+	if i + 1 < CHAPTERS.size():
+		return int(CHAPTERS[i + 1]["unlock"])
+	return 0

@@ -363,7 +363,7 @@ func _show_campaign_intro() -> void:
 	vb.add_theme_constant_override("separation", 14)
 	cl.add_child(vb)
 	var t1 := Label.new()
-	t1.text = "ИМПЕРИЯ ZWS"
+	t1.text = "ГЛАВА %d · %s" % [GameState.chapter_index() + 1, GameState.chapter_name()]
 	t1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	t1.add_theme_font_size_override("font_size", 30)
 	vb.add_child(t1)

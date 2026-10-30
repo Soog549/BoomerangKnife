@@ -42,7 +42,7 @@ func _ready() -> void:
 	add_child(title)
 
 	var lvl := Label.new()
-	lvl.text = "Уровень Империи: %d · Реликвии: %d" % [1 + GameState.max_level_reached / 5, GameState.relics_total]
+	lvl.text = "Глава %d: %s · Реликвии: %d" % [GameState.chapter_index() + 1, GameState.chapter_name(), GameState.relics_total]
 	lvl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lvl.add_theme_font_size_override("font_size", 15)
 	lvl.position = Vector2(0, UIKit.M + 40)
