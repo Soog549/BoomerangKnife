@@ -52,6 +52,7 @@ const SKINS := [
 var difficulty := "normal"
 var selected_skin := 0
 var last_mode_scene := ""
+var btn_side := "right"
 var selected_modes: Array[String] = []
 var gold_knife_active := false  # флаг забега: золотой нож даёт 2 сегмента за удар
 var boosters: Dictionary = {"heart": 0, "shield": 0, "magnet": 0, "talisman": 0}  # инвентарь
@@ -951,6 +952,7 @@ func load_settings() -> void:
 	is_touch = cfg.get_value("settings", "is_touch", false)
 	last_screen = cfg.get_value("settings", "last_screen", Vector2i.ZERO)
 	last_mode_scene = str(cfg.get_value("settings", "last_mode_scene", ""))
+	btn_side = str(cfg.get_value("settings", "btn_side", "right"))
 	joy_scale = cfg.get_value("settings", "joy_scale", 1.0)
 	auto_aim = cfg.get_value("settings", "auto_aim", true)
 	avatar = cfg.get_value("settings", "avatar", 0)
@@ -1087,6 +1089,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
 	cfg.set_value("settings", "last_mode_scene", last_mode_scene)
+	cfg.set_value("settings", "btn_side", btn_side)
 	cfg.set_value("settings", "selected_modes", selected_modes)
 	cfg.set_value("settings", "boosters", boosters)
 	cfg.set_value("settings", "armed_booster", armed_booster)

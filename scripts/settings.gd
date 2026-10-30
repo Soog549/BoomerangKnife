@@ -101,6 +101,7 @@ func _add_personal_rows() -> void:
 	vb.add_child(_prow(tr("КЛАСС"), AVATAR_TYPES[clampi(GameState.avatar, 0, AVATAR_TYPES.size() - 1)], _cycle_class))
 	vb.add_child(_prow(tr("СТИЛЬ"), GameState.style_pack.to_upper(), _cycle_style))
 	vb.add_child(_prow(tr("СЛОЖНОСТЬ"), tr(GameState.difficulty.to_upper()), _cycle_diff))
+	vb.add_child(_prow(tr("КНОПКИ"), tr("СПРАВА") if GameState.btn_side == "right" else tr("СЛЕВА"), _cycle_btn_side))
 	vb.add_child(_prow(tr("СКИН"), str(GameState.current_skin().get("label", "—")), _cycle_skin))
 
 
@@ -167,7 +168,16 @@ func _cycle_skin(d: int) -> void:
 	_rebuild_settings()
 
 
+func _cycle_btn_side(d: int) -> void:
+	GameState.btn_side = "right" if GameState.btn_side == "left" else "left"
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
 func _rebuild_settings() -> void:
+	if _row_values.size() >= 5:
+		_row_values[4].text = tr("СПРАВА") if GameState.btn_side == "right" else tr("СЛЕВА")
 	if _row_values.size() >= 4:
 		_row_values[3].text = str(GameState.current_skin().get("label", "—"))
 	if _row_values.size() >= 3:

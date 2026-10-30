@@ -156,6 +156,7 @@ func _ready() -> void:
 		avatar_tex = load(ap)
 	_build_pause()
 	PauseUI.normalize(_pm)
+	_build_action_buttons()
 	_build_shop()
 	replay_btn = Button.new()
 	replay_btn.text = tr("ПОВТОР")
@@ -1004,3 +1005,47 @@ func _toggle_pause() -> void:
 func _to_menu() -> void:
 	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+
+func _build_action_buttons() -> void:
+	var x: float = 640.0
+	if GameState.btn_side == "left":
+		x = 26.0
+	var melee_btn := Button.new()
+	melee_btn.text = "УДАР"
+	melee_btn.position = Vector2(x, 1080.0)
+	melee_btn.size = Vector2(120, 120)
+	melee_btn.modulate = Color(1, 1, 1, 0.55)
+	melee_btn.pressed.connect(_melee)
+	_pl.add_child(melee_btn)
+	var throw_btn := Button.new()
+	throw_btn.text = "БРОСОК"
+	throw_btn.position = Vector2(x - 132.0 if GameState.btn_side == "right" else x + 132.0, 1080.0)
+	throw_btn.size = Vector2(116, 116)
+	throw_btn.modulate = Color(1, 1, 1, 0.55)
+	throw_btn.pressed.connect(_throw_auto)
+	_pl.add_child(throw_btn)
+
+
+func _melee() -> void:
+	if paused or over:
+		return
+	AudioManager.play("hit")
+	var reach: float = 105.0
+	var hit_any := false
+	for m in mobs:
+		var d: float = Vector2(float(m["x"]) - px, float(m["y"]) - py).length()
+		if d <= reach + float(m["r"]):
+			m["hp"] = float(m["hp"]) - 25.0
+			m["flash"] = 0.2
+			dmg_pop.append({"x": float(m["x"]), "y": float(m["y"]) - float(m["r"]), "txt": "25", "t": 0.0})
+			rings.append({"x": m["x"], "y": m["y"], "t": 0.35, "rad": float(m["r"])})
+			if float(m["hp"]) <= 0.0:
+				score += 10 + wave
+				combo += 1
+				combo_t = 2.0
+				mobs.erase(m)
+			hit_any = true
+			break
+	if not hit_any:
+		rings.append({"x": px, "y": py, "t": 0.25, "rad": 70.0})
