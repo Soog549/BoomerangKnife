@@ -451,6 +451,7 @@ func _process(dt: float) -> void:
 		wave_killed = 0
 		banner_n = wave
 		banner_t = 1.6
+		rig_play("win")
 		AudioManager.play("level")
 		if wave == 5 and GameState.unlock_arena_ach("wave5"):
 			_ach_toast(tr("ВОЛНА 5"))
@@ -724,7 +725,12 @@ func _draw() -> void:
 		if not texs.is_empty():
 			var tx: Texture2D = texs[int(m.get("var", 0)) % texs.size()]
 			var msz: float = minf(mr * 3.2, W * 0.30)
-			draw_texture_rect(tx, Rect2(mx - msz * 0.5, my - msz * 0.5, msz, msz), false)
+			var ph: float = float(m.get("var", 0)) * 1.7 + mx * 0.01
+			var mbob: float = sin(_anim_t * 3.6 + ph) * (3.4 if msz > 90.0 else 2.2)
+			var msw: float = sin(_anim_t * 2.4 + ph) * 0.045
+			draw_set_transform(Vector2(mx, my + mbob), msw, Vector2.ONE)
+			draw_texture_rect(tx, Rect2(-msz * 0.5, -msz * 0.5, msz, msz), false)
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		else:
 			draw_circle(Vector2(mx, my), mr, m["col"])
 			draw_circle(Vector2(mx, my), mr * 0.55, Color(0.05, 0.05, 0.08, 0.8))
