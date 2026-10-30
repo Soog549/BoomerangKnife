@@ -15,6 +15,7 @@ const NEON_GREEN := Color(0.224, 1.0, 0.533, 1.0)
 const EMPTY_HINT := Color(0.28, 0.32, 0.42, 0.85)
 
 var avatar_texture: Texture2D = null
+var _t := 0.0
 var body_col := Color(0.12, 0.15, 0.23)
 var body_hi := Color(0.19, 0.23, 0.33)
 var accent_col := Color(0.95, 0.8, 0.3)
@@ -33,6 +34,11 @@ func _ready() -> void:
 	custom_minimum_size = Vector2(480, 300)
 	size = Vector2(480, 300)
 	queue_redraw()
+
+func _process(dt: float) -> void:
+	_t += dt
+	if avatar_texture != null:
+		queue_redraw()
 
 func refresh() -> void:
 	queue_redraw()
@@ -57,7 +63,11 @@ func _draw() -> void:
 		draw_arc(head_c, 32.0, 0, TAU, 40, OUTLINE, 2.0)
 	if avatar_texture != null:
 		var av_size := 96.0
-		draw_texture_rect(avatar_texture, Rect2(head_c - Vector2(av_size, av_size) * 0.5, Vector2(av_size, av_size)), false)
+		var bob := sin(_t * 2.6) * 3.0
+		var tilt := sin(_t * 1.7) * 0.05
+		draw_set_transform(head_c + Vector2(0, bob), tilt, Vector2.ONE)
+		draw_texture_rect(avatar_texture, Rect2(Vector2(-av_size, -av_size) * 0.5, Vector2(av_size, av_size)), false)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	# Шлем: ободок + гребень
 	if _equipped_id("helmet") != "":
 		draw_arc(head_c, 32.0, PI * 0.85, PI * 2.15, 30, ACCENT_GEAR, 5.0)
