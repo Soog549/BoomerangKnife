@@ -64,7 +64,6 @@ func _rebuild() -> void:
 	pv_cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	pv_cap.add_theme_font_size_override("font_size", 15)
 	items_box.add_child(pv_cap)
-	_build_class_weapons()
 	info_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	info_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	info_label.text = tr("Твой максимальный уровень: %d — проходи уровни, открывай цели или смотри рекламу за монеты:") % GameState.max_level_reached
@@ -81,6 +80,7 @@ func _rebuild() -> void:
 	else:
 		crystal_earn_btn.text = tr("Кристаллы: лимит на сегодня")
 		crystal_earn_btn.disabled = true
+	_build_class_weapons()
 	_build_iap()
 	_build_crystal_ad_packs()
 	_build_skins()
@@ -342,7 +342,11 @@ func _build_equipment() -> void:
 	items_box.add_child(header)
 	for slot: String in Economy.EQUIPMENT:
 		var slot_title := Label.new()
-		slot_title.text = _slot_label(slot)
+		var own_cnt := 0
+		for _it in Economy.EQUIPMENT[slot]:
+			if GameState.is_equipment_owned(_it.id):
+				own_cnt += 1
+		slot_title.text = "%s  (%d/%d)" % [_slot_label(slot), own_cnt, Economy.EQUIPMENT[slot].size()]
 		slot_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		items_box.add_child(slot_title)
 		for it in Economy.EQUIPMENT[slot]:
