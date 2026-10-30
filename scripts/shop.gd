@@ -390,6 +390,14 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 	if ResourceLoader.exists(ip):
 		row.add_child(_thumb(ip, 56))
 	row.add_child(label_panel)
+	if not owned and eq_id.contains("_v"):
+		var nb := Label.new()
+		nb.text = "NEW"
+		nb.add_theme_font_size_override("font_size", 12)
+		nb.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
+		nb.custom_minimum_size = Vector2(42, 0)
+		nb.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		row.add_child(nb)
 
 	var btn: Button
 	if owned:
