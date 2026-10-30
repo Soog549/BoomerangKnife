@@ -344,13 +344,13 @@ func _build_equipment() -> void:
 	for slot: String in Economy.EQUIPMENT:
 		var slot_title := Label.new()
 		var own_cnt := 0
-		for _it in Economy.EQUIPMENT[slot]:
+		for _it in Economy.items(str(slot)):
 			if GameState.is_equipment_owned(_it.id):
 				own_cnt += 1
-		slot_title.text = "%s  (%d/%d)" % [_slot_label(slot), own_cnt, Economy.EQUIPMENT[slot].size()]
+		slot_title.text = "%s  (%d/%d)" % [_slot_label(slot), own_cnt, Economy.items(str(slot)).size()]
 		slot_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		items_box.add_child(slot_title)
-		for it in Economy.EQUIPMENT[slot]:
+		for it in Economy.items(str(slot)):
 			items_box.add_child(_make_equip_row(it))
 
 func _slot_label(slot: String) -> String:
@@ -378,8 +378,11 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 			label_panel = _row_panel(tr(it.label), tr(it.desc))
 	else:
 		label_panel = _row_panel(tr(it.label), tr("%s (%d м.)") % [tr(it.desc), price])
-	if it.slot == "shield":
-		row.add_child(_thumb("res://assets/images/shields/%s.png" % eq_id, 56))
+	var ip := "res://assets/images/equipment/%s.png" % eq_id
+	if not ResourceLoader.exists(ip) and it.slot == "shield":
+		ip = "res://assets/images/shields/%s.png" % eq_id
+	if ResourceLoader.exists(ip):
+		row.add_child(_thumb(ip, 56))
 	row.add_child(label_panel)
 
 	var btn: Button

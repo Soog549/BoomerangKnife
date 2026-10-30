@@ -125,7 +125,7 @@ const EQUIPMENT := {
 static func all_equipment() -> Array:
 	var out: Array = []
 	for slot: String in EQUIPMENT:
-		for it in EQUIPMENT[slot]:
+		for it in items(slot):
 			out.append(it)
 	return out
 
@@ -240,3 +240,36 @@ const DAILY_REWARDS := [
 	{"day": 6,  "coins": 50},
 	{"day": 7,  "coins": 80},   # большой бонус за неделю
 ]
+
+static var _items_cache := {}
+
+
+static func items(slot: String) -> Array:
+	if _items_cache.has(slot):
+		return _items_cache[slot]
+	var out: Array = []
+	var base: Array = EQUIPMENT.get(slot, [])
+	if base.is_empty():
+		_items_cache[slot] = out
+		return out
+	var bn: int = base.size()
+	for i in range(23):
+		var src: Dictionary = base[i % bn]
+		var it: Dictionary = {
+			"id": str(src.get("id", slot)),
+			"label": str(src.get("label", slot)),
+			"desc": str(src.get("desc", "")),
+			"slot": slot,
+			"price": int(src.get("price", 100)),
+		}
+		for k in src.keys():
+			if not it.has(k):
+				it[k] = src[k]
+		if i >= bn:
+			var vid := "%s_v%02d" % [slot, i + 1]
+			it["id"] = vid
+			it["label"] = "%s +%d" % [str(src.get("label", slot)), i + 1]
+			it["price"] = int(src.get("price", 100)) + (i + 1) * 35
+		out.append(it)
+	_items_cache[slot] = out
+	return out
