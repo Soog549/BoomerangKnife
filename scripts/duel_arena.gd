@@ -20,6 +20,8 @@ var game_over := false
 var paused := false
 var _duel_variant := "split"   # режим дуэли для выплаты награды | duel variant used for payout
 var _enemy_on := false
+var _enemy_hp := 100.0
+var _auto_cd := 0.0
 var _enemy_pos := Vector2(360, 520)
 var _enemy_dir := 1.0
 var _enemy_axis := "y"
@@ -79,7 +81,11 @@ func _ready() -> void:
 		if bgp2 != null:
 			bgp2.visible = false
 		spawn_p1.position = Vector2(360, 1050)
-		msg_label.text = tr("ТРЕНИРОВКА (соло): бросай нож, отрабатывай точность.")
+		_enemy_on = true
+		_enemy_pos = Vector2(360, 500)
+		_enemy_axis = "y"
+		_enemy_hp = 100.0
+		msg_label.text = tr("ТРЕНИРОВКА: авто-бросок по мобу. Сложность меняет темп.")
 	elif variant == "mob":
 		spawn_p1.position = Vector2(180, 1050)
 		spawn_p2.position = Vector2(540, 380)
@@ -124,6 +130,29 @@ func _process(delta: float) -> void:
 				_enemy_pos.y = 380.0
 				_enemy_dir = 1.0
 		queue_redraw()
+	if _duel_variant == "solo" and not paused and not game_over:
+		_auto_cd -= delta
+		var cd: float = 1.2
+		match GameState.difficulty:
+			"easy":
+				cd = 1.7
+			"hard":
+				cd = 0.9
+			"survival":
+				cd = 0.75
+		if _auto_cd <= 0.0:
+			_auto_cd = cd
+			if knife_p1 != null and is_instance_valid(knife_p1):
+				knife_p1.throw_toward(_enemy_pos)
+		if knife_p1 != null and is_instance_valid(knife_p1):
+			var d: float = (knife_p1.global_position - _enemy_pos).length()
+			if d < 58.0:
+				_enemy_hp -= 15.0
+				AudioManager.play("hit")
+				if _enemy_hp <= 0.0:
+					_enemy_hp = 100.0
+					AudioManager.play("level")
+				knife_p1.global_position = spawn_p1.global_position
 	Autoshot.tick(delta)
 
 func _banner_setup() -> void:
@@ -229,7 +258,10 @@ func _start_round(round_number: int) -> void:
 	if _shared_target:
 		target_p1 = _spawn_target(Vector2(360, 300), segs, speed, golden, moving, _on_p1_clear)
 		target_p2 = null
-	elif _duel_variant in ["solo", "net"]:
+	elif _duel_variant == "solo":
+		target_p1 = null
+		target_p2 = null
+	elif _duel_variant == "net":
 		target_p1 = _spawn_target(Vector2(360, 300), segs, speed, golden, moving, _on_p1_clear)
 		target_p2 = null
 	else:
