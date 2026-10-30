@@ -21,10 +21,11 @@ Telemetry="*res://scripts/telemetry.gd"
 Toast="*res://scripts/toast.gd"
 UIPressFX="*res://scripts/ui_fx.gd"
 UIKit="*res://scripts/ui_kit.gd"
+PauseUI="*res://scripts/pause_ui.gd"
 
 [application]
 
-config/version="1.0.111"
+config/version="1.0.112"
 config/name="BoomerangKnife"
 config/description="Hypercasual boomerang knife arcade: arena, tower defense, duels, endless."
 run/main_scene="res://scenes/main_menu.tscn"
