@@ -101,6 +101,10 @@ var _anim_t := 0.0
 var _rig_state := "idle"
 var _rig_t := 0.0
 var avatar_tex: Texture2D = null
+var rig_head: Texture2D = null
+var rig_torso: Texture2D = null
+var rig_leg_l: Texture2D = null
+var rig_leg_r: Texture2D = null
 var stick_r := 62.0
 
 func _ready() -> void:
@@ -175,6 +179,12 @@ func _ready() -> void:
 		ap = "res://assets/images/avatars/avatar_%d.png" % GameState.avatar
 	if ResourceLoader.exists(ap):
 		avatar_tex = load(ap)
+	var rp := "res://assets/images/rig/%s/" % CF[ci]
+	if ResourceLoader.exists(rp + "head.png"):
+		rig_head = load(rp + "head.png")
+		rig_torso = load(rp + "torso.png")
+		rig_leg_l = load(rp + "leg_l.png")
+		rig_leg_r = load(rp + "leg_r.png")
 	_build_pause()
 	PauseUI.normalize(_pm)
 	_build_action_buttons()
@@ -823,7 +833,7 @@ func _draw() -> void:
 		else:
 			draw_circle(Vector2(kx, ky), 10.0, Color(0.95, 0.8, 0.3))
 	# игрок (масштаб 1.45 — корабль не должен проигрывать мобам)
-	if _ground_mode and avatar_tex != null:
+	if _ground_mode and (rig_torso != null or avatar_tex != null):
 		_draw_rig(px, py, 196.0, 196.0 * 0.72, avatar_tex.get_size())
 	if _ground_mode:
 		if shield > 0.0:
@@ -1159,6 +1169,51 @@ func rig_play(state: String) -> void:
 
 
 func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
+	# ЕСТЬ ЧАСТИ — настоящий риг из отдельных слоёв
+	if rig_torso != null:
+		_rig_t += get_process_delta_time()
+		var br: float = sin(_anim_t * 4.2) * 1.8
+		var stride: float = sin(_anim_t * 7.0) * 0.13
+		var lean: float = 0.0
+		var head_dx: float = 0.0
+		match _rig_state:
+			"attack":
+				lean = 0.12 * sin(clampf(_rig_t / 0.28, 0.0, 1.0) * PI)
+				head_dx = 6.0
+				if _rig_t > 0.32:
+					rig_play("idle")
+			"block":
+				lean = -0.06
+				if _rig_t > 0.6:
+					rig_play("idle")
+			"hurt":
+				head_dx = sin(_rig_t * 55.0) * 4.0 * clampf(1.0 - _rig_t / 0.4, 0.0, 1.0)
+				if _rig_t > 0.45:
+					rig_play("idle")
+			"win":
+				if _rig_t > 1.2:
+					rig_play("idle")
+		var hip: Vector2 = Vector2(px, py - gh * 0.40)
+		# ноги
+		var lw: float = rig_leg_l.get_width() * (gh * 0.46 / rig_leg_l.get_height())
+		draw_set_transform(Vector2(px - gw * 0.15, hip.y), -stride, Vector2.ONE)
+		draw_texture_rect(rig_leg_l, Rect2(-lw * 0.5, 0, lw, gh * 0.46), false)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		draw_set_transform(Vector2(px + gw * 0.15, hip.y), stride, Vector2.ONE)
+		draw_texture_rect(rig_leg_r, Rect2(-lw * 0.5, 0, lw, gh * 0.46), false)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		# торс
+		var tw2: float = rig_torso.get_width() * (gh * 0.46 / rig_torso.get_height())
+		var th2: float = gh * 0.46
+		draw_set_transform(Vector2(px, hip.y - th2 * 0.02), lean, Vector2.ONE)
+		draw_texture_rect(rig_torso, Rect2(-tw2 * 0.5, -th2 + br, tw2, th2), false)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		# голова
+		var hw2: float = rig_head.get_width() * (gh * 0.24 / rig_head.get_height())
+		draw_set_transform(Vector2(px + head_dx, hip.y - th2 + br * 1.4 - gh * 0.02), lean * 1.3, Vector2.ONE)
+		draw_texture_rect(rig_head, Rect2(-hw2 * 0.5, -gh * 0.24, hw2, gh * 0.24), false)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		return
 	_rig_t += get_process_delta_time()
 	var breathing: float = sin(_anim_t * 4.2) * 2.6
 	var sway: float = sin(_anim_t * 5.4) * 2.2
