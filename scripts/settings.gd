@@ -87,12 +87,17 @@ func _ready() -> void:
 	_normalize_layout()
 	_add_personal_rows()
 	_add_footer()
+	# Убираем дубль выбора класса (старая пара Label+OptionButton) — оставлен один ряд «КЛАСС».
+	for n in ["Center/VBox/AvatarLabel", "Center/VBox/AvatarRow"]:
+		var node := get_node_or_null(n)
+		if node is CanvasItem:
+			(node as CanvasItem).visible = false
 
 func _normalize_layout() -> void:
 	var center := get_node_or_null("Center")
 	if center is Control:
 		(center as Control).position = Vector2(UIKit.M, 36)
-		(center as Control).size = Vector2(UIKit.W - UIKit.M * 2.0, UIKit.H - 72.0)
+		(center as Control).size = Vector2(UIKit.W - UIKit.M * 2.0, UIKit.H - 72.0 - 64.0)
 	var vb := get_node_or_null("Center/VBox")
 	if vb is Control:
 		(vb as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL

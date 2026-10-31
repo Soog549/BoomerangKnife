@@ -92,6 +92,26 @@ func _try_load_background() -> void:
 		$Background.visible = false
 
 func _add_character_preview() -> void:
+	const CF := ["warrior", "rogue", "mage", "archer", "knight", "berserker", "assassin", "paladin",
+		"druid", "monk", "pirate", "samurai", "ninja", "viking", "gunslinger", "alchemist",
+		"necromancer", "engineer", "bounty_hunter", "shaman", "champion", "princess", "fist",
+		"kinetic", "pyro", "cryo", "psion", "telekinetic", "kimaster", "aurate", "graviton",
+		"symbiote", "empath"]
+	var idx: int = clampi(GameState.avatar, 0, CF.size() - 1)
+	var p := "res://assets/images/classes_full/%s.png" % CF[idx]
+	if not ResourceLoader.exists(p):
+		p = "res://assets/images/classes/%s.png" % CF[idx]
+	if ResourceLoader.exists(p):
+		var art := TextureRect.new()
+		art.name = "CharArt"
+		art.texture = load(p)
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		art.position = Vector2(8.0, 860.0)
+		art.size = Vector2(320.0, 340.0)
+		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(art)
+		return
 	var cp = preload("res://scripts/character_preview.gd").new()
 	cp.name = "CharPreview"
 	cp.position = Vector2(10.0, 930.0)

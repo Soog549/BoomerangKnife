@@ -289,6 +289,14 @@ func _draw_target() -> void:
 		base.texture = tex
 		base.scale = Vector2.ONE * (RADIUS * 2.0 / tex.get_width())
 		visuals.add_child(base)
+		# Концентрические кольца — чтобы «яблочко» читалось на любом стиле
+		for rf in [0.72, 0.46, 0.2]:
+			var ringl := Line2D.new()
+			ringl.points = _ring_pts(RADIUS * rf)
+			ringl.width = 3.0
+			ringl.default_color = Color(1.0, 0.92, 0.6, 0.55)
+			ringl.closed = true
+			visuals.add_child(ringl)
 	else:
 		var ring := _circle(RADIUS, Color(0.55, 0.4, 0.15, 1))
 		ring.name = "Ring"

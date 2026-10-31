@@ -69,6 +69,14 @@ func _ready() -> void:
 	# Автопоказ ежедневной награды (если доступна) — дружелюбное напоминание
 	if GameState.can_claim_daily():
 		get_tree().call_deferred("change_scene_to_file", "res://scenes/daily_rewards.tscn")
+	if is_instance_valid(high_score_label):
+		high_score_label.visible = false
+		high_score_label.text = ""
+	if is_instance_valid(wallet_label):
+		wallet_label.visible = false
+		wallet_label.text = ""
+
+
 
 func _build_profile_panel() -> void:
 	notch_shift()
@@ -106,7 +114,7 @@ func _build_profile_panel() -> void:
 	bar.show_percentage = false
 	vb.add_child(bar)
 	var cls := Label.new()
-	cls.text = str(GameState.current_skin().get("label", "—"))
+	cls.text = "СКИН: " + str(GameState.current_skin().get("label", "—"))
 	cls.add_theme_font_size_override("font_size", 14)
 	vb.add_child(cls)
 	if GameState.login_streak > 1:
@@ -119,6 +127,11 @@ func _build_profile_panel() -> void:
 	go_char.text = "▸ ПЕРСОНАЖ"
 	go_char.custom_minimum_size = Vector2(0, 34)
 	go_char.pressed.connect(func(): _go("res://scenes/profile.tscn"))
+	var coins_l := Label.new()
+	coins_l.text = "МОНЕТЫ %d" % GameState.coins
+	coins_l.add_theme_font_size_override("font_size", 14)
+	coins_l.add_theme_color_override("font_color", Color(1.0, 0.86, 0.4))
+	vb.add_child(coins_l)
 	vb.add_child(go_char)
 
 func _show_splash() -> void:
@@ -203,6 +216,7 @@ func notch_shift() -> void:
 			l.position.y += 40.0
 
 func COINS_TABLO_build() -> void:
+	return  # отключено: дубль статов
 	var lvl := Label.new()
 	lvl.name = "TABLO"
 	lvl.position = Vector2(360, 54)

@@ -1091,7 +1091,7 @@ func _to_menu() -> void:
 
 
 func _build_action_buttons() -> void:
-	var x: float = 640.0
+	var x: float = 574.0
 	if GameState.btn_side == "left":
 		x = 26.0
 	var melee_btn := Button.new()

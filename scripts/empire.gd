@@ -2,15 +2,15 @@ extends Control
 ## КАРТА ИМПЕРИИ — интерактивное меню: иконки-переходы по «территории».
 
 const NODES := [
-	{"t": "КАМПАНИЯ", "s": "res://scenes/game.tscn", "x": 0.18, "y": 0.16},
-	{"t": "АРЕНА", "s": "res://scenes/mob_arena.tscn", "x": 0.52, "y": 0.12},
-	{"t": "ОБОРОНА", "s": "res://scenes/td.tscn", "x": 0.82, "y": 0.20},
-	{"t": "ДУЭЛЬ", "s": "res://scenes/duel.tscn", "x": 0.30, "y": 0.34},
-	{"t": "МИРЫ", "s": "res://scenes/worlds.tscn", "x": 0.70, "y": 0.38},
-	{"t": "МАГАЗИН", "s": "res://scenes/shop.tscn", "x": 0.18, "y": 0.56},
-	{"t": "КОЛЛЕКЦИЯ", "s": "res://scenes/collection.tscn", "x": 0.52, "y": 0.60},
-	{"t": "ПЕРСОНАЖ", "s": "res://scenes/profile.tscn", "x": 0.80, "y": 0.54},
-	{"t": "НАСТРОЙКИ", "s": "res://scenes/settings.tscn", "x": 0.36, "y": 0.74},
+	{"t": "КАМПАНИЯ", "s": "res://scenes/game.tscn", "x": 0.18, "y": 0.13},
+	{"t": "АРЕНА", "s": "res://scenes/mob_arena.tscn", "x": 0.52, "y": 0.11},
+	{"t": "ОБОРОНА", "s": "res://scenes/td.tscn", "x": 0.82, "y": 0.17},
+	{"t": "ДУЭЛЬ", "s": "res://scenes/duel.tscn", "x": 0.20, "y": 0.28},
+	{"t": "МИРЫ", "s": "res://scenes/worlds.tscn", "x": 0.76, "y": 0.30},
+	{"t": "МАГАЗИН", "s": "res://scenes/shop.tscn", "x": 0.18, "y": 0.42},
+	{"t": "КОЛЛЕКЦИЯ", "s": "res://scenes/collection.tscn", "x": 0.52, "y": 0.44},
+	{"t": "ПЕРСОНАЖ", "s": "res://scenes/profile.tscn", "x": 0.82, "y": 0.40},
+	{"t": "НАСТРОЙКИ", "s": "res://scenes/settings.tscn", "x": 0.50, "y": 0.86},
 ]
 
 
@@ -59,7 +59,7 @@ func _ready() -> void:
 	rec.text = "РАШ: %d  ·  ВЫЖ: %d" % [GameState.best_rush_waves, GameState.best_survival_waves]
 	rec.add_theme_font_size_override("font_size", 16)
 	rec.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
-	rec.position = Vector2(24, 1280.0 - 60.0)
+	rec.position = Vector2(24, 96.0)
 	add_child(rec)
 
 
@@ -89,24 +89,24 @@ func _add_node(n: Dictionary) -> void:
 func _add_special() -> void:
 	var g := Button.new()
 	g.text = "ГИЛЬДИЯ"
-	g.size = Vector2(190, 84)
-	g.position = Vector2(0.10 * 720.0, 0.70 * 1280.0)
+	g.size = Vector2(200, 76)
+	g.position = Vector2(0.12 * 720.0, 0.56 * 1280.0)
 	g.add_theme_font_size_override("font_size", 15)
 	g.pressed.connect(_guild_pressed)
 	add_child(g)
 
 	var zones := [
-		{"t": "ОКРАИНА\n(easy)", "d": "easy", "x": 0.34},
-		{"t": "ПУСТОШЬ\n(normal)", "d": "normal", "x": 0.50},
-		{"t": "РУБЕЖ\n(hard)", "d": "hard", "x": 0.66},
-		{"t": "БОСС-РАШ", "d": "normal", "x": 0.82, "m": "rush"},
-		{"t": "ВЫЖИВАНИЕ", "d": "hard", "x": 0.34, "y": 0.78, "m": "surv"},
+		{"t": "ОКРАИНА", "d": "easy", "x": 0.50, "y": 0.56},
+		{"t": "ПУСТОШЬ", "d": "normal", "x": 0.84, "y": 0.56},
+		{"t": "РУБЕЖ", "d": "hard", "x": 0.20, "y": 0.68},
+		{"t": "БОСС-РАШ", "d": "normal", "x": 0.52, "y": 0.68, "m": "rush"},
+		{"t": "ВЫЖИВАНИЕ", "d": "hard", "x": 0.82, "y": 0.68, "m": "surv"},
 	]
 	for z in zones:
 		var b := Button.new()
 		b.text = str(z["t"])
-		b.size = Vector2(120, 76)
-		b.position = Vector2(float(z["x"]) * 720.0 - 60.0, float(z.get("y", 0.70)) * 1280.0)
+		b.size = Vector2(150, 72)
+		b.position = Vector2(float(z["x"]) * 720.0 - 75.0, float(z.get("y", 0.56)) * 1280.0)
 		b.add_theme_font_size_override("font_size", 13)
 		var dd: String = str(z["d"])
 		var mm: String = str(z.get("m", ""))

@@ -441,52 +441,52 @@ VIP-подписка (30 дн.),VIP-подписка (30 дн.),VIP subscription
 Оружие,Оружие,Weapon,Зброя,Arma,Waffe,Arme,Arma,Arma,Broń,Silah
 Кольцо,Кольцо,Ring,Перстень,Anillo,Ring,Anneau,Anel,Anello,Pierścień,Yüzük
 
-"МОЯ ИГРА","МОЯ ИГРА","MY GAME","МОЯ ГРА","MI JUEGO","MEIN SPIEL","MON JEU","MEU JOGO","IL MIO GIOCO","MOJA GRA","OYUNUM"
-"Скин","Скин","Skin","Скін","Aspecto","Skin","Skin","Skin","Skin","Skórka","Görünüm"
-"Сложность","Сложность","Difficulty","Складність","Dificultad","Schwierigkeit","Difficulté","Dificuldade","Difficoltà","Poziom","Zorluk"
-"Управление","Управление","Controls","Керування","Controles","Steuerung","Commandes","Controles","Comandi","Sterowanie","Kontroller"
-"Размер стика","Размер стика","Stick size","Розмір стіка","Tamaño del stick","Stickgröße","Taille du stick","Tamanho do stick","Dimensione stick","Rozmiar drążka","Çubuk boyutu"
-"Авто-прицел","Авто-прицел","Auto-aim","Авто-приціл","Puntería auto","Auto-Zielen","Visée auto","Mira auto","Mira auto","Auto-celowanie","Otomatik nişan"
-"Музыка","Музыка","Music","Музика","Música","Musik","Musique","Música","Musica","Muzyka","Müzik"
-"Звуки","Звуки","SFX","Звуки","Efectos","Effekte","Effets","Efeitos","Effetti","Efekty","Efektler"
-"Язык","Язык","Language","Мова","Idioma","Sprache","Langue","Idioma","Lingua","Język","Dil"
-"КОМБО x%d","КОМБО x%d","COMBO x%d","КОМБО x%d","COMBO x%d","COMBO x%d","COMBO x%d","COMBO x%d","COMBO x%d","COMBO x%d","COMBO x%d"
-"ВОЛНА %d","ВОЛНА %d","WAVE %d","ХВИЛЯ %d","OLEADA %d","WELLE %d","VAGUE %d","ONDA %d","ONDATA %d","FALA %d","DALGA %d"
-"СЧЁТ %d   МОНЕТЫ %d   ВОЛНА %d","СЧЁТ %d   МОНЕТЫ %d   ВОЛНА %d","SCORE %d   COINS %d   WAVE %d","РАХУНОК %d   МОНЕТИ %d   ХВИЛЯ %d","PUNTOS %d   MONEDAS %d   OLEADA %d","PUNKTE %d   MÜNZEN %d   WELLE %d","SCORE %d   PIÈCES %d   VAGUE %d","PONTOS %d   MOEDAS %d   ONDA %d","PUNTI %d   MONETE %d   ONDATA %d","PUNKTY %d   MONETY %d   FALA %d","PUAN %d   ALTIN %d   DALGA %d"
-"HP %d/%d   ЩИТ %d","HP %d/%d   ЩИТ %d","HP %d/%d   SHIELD %d","HP %d/%d   ЩИТ %d","HP %d/%d   ESCUDO %d","HP %d/%d   SCHILD %d","HP %d/%d   BOUCLIER %d","HP %d/%d   ESCUDO %d","HP %d/%d   SCUDO %d","HP %d/%d   TARCZA %d","HP %d/%d   KALKAN %d"
-"ПОРАЖЕНИЕ","ПОРАЖЕНИЕ","DEFEAT","ПОРАЗКА","DERROTA","NIEDERLAGE","DÉFAITE","DERROTA","SCONFITTA","PORAŻKA","YENİLGİ"
-"ЯДРО %d/%d","ЯДРО %d/%d","CORE %d/%d","ЯДРО %d/%d","NÚCLEO %d/%d","KERN %d/%d","CŒUR %d/%d","NÚCLEO %d/%d","NUCLEO %d/%d","RDZEŃ %d/%d","ÇEKİRDEK %d/%d"
-"ЯДРО ПАЛО","ЯДРО ПАЛО","CORE DESTROYED","ЯДРО ВПАЛО","NÚCLEO CAÍDO","KERN ZERSTÖRT","CŒUR DÉTRUIT","NÚCLEO DESTRUÍDO","NUCLEO DISTRUTTO","RDZEŃ ZNISZCZONY","ÇEKİRDEK YIKILDI"
-"СТРЕЛОК","СТРЕЛОК","ARCHER","СТРІЛОК","ARQUERO","SCHÜTZE","ARCHER","ARQUEIRO","ARCIERE","ŁUCZNIK","OKÇU"
-"МОРОЗ","МОРОЗ","FROST","МОРОЗ","HIELO","FROST","GIVRE","GELO","GELO","MROZ","DON"
-"ЭНЕРГИЯ","ЭНЕРГИЯ","ENERGY","ЕНЕРГІЯ","ENERGÍA","ENERGIE","ÉNERGIE","ENERGIA","ENERGIA","ENERGIA","ENERJİ"
-"ПРОДОЛЖИТЬ","ПРОДОЛЖИТЬ","CONTINUE","ПРОДОВЖИТИ","CONTINUAR","WEITER","CONTINUER","CONTINUAR","CONTINUA","KONTYNUUJ","DEVAM"
-"В МЕНЮ","В МЕНЮ","TO MENU","В МЕНЮ","AL MENÚ","ZUM MENÜ","AU MENU","AO MENU","AL MENU","DO MENU","MENÜYE"
-"TD ПРОТОТИП  ВОЛНА %d  МОНЕТЫ %d","TD ПРОТОТИП  ВОЛНА %d  МОНЕТЫ %d","TD PROTOTYPE  WAVE %d  COINS %d","TD-ПРОТОТИП  ХВИЛЯ %d  МОНЕТИ %d","PROTOTIPO TD  OLEADA %d  MONEDAS %d","TD-PROTOTYP  WELLE %d  MÜNZEN %d","PROTO TD  VAGUE %d  PIÈCES %d","PROTÓTIPO TD  ONDA %d  MOEDAS %d","PROTOTIPO TD  ONDATA %d  MONETE %d","PROTOTYP TD  FALA %d  MONETY %d","TD PROTOTİP  DALGA %d  ALTIN %d"
-"Выбери башню и кликни по полю · клик по башне - апгрейд","Выбери башню и кликни по полю · клик по башне - апгрейд","Pick a tower and tap the field · tap a tower to upgrade","Обери башту й клікни по полю · клік по башті - апгрейд","Elige una torre y toca el campo · toca una torre para mejorar","Turm wählen, Feld antippen · Turm antippen zum Verbessern","Choisis une tour et touche le terrain · touche une tour pour améliorer","Escolha uma torre e toque no campo · toque numa torre para melhorar","Scegli una torre e tocca il campo · tocca una torre per potenziare","Wybierz wieżę i kliknij pole · kliknij wieżę, aby ulepszyć","Bir kule seç ve alana dokun · yükseltmek için kuleye dokun"
-"Клик - рестарт","Клик - рестарт","Click to restart","Клік - рестарт","Clic para reiniciar","Klick zum Neustart","Cliquez pour recommencer","Clique para reiniciar","Clic per riavviare","Kliknij, aby zrestartować","Yeniden başlat için tıkla"
-"%d мон.","%d мон.","%d coins","%d мон.","%d monedas","%d Münzen","%d pièces","%d moedas","%d monete","%d monet","%d altın"
-"WASD/стрелки - движение · ЛКМ/Пробел - нож · мышь в поле - стик","WASD/стрелки - движение · ЛКМ/Пробел - нож · мышь в поле - стик","WASD/arrows - move · LMB/Space - knife · mouse in field - stick","WASD/стрілки - рух · ЛКМ/Пробіл - ніж · миша в полі - стік","WASD/flechas - mover · Clic/Espacio - cuchillo · ratón en campo - stick","WASD/Pfeile - bewegen · LMB/Leertaste - Messer · Maus im Feld - Stick","WASD/flèches - bouger · Clic/Espace - couteau · souris dans le champ - stick","WASD/setas - mover · Clique/Espaço - faca · rato no campo - stick","WASD/frecce - muovi · Clic/Spazio - coltello · mouse nel campo - stick","WASD/strzałki - ruch · LPM/Spacja - nóż · mysz w polu - drążek","WASD/oklar - hareket · Sol tık/Boşluk - bıçak · alanda fare - çubuk"
-"Тяни в поле - движение · Тап - нож · WASD/Пробел","Тяни в поле - движение · Тап - нож · WASD/Пробел","Drag in field - move · Tap - knife · WASD/Space","Тягни в полі - рух · Тап - ніж · WASD/Пробіл","Arrastra en el campo - mover · Toque - cuchillo · WASD/Espacio","Im Feld ziehen - bewegen · Tippen - Messer · WASD/Leertaste","Glisse dans le champ - bouger · Touche - couteau · WASD/Espace","Arraste no campo - mover · Toque - faca · WASD/Espaço","Trascina nel campo - muovi · Tocca - coltello · WASD/Spazio","Przeciągnij w polu - ruch · Dotknij - nóż · WASD/Spacja","Alanda sürükle - hareket · Dokun - bıçak · WASD/Boşluk"
-"Тяни в поле - движение · Тап - бросок ножа","Тяни в поле - движение · Тап - бросок ножа","Drag in field - move · Tap - throw knife","Тягни в полі - рух · Тап - кидок ножа","Arrastra en el campo - mover · Toque - lanzar cuchillo","Im Feld ziehen - bewegen · Tippen - Messer werfen","Glisse dans le champ - bouger · Touche - lancer le couteau","Arraste no campo - mover · Toque - lançar faca","Trascina nel campo - muovi · Tocca - lancia il coltello","Przeciągnij w polu - ruch · Dotknij - rzuć nóż","Alanda sürükle - hareket · Dokun - bıçak at"
-"Кулачный","Кулачный","Fist Fighter","Fist Fighter","Fist Fighter","Fist Fighter","Fist Fighter","Fist Fighter","Fist Fighter","Fist Fighter","Fist Fighter"
-"Кинетик","Кинетик","Kinetic","Kinetic","Kinetic","Kinetic","Kinetic","Kinetic","Kinetic","Kinetic","Kinetic"
-"Пиромант","Пиромант","Pyromancer","Pyromancer","Pyromancer","Pyromancer","Pyromancer","Pyromancer","Pyromancer","Pyromancer","Pyromancer"
-"Криомант","Криомант","Cryomancer","Cryomancer","Cryomancer","Cryomancer","Cryomancer","Cryomancer","Cryomancer","Cryomancer","Cryomancer"
-"Псайкер","Псайкер","Psyker","Psyker","Psyker","Psyker","Psyker","Psyker","Psyker","Psyker","Psyker"
-"Телекинетик","Телекинетик","Telekinetic","Telekinetic","Telekinetic","Telekinetic","Telekinetic","Telekinetic","Telekinetic","Telekinetic","Telekinetic"
-"Мастер КИ","Мастер КИ","Chi Master","Chi Master","Chi Master","Chi Master","Chi Master","Chi Master","Chi Master","Chi Master","Chi Master"
-"Аурат","Аурат","Aurathe","Aurathe","Aurathe","Aurathe","Aurathe","Aurathe","Aurathe","Aurathe","Aurathe"
-"Гравитоник","Гравитоник","Graviton","Graviton","Graviton","Graviton","Graviton","Graviton","Graviton","Graviton","Graviton"
-"Симбиот","Симбиот","Symbiote","Symbiote","Symbiote","Symbiote","Symbiote","Symbiote","Symbiote","Symbiote","Symbiote"
-"Эмпат","Эмпат","Empath","Empath","Empath","Empath","Empath","Empath","Empath","Empath","Empath"
-"БОСС-РАШ","БОСС-РАШ","BOSS RUSH","BOSS RUSH","BOSS RUSH","BOSS RUSH","BOSS RUSH","BOSS RUSH","BOSS RUSH","BOSS RUSH","BOSS RUSH"
-"ВЫЖИВАНИЕ","ВЫЖИВАНИЕ","SURVIVAL","SURVIVAL","SURVIVAL","SURVIVAL","SURVIVAL","SURVIVAL","SURVIVAL","SURVIVAL","SURVIVAL"
+МОЯ ИГРА,МОЯ ИГРА,MY GAME,МОЯ ГРА,MI JUEGO,MEIN SPIEL,MON JEU,MEU JOGO,IL MIO GIOCO,MOJA GRA,OYUNUM
+Скин,Скин,Skin,Скін,Aspecto,Skin,Skin,Skin,Skin,Skórka,Görünüm
+Сложность,Сложность,Difficulty,Складність,Dificultad,Schwierigkeit,Difficulté,Dificuldade,Difficoltà,Poziom,Zorluk
+Управление,Управление,Controls,Керування,Controles,Steuerung,Commandes,Controles,Comandi,Sterowanie,Kontroller
+Размер стика,Размер стика,Stick size,Розмір стіка,Tamaño del stick,Stickgröße,Taille du stick,Tamanho do stick,Dimensione stick,Rozmiar drążka,Çubuk boyutu
+Авто-прицел,Авто-прицел,Auto-aim,Авто-приціл,Puntería auto,Auto-Zielen,Visée auto,Mira auto,Mira auto,Auto-celowanie,Otomatik nişan
+Музыка,Музыка,Music,Музика,Música,Musik,Musique,Música,Musica,Muzyka,Müzik
+Звуки,Звуки,SFX,Звуки,Efectos,Effekte,Effets,Efeitos,Effetti,Efekty,Efektler
+Язык,Язык,Language,Мова,Idioma,Sprache,Langue,Idioma,Lingua,Język,Dil
+КОМБО x%d,КОМБО x%d,COMBO x%d,КОМБО x%d,COMBO x%d,COMBO x%d,COMBO x%d,COMBO x%d,COMBO x%d,COMBO x%d,COMBO x%d
+ВОЛНА %d,ВОЛНА %d,WAVE %d,ХВИЛЯ %d,OLEADA %d,WELLE %d,VAGUE %d,ONDA %d,ONDATA %d,FALA %d,DALGA %d
+СЧЁТ %d   МОНЕТЫ %d   ВОЛНА %d,СЧЁТ %d   МОНЕТЫ %d   ВОЛНА %d,SCORE %d   COINS %d   WAVE %d,РАХУНОК %d   МОНЕТИ %d   ХВИЛЯ %d,PUNTOS %d   MONEDAS %d   OLEADA %d,PUNKTE %d   MÜNZEN %d   WELLE %d,SCORE %d   PIÈCES %d   VAGUE %d,PONTOS %d   MOEDAS %d   ONDA %d,PUNTI %d   MONETE %d   ONDATA %d,PUNKTY %d   MONETY %d   FALA %d,PUAN %d   ALTIN %d   DALGA %d
+HP %d/%d   ЩИТ %d,HP %d/%d   ЩИТ %d,HP %d/%d   SHIELD %d,HP %d/%d   ЩИТ %d,HP %d/%d   ESCUDO %d,HP %d/%d   SCHILD %d,HP %d/%d   BOUCLIER %d,HP %d/%d   ESCUDO %d,HP %d/%d   SCUDO %d,HP %d/%d   TARCZA %d,HP %d/%d   KALKAN %d
+ПОРАЖЕНИЕ,ПОРАЖЕНИЕ,DEFEAT,ПОРАЗКА,DERROTA,NIEDERLAGE,DÉFAITE,DERROTA,SCONFITTA,PORAŻKA,YENİLGİ
+ЯДРО %d/%d,ЯДРО %d/%d,CORE %d/%d,ЯДРО %d/%d,NÚCLEO %d/%d,KERN %d/%d,CŒUR %d/%d,NÚCLEO %d/%d,NUCLEO %d/%d,RDZEŃ %d/%d,ÇEKİRDEK %d/%d
+ЯДРО ПАЛО,ЯДРО ПАЛО,CORE DESTROYED,ЯДРО ВПАЛО,NÚCLEO CAÍDO,KERN ZERSTÖRT,CŒUR DÉTRUIT,NÚCLEO DESTRUÍDO,NUCLEO DISTRUTTO,RDZEŃ ZNISZCZONY,ÇEKİRDEK YIKILDI
+СТРЕЛОК,СТРЕЛОК,ARCHER,СТРІЛОК,ARQUERO,SCHÜTZE,ARCHER,ARQUEIRO,ARCIERE,ŁUCZNIK,OKÇU
+МОРОЗ,МОРОЗ,FROST,МОРОЗ,HIELO,FROST,GIVRE,GELO,GELO,MROZ,DON
+ЭНЕРГИЯ,ЭНЕРГИЯ,ENERGY,ЕНЕРГІЯ,ENERGÍA,ENERGIE,ÉNERGIE,ENERGIA,ENERGIA,ENERGIA,ENERJİ
+ПРОДОЛЖИТЬ,ПРОДОЛЖИТЬ,CONTINUE,ПРОДОВЖИТИ,CONTINUAR,WEITER,CONTINUER,CONTINUAR,CONTINUA,KONTYNUUJ,DEVAM
+В МЕНЮ,В МЕНЮ,TO MENU,В МЕНЮ,AL MENÚ,ZUM MENÜ,AU MENU,AO MENU,AL MENU,DO MENU,MENÜYE
+TD ПРОТОТИП  ВОЛНА %d  МОНЕТЫ %d,ОБОРОНА  ВОЛНА %d  МОНЕТЫ %d,DEFENSE  WAVE %d  COINS %d,TD-ПРОТОТИП  ХВИЛЯ %d  МОНЕТИ %d,PROTOTIPO TD  OLEADA %d  MONEDAS %d,TD-PROTOTYP  WELLE %d  MÜNZEN %d,PROTO TD  VAGUE %d  PIÈCES %d,PROTÓTIPO TD  ONDA %d  MOEDAS %d,PROTOTIPO TD  ONDATA %d  MONETE %d,PROTOTYP TD  FALA %d  MONETY %d,TD PROTOTİP  DALGA %d  ALTIN %d
+Выбери башню и кликни по полю · клик по башне - апгрейд,Выбери башню и кликни по полю · клик по башне - апгрейд,Pick a tower and tap the field · tap a tower to upgrade,Обери башту й клікни по полю · клік по башті - апгрейд,Elige una torre y toca el campo · toca una torre para mejorar,"Turm wählen, Feld antippen · Turm antippen zum Verbessern",Choisis une tour et touche le terrain · touche une tour pour améliorer,Escolha uma torre e toque no campo · toque numa torre para melhorar,Scegli una torre e tocca il campo · tocca una torre per potenziare,"Wybierz wieżę i kliknij pole · kliknij wieżę, aby ulepszyć",Bir kule seç ve alana dokun · yükseltmek için kuleye dokun
+Клик - рестарт,Клик - рестарт,Click to restart,Клік - рестарт,Clic para reiniciar,Klick zum Neustart,Cliquez pour recommencer,Clique para reiniciar,Clic per riavviare,"Kliknij, aby zrestartować",Yeniden başlat için tıkla
+%d мон.,%d мон.,%d coins,%d мон.,%d monedas,%d Münzen,%d pièces,%d moedas,%d monete,%d monet,%d altın
+WASD/стрелки - движение · ЛКМ/Пробел - нож · мышь в поле - стик,WASD/стрелки - движение · ЛКМ/Пробел - нож · мышь в поле - стик,WASD/arrows - move · LMB/Space - knife · mouse in field - stick,WASD/стрілки - рух · ЛКМ/Пробіл - ніж · миша в полі - стік,WASD/flechas - mover · Clic/Espacio - cuchillo · ratón en campo - stick,WASD/Pfeile - bewegen · LMB/Leertaste - Messer · Maus im Feld - Stick,WASD/flèches - bouger · Clic/Espace - couteau · souris dans le champ - stick,WASD/setas - mover · Clique/Espaço - faca · rato no campo - stick,WASD/frecce - muovi · Clic/Spazio - coltello · mouse nel campo - stick,WASD/strzałki - ruch · LPM/Spacja - nóż · mysz w polu - drążek,WASD/oklar - hareket · Sol tık/Boşluk - bıçak · alanda fare - çubuk
+Тяни в поле - движение · Тап - нож · WASD/Пробел,Тяни в поле - движение · Тап - нож · WASD/Пробел,Drag in field - move · Tap - knife · WASD/Space,Тягни в полі - рух · Тап - ніж · WASD/Пробіл,Arrastra en el campo - mover · Toque - cuchillo · WASD/Espacio,Im Feld ziehen - bewegen · Tippen - Messer · WASD/Leertaste,Glisse dans le champ - bouger · Touche - couteau · WASD/Espace,Arraste no campo - mover · Toque - faca · WASD/Espaço,Trascina nel campo - muovi · Tocca - coltello · WASD/Spazio,Przeciągnij w polu - ruch · Dotknij - nóż · WASD/Spacja,Alanda sürükle - hareket · Dokun - bıçak · WASD/Boşluk
+Тяни в поле - движение · Тап - бросок ножа,Тяни в поле - движение · Тап - бросок ножа,Drag in field - move · Tap - throw knife,Тягни в полі - рух · Тап - кидок ножа,Arrastra en el campo - mover · Toque - lanzar cuchillo,Im Feld ziehen - bewegen · Tippen - Messer werfen,Glisse dans le champ - bouger · Touche - lancer le couteau,Arraste no campo - mover · Toque - lançar faca,Trascina nel campo - muovi · Tocca - lancia il coltello,Przeciągnij w polu - ruch · Dotknij - rzuć nóż,Alanda sürükle - hareket · Dokun - bıçak at
+Кулачный,Кулачный,Fist Fighter,Fist Fighter,Fist Fighter,Fist Fighter,Fist Fighter,Fist Fighter,Fist Fighter,Fist Fighter,Fist Fighter
+Кинетик,Кинетик,Kinetic,Kinetic,Kinetic,Kinetic,Kinetic,Kinetic,Kinetic,Kinetic,Kinetic
+Пиромант,Пиромант,Pyromancer,Pyromancer,Pyromancer,Pyromancer,Pyromancer,Pyromancer,Pyromancer,Pyromancer,Pyromancer
+Криомант,Криомант,Cryomancer,Cryomancer,Cryomancer,Cryomancer,Cryomancer,Cryomancer,Cryomancer,Cryomancer,Cryomancer
+Псайкер,Псайкер,Psyker,Psyker,Psyker,Psyker,Psyker,Psyker,Psyker,Psyker,Psyker
+Телекинетик,Телекинетик,Telekinetic,Telekinetic,Telekinetic,Telekinetic,Telekinetic,Telekinetic,Telekinetic,Telekinetic,Telekinetic
+Мастер КИ,Мастер КИ,Chi Master,Chi Master,Chi Master,Chi Master,Chi Master,Chi Master,Chi Master,Chi Master,Chi Master
+Аурат,Аурат,Aurathe,Aurathe,Aurathe,Aurathe,Aurathe,Aurathe,Aurathe,Aurathe,Aurathe
+Гравитоник,Гравитоник,Graviton,Graviton,Graviton,Graviton,Graviton,Graviton,Graviton,Graviton,Graviton
+Симбиот,Симбиот,Symbiote,Symbiote,Symbiote,Symbiote,Symbiote,Symbiote,Symbiote,Symbiote,Symbiote
+Эмпат,Эмпат,Empath,Empath,Empath,Empath,Empath,Empath,Empath,Empath,Empath
+БОСС-РАШ,БОСС-РАШ,BOSS RUSH,BOSS RUSH,BOSS RUSH,BOSS RUSH,BOSS RUSH,BOSS RUSH,BOSS RUSH,BOSS RUSH,BOSS RUSH
+ВЫЖИВАНИЕ,ВЫЖИВАНИЕ,SURVIVAL,SURVIVAL,SURVIVAL,SURVIVAL,SURVIVAL,SURVIVAL,SURVIVAL,SURVIVAL,SURVIVAL
 "Предпросмотр стиля: фон, моб, нож, щит","Предпросмотр стиля: фон, моб, нож, щит","Style preview: bg, mob, knife, shield","Style preview: bg, mob, knife, shield","Style preview: bg, mob, knife, shield","Style preview: bg, mob, knife, shield","Style preview: bg, mob, knife, shield","Style preview: bg, mob, knife, shield","Style preview: bg, mob, knife, shield","Style preview: bg, mob, knife, shield","Style preview: bg, mob, knife, shield"
-"Пока пусто — загляни в магазин","Пока пусто — загляни в магазин","Empty — check the shop","Empty — check the shop","Empty — check the shop","Empty — check the shop","Empty — check the shop","Empty — check the shop","Empty — check the shop","Empty — check the shop","Empty — check the shop"
-"СОХРАНИТЬ ПРОФИЛЬ","СОХРАНИТЬ ПРОФИЛЬ","SAVE PROFILE","SAVE PROFILE","SAVE PROFILE","SAVE PROFILE","SAVE PROFILE","SAVE PROFILE","SAVE PROFILE","SAVE PROFILE","SAVE PROFILE"
-"ЗАГРУЗИТЬ","ЗАГРУЗИТЬ","LOAD","LOAD","LOAD","LOAD","LOAD","LOAD","LOAD","LOAD","LOAD"
-"Профиль сохранён","Профиль сохранён","Profile saved","Profile saved","Profile saved","Profile saved","Profile saved","Profile saved","Profile saved","Profile saved","Profile saved"
-"Профиль загружен","Профиль загружен","Profile loaded","Profile loaded","Profile loaded","Profile loaded","Profile loaded","Profile loaded","Profile loaded","Profile loaded","Profile loaded"
-"Файл профиля не найден","Файл профиля не найден","Profile file not found","Profile file not found","Profile file not found","Profile file not found","Profile file not found","Profile file not found","Profile file not found","Profile file not found","Profile file not found"
-"БЕЗ РЕКЛАМЫ · ОФЛАЙН · ПРОГРЕСС СОХРАНЯЕТСЯ","БЕЗ РЕКЛАМЫ · ОФЛАЙН · ПРОГРЕСС СОХРАНЯЕТСЯ","NO ADS · OFFLINE · PROGRESS SAVED","NO ADS · OFFLINE · PROGRESS SAVED","NO ADS · OFFLINE · PROGRESS SAVED","NO ADS · OFFLINE · PROGRESS SAVED","NO ADS · OFFLINE · PROGRESS SAVED","NO ADS · OFFLINE · PROGRESS SAVED","NO ADS · OFFLINE · PROGRESS SAVED","NO ADS · OFFLINE · PROGRESS SAVED","NO ADS · OFFLINE · PROGRESS SAVED"
+Пока пусто — загляни в магазин,Пока пусто — загляни в магазин,Empty — check the shop,Empty — check the shop,Empty — check the shop,Empty — check the shop,Empty — check the shop,Empty — check the shop,Empty — check the shop,Empty — check the shop,Empty — check the shop
+СОХРАНИТЬ ПРОФИЛЬ,СОХРАНИТЬ ПРОФИЛЬ,SAVE PROFILE,SAVE PROFILE,SAVE PROFILE,SAVE PROFILE,SAVE PROFILE,SAVE PROFILE,SAVE PROFILE,SAVE PROFILE,SAVE PROFILE
+ЗАГРУЗИТЬ,ЗАГРУЗИТЬ,LOAD,LOAD,LOAD,LOAD,LOAD,LOAD,LOAD,LOAD,LOAD
+Профиль сохранён,Профиль сохранён,Profile saved,Profile saved,Profile saved,Profile saved,Profile saved,Profile saved,Profile saved,Profile saved,Profile saved
+Профиль загружен,Профиль загружен,Profile loaded,Profile loaded,Profile loaded,Profile loaded,Profile loaded,Profile loaded,Profile loaded,Profile loaded,Profile loaded
+Файл профиля не найден,Файл профиля не найден,Profile file not found,Profile file not found,Profile file not found,Profile file not found,Profile file not found,Profile file not found,Profile file not found,Profile file not found,Profile file not found
+БЕЗ РЕКЛАМЫ · ОФЛАЙН · ПРОГРЕСС СОХРАНЯЕТСЯ,БЕЗ РЕКЛАМЫ · ОФЛАЙН · ПРОГРЕСС СОХРАНЯЕТСЯ,NO ADS · OFFLINE · PROGRESS SAVED,NO ADS · OFFLINE · PROGRESS SAVED,NO ADS · OFFLINE · PROGRESS SAVED,NO ADS · OFFLINE · PROGRESS SAVED,NO ADS · OFFLINE · PROGRESS SAVED,NO ADS · OFFLINE · PROGRESS SAVED,NO ADS · OFFLINE · PROGRESS SAVED,NO ADS · OFFLINE · PROGRESS SAVED,NO ADS · OFFLINE · PROGRESS SAVED
