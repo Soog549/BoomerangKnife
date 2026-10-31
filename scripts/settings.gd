@@ -3,6 +3,7 @@ extends Control
 const APP_VERSION := ""
 const STYLE_ORDER := ["base", "imperial", "epic", "space", "anime", "eurasia", "norse", "kids", "cyber", "dark", "icon-flat", "noir", "holiday", "wuxia", "biomech", "arcade", "imperial-2", "imperial-3", "space-2"]
 var _row_values: Array = []
+var style_preview_tex: TextureRect = null
 const DIFF_ORDER := ["easy", "normal", "hard", "survival"]
 
 @onready var volume_label: Label = $Center/VBox/VolumeLabel
@@ -111,6 +112,7 @@ func _add_personal_rows() -> void:
 		return
 	vb.add_child(_prow(tr("КЛАСС"), AVATAR_TYPES[clampi(GameState.avatar, 0, AVATAR_TYPES.size() - 1)], _cycle_class))
 	vb.add_child(_prow(tr("СТИЛЬ"), GameState.style_pack.to_upper(), _cycle_style))
+	vb.add_child(_style_preview())
 	vb.add_child(_prow(tr("СЛОЖНОСТЬ"), tr(GameState.difficulty.to_upper()), _cycle_diff))
 	vb.add_child(_prow(tr("УПРАВЛЕНИЕ"), tr(GameState.control_mode.to_upper()), _cycle_mode))
 	vb.add_child(_prow(tr("АВТОПРИЦЕЛ"), tr("ВКЛ") if GameState.auto_aim else tr("ВЫКЛ"), _cycle_aim))
@@ -210,6 +212,34 @@ func _cycle_style(d: int) -> void:
 	_rebuild_settings()
 
 
+func _style_preview() -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	style_preview_tex = TextureRect.new()
+	style_preview_tex.custom_minimum_size = Vector2(180, 120)
+	style_preview_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	row.add_child(style_preview_tex)
+	var info := Label.new()
+	info.text = tr("Предпросмотр стиля: фон, моб, нож, щит")
+	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	info.add_theme_font_size_override("font_size", 13)
+	info.add_theme_color_override("font_color", Color(0.7, 0.75, 0.85))
+	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(info)
+	_refresh_style_preview()
+	return row
+
+
+func _refresh_style_preview() -> void:
+	if style_preview_tex == null:
+		return
+	var p := "res://assets/images/packs/%s/hero-front.png" % GameState.style_pack
+	if ResourceLoader.exists(p):
+		style_preview_tex.texture = load(p)
+	elif ResourceLoader.exists("res://assets/images/packs/%s/knife-1.png" % GameState.style_pack):
+		style_preview_tex.texture = load("res://assets/images/packs/%s/knife-1.png" % GameState.style_pack)
+
+
 func _cycle_diff(d: int) -> void:
 	var i: int = DIFF_ORDER.find(GameState.difficulty)
 	GameState.difficulty = DIFF_ORDER[(i + d + DIFF_ORDER.size()) % DIFF_ORDER.size()]
@@ -239,6 +269,7 @@ func _rebuild_settings() -> void:
 	if _row_values.size() >= 9:
 		_row_values[0].text = AVATAR_TYPES[clampi(GameState.avatar, 0, AVATAR_TYPES.size() - 1)]
 		_row_values[1].text = GameState.style_pack.to_upper()
+		_refresh_style_preview()
 		_row_values[2].text = tr(GameState.difficulty.to_upper())
 		_row_values[3].text = GameState.control_mode.to_upper()
 		_row_values[4].text = tr("ВКЛ") if GameState.auto_aim else tr("ВЫКЛ")
