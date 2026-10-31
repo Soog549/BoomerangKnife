@@ -7,6 +7,7 @@ extends Control
 @onready var rules_label: Label = $Center/Panel/VBox/RulesLabel
 
 func _ready() -> void:
+	_apply_bg()
 	var _hb := get_node_or_null("UI/HomeButton")
 	if _hb != null:
 		_hb.visible = false
@@ -67,3 +68,17 @@ func _on_decline() -> void:
 func _on_back() -> void:
 	AudioManager.play("click")
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func _apply_bg() -> void:
+	var bg := get_node_or_null("Background")
+	var p := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
+	if bg == null or not ResourceLoader.exists(p):
+		return
+	var tex := TextureRect.new()
+	tex.texture = load(p)
+	tex.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	tex.modulate = Color(1, 1, 1, 0.55)
+	tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bg.add_child(tex)

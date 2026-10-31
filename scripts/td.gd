@@ -142,9 +142,9 @@ func _unhandled_input(e: InputEvent) -> void:
 			_start_wave()
 			return
 		# выбор типа башни (низ экрана)
-		if p.y < 96.0:
+		if p.y < 150.0:
 			for i in 3:
-				var r := Rect2(14.0 + float(i) * 200.0, 34.0, 190.0, 52.0)
+				var r := Rect2(12.0 + float(i) * 196.0, 84.0, 186.0, 60.0)
 				if r.has_point(p):
 					sel_type = i
 					return
@@ -327,11 +327,21 @@ func _draw() -> void:
 	# кнопки типов
 	for i in 3:
 		var tt: Dictionary = TOWER_TYPES[i]
-		var r := Rect2(14.0 + float(i) * 200.0, 34.0, 190.0, 52.0)
-		draw_rect(r, Color(0.16, 0.20, 0.28) if i != sel_type else Color(0.25, 0.45, 0.65))
-		draw_rect(r, tt["col"], false, 3.0)
-		draw_string(ThemeDB.fallback_font, Vector2(r.position.x + 8.0, r.position.y + 26.0), tr(str(tt["name"])), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(1, 1, 1))
-		draw_string(ThemeDB.fallback_font, Vector2(r.position.x + 8.0, r.position.y + 50.0), tr("%d мон.") % int(tt["cost"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, tt["col"])
+		var sel: bool = i == sel_type
+		var r := Rect2(12.0 + float(i) * 196.0, 84.0, 186.0, 60.0)
+		var accent: Color = tt["col"]
+		draw_rect(Rect2(r.position + Vector2(0, 3), r.size), Color(0, 0, 0, 0.35))
+		draw_rect(r, Color(0.10, 0.12, 0.18, 0.92))
+		draw_rect(Rect2(r.position, Vector2(6.0, r.size.y)), accent)
+		draw_rect(r, accent if sel else Color(accent.r, accent.g, accent.b, 0.45), false, 3.0 if sel else 2.0)
+		draw_string(ThemeDB.fallback_font, Vector2(r.position.x + 16.0, r.position.y + 27.0),
+			tr(str(tt["name"])), HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Color(1, 1, 1))
+		draw_circle(Vector2(r.position.x + 22.0, r.position.y + 46.0), 6.0, Color(0.95, 0.78, 0.25))
+		draw_string(ThemeDB.fallback_font, Vector2(r.position.x + 34.0, r.position.y + 51.0),
+			"%d" % int(tt["cost"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(1.0, 0.88, 0.55))
+		if sel:
+			draw_string(ThemeDB.fallback_font, Vector2(r.position.x + 128.0, r.position.y + 51.0),
+				tr("ВЫБРАН"), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1.0, 0.95, 0.7, 0.9))
 	draw_string(ThemeDB.fallback_font, Vector2(40, 1116), tr("Выбери башню и кликни по полю · клик по башне - апгрейд"), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.7, 0.9, 0.8))
 	if over:
 		draw_rect(Rect2(0, 400, W, 180), Color(0, 0, 0, 0.75))
