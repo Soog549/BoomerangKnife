@@ -50,7 +50,6 @@ const MENU_VIEWS := {
 var _view := "root"
 
 func _ready() -> void:
-	_add_shop_corner()
 	AudioManager.play("click")
 	_apply_pack_bg()
 	_show_splash()
