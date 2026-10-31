@@ -6,6 +6,7 @@ var _info: Label
 
 
 func _ready() -> void:
+	_add_device_fit_block()
 	AudioManager.play("click")
 	var bg := ColorRect.new()
 	bg.color = Color(0.05, 0.06, 0.10, 1)
@@ -117,3 +118,36 @@ func _reset() -> void:
 	Telemetry._errors = 0
 	_out.text = "Телеметрия очищена."
 	_refresh()
+
+
+func _add_device_fit_block() -> void:
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	var box := VBoxContainer.new()
+	box.name = "DeviceFitBox"
+	box.position = Vector2(24.0, vp.y - 210.0)
+	box.custom_minimum_size = Vector2(vp.x - 48.0, 0)
+	add_child(box)
+
+	var info := Label.new()
+	info.name = "DeviceInfo"
+	info.text = DeviceFit.summary()
+	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	info.add_theme_font_size_override("font_size", 14)
+	box.add_child(info)
+
+	var res := Label.new()
+	res.name = "FitResult"
+	res.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	res.add_theme_font_size_override("font_size", 14)
+	res.add_theme_color_override("font_color", Color(0.6, 0.95, 0.75))
+	box.add_child(res)
+
+	var b := Button.new()
+	b.text = tr("ПОДОГНАТЬ ПОД ЭКРАН")
+	b.custom_minimum_size = Vector2(0, 48)
+	b.pressed.connect(func() -> void:
+		var r: Dictionary = DeviceFit.fit(get_tree().current_scene)
+		res.text = tr("Подгонка: элементов за краем %d, сдвинуто %d") % [int(r["clipped"]), int(r["moved"])]
+		info.text = DeviceFit.summary()
+		AudioManager.play("click"))
+	box.add_child(b)

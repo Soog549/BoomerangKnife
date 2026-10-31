@@ -13,15 +13,18 @@ extends Control
 
 func _ready() -> void:
 	GameState.record_login()
+	var vp: Vector2 = get_viewport_rect().size
+	var wheel_w: float = 400.0
+	var wheel_y: float = vp.y - 470.0
 	var wheel := FortuneWheel.new()
-	wheel.position = Vector2(160, 800)
-	wheel.size = Vector2(400, 400)
+	wheel.position = Vector2((vp.x - wheel_w) * 0.5, wheel_y)
+	wheel.size = Vector2(wheel_w, wheel_w)
 	wheel.finished.connect(_on_fortune_finished)
 	add_child(wheel)
 	var hint := Label.new()
 	hint.text = tr("ФОРТУНА · 1 прокрут в день (нажми на колесо)")
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hint.position = Vector2(0, 1190)
+	hint.position = Vector2(0, wheel_y + wheel_w + 24.0)
 	hint.size = Vector2(720, 24)
 	hint.add_theme_font_size_override("font_size", 15)
 	add_child(hint)
@@ -31,6 +34,8 @@ func _ready() -> void:
 	streak_label.text = tr("Серия дней: %d") % GameState.login_streak
 	_build_calendar()
 	_refresh()
+	claim_button.position.y = wheel_y - 210.0
+	quest_claim.position.y = wheel_y - 130.0
 
 func _build_calendar() -> void:
 	for child in calendar.get_children():
