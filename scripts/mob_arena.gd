@@ -107,6 +107,8 @@ var rig_leg_l: Texture2D = null
 var rig_leg_r: Texture2D = null
 var rig_arm_l: Texture2D = null
 var rig_arm_r: Texture2D = null
+var rig_prop_r: Texture2D = null
+var rig_prop_l: Texture2D = null
 var stick_r := 62.0
 
 func _ready() -> void:
@@ -191,6 +193,10 @@ func _ready() -> void:
 		if ResourceLoader.exists(pl):
 			rig_arm_l = load(pl)
 			rig_arm_r = load(rp + "arm_r.png")
+			var pp := rp + "prop_r.png"
+			if ResourceLoader.exists(pp):
+				rig_prop_r = load(pp)
+				rig_prop_l = load(rp + "prop_l.png")
 	_build_pause()
 	PauseUI.normalize(_pm)
 	_build_action_buttons()
@@ -1224,6 +1230,22 @@ func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
 			draw_set_transform(Vector2(px + gw * 0.33, elbow_y), -arm_ang, Vector2.ONE)
 			draw_texture_rect(rig_arm_r, Rect2(-aw2 * 0.5, 0, aw2, gh * 0.22), false)
 			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		# СЛОЙ ПРЕДМЕТА (оружие/щит) — качается сильнее руки
+		if rig_prop_r != null:
+			var swing: float = -stride * 1.6
+			if _rig_state == "attack":
+				swing = -0.75 * sin(clampf(_rig_t / 0.28, 0.0, 1.0) * PI)
+			if _rig_state == "block":
+				swing = -0.18
+			var pw: float = rig_prop_r.get_width() * (gh * 0.40 / rig_prop_r.get_height())
+			draw_set_transform(Vector2(px + gw * 0.30, hip.y - gh * 0.10), swing, Vector2.ONE)
+			draw_texture_rect(rig_prop_r, Rect2(-pw * 0.5, 0, pw, gh * 0.40), false)
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			if rig_prop_l != null:
+				var pw2: float = rig_prop_l.get_width() * (gh * 0.40 / rig_prop_l.get_height())
+				draw_set_transform(Vector2(px - gw * 0.30, hip.y - gh * 0.10), -swing * 0.6, Vector2.ONE)
+				draw_texture_rect(rig_prop_l, Rect2(-pw2 * 0.5, 0, pw2, gh * 0.40), false)
+				draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		# торс
 		var tw2: float = rig_torso.get_width() * (gh * 0.46 / rig_torso.get_height())
 		var th2: float = gh * 0.46
