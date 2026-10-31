@@ -13,6 +13,7 @@ AudioManager="*res://scripts/audio_manager.gd"
 FX="*res://scripts/fx.gd"
 YandexSDK="*res://scripts/yandex_sdk.gd"
 AdService="*res://scripts/ads.gd"
+Fader="*res://scripts/fader.gd"
 Assets="*res://scripts/asset_manager.gd"
 OnlineService="*res://scripts/online_service.gd"
 PurchaseService="*res://scripts/purchase_service.gd"
@@ -25,7 +26,7 @@ PauseUI="*res://scripts/pause_ui.gd"
 
 [application]
 
-config/version="1.0.155"
+config/version="1.0.156"
 config/name="BoomerangKnife"
 config/description="Hypercasual boomerang knife arcade: arena, tower defense, duels, endless."
 run/main_scene="res://scenes/main_menu.tscn"
