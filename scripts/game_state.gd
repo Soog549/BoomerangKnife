@@ -1287,18 +1287,46 @@ func claim_fortune() -> Dictionary:
 	if not fortune_available():
 		return {}
 	fortune_day = Time.get_date_string_from_system()
+	var roll: int = randi() % 12
+	var reward: Dictionary = {"index": roll}
+	match roll:
+		0:
+			add_coins(20)
+			reward.merge({"kind": "coins", "amount": 20, "label": "+20 монет"})
+		1:
+			add_coins(30)
+			reward.merge({"kind": "coins", "amount": 30, "label": "+30 монет"})
+		2:
+			add_coins(40)
+			reward.merge({"kind": "coins", "amount": 40, "label": "+40 монет"})
+		3:
+			add_coins(60)
+			reward.merge({"kind": "coins", "amount": 60, "label": "+60 монет"})
+		4:
+			add_coins(100)
+			reward.merge({"kind": "coins", "amount": 100, "label": "+100 монет"})
+		5:
+			add_player_xp(30)
+			reward.merge({"kind": "xp", "amount": 30, "label": "+30 опыта"})
+		6:
+			add_player_xp(50)
+			reward.merge({"kind": "xp", "amount": 50, "label": "+50 опыта"})
+		7:
+			add_player_xp(80)
+			reward.merge({"kind": "xp", "amount": 80, "label": "+80 опыта"})
+		8:
+			crystals += 5
+			reward.merge({"kind": "crystals", "amount": 5, "label": "+5 кристаллов"})
+		9:
+			crystals += 10
+			reward.merge({"kind": "crystals", "amount": 10, "label": "+10 кристаллов"})
+		10:
+			shards += 20
+			reward.merge({"kind": "shards", "amount": 20, "label": "+20 осколков"})
+		_:
+			reward.merge({"kind": "booster", "label": "Усилитель удачи"})
 	save_settings()
-	var roll := randi() % 4
-	if roll == 0:
-		add_coins(60)
-		return {"kind": "coins", "amount": 60, "label": "+60 монет"}
-	if roll == 1:
-		add_coins(30)
-		return {"kind": "coins", "amount": 30, "label": "+30 монет"}
-	if roll == 2:
-		add_player_xp(50)
-		return {"kind": "xp", "amount": 50, "label": "+50 опыта"}
-	return {"kind": "booster", "label": "Одноразовый буст"}
+	return reward
 
 
 func _migrate_save(from_v: int) -> void:

@@ -41,7 +41,7 @@ func _fix_layout() -> void:
 		sc.offset_right = -80.0
 
 func _on_coins(total: int) -> void:
-	wallet_label.text = tr("Монеты: %d • %d • %d") % [total, GameState.crystals, GameState.shards]
+	wallet_label.text = tr("Монеты %d  ·  Кристаллы %d  ·  Осколки %d") % [total, GameState.crystals, GameState.shards]
 
 var _slot_filter := ""
 
@@ -76,7 +76,7 @@ func _rebuild() -> void:
 	info_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	info_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	info_label.text = tr("Твой максимальный уровень: %d — проходи уровни, открывай цели или смотри рекламу за монеты:") % GameState.max_level_reached
-	wallet_label.text = tr("Монеты: %d • %d • %d") % [GameState.coins, GameState.crystals, GameState.shards]
+	wallet_label.text = tr("Монеты %d  ·  Кристаллы %d  ·  Осколки %d") % [GameState.coins, GameState.crystals, GameState.shards]
 	var left := GameState.coin_ads_left()
 	if left > 0:
 		earn_btn.text = tr("Смотреть рекламу (+%d монет) — осталось %d") % [Economy.AD_REWARD_COINS, left]
@@ -675,6 +675,12 @@ func _build_class_weapons() -> void:
 	for pair in CLASS_WPN:
 		var cell := VBoxContainer.new()
 		cell.custom_minimum_size = Vector2(300, 130)
+		var tex_panel := PanelContainer.new()
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.85, 0.88, 1.0, 0.10)
+		sb.set_corner_radius_all(14)
+		sb.set_content_margin_all(6)
+		tex_panel.add_theme_stylebox_override("panel", sb)
 		var tex := TextureRect.new()
 		tex.custom_minimum_size = Vector2(96, 96)
 		tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -682,7 +688,8 @@ func _build_class_weapons() -> void:
 		var wp := "res://assets/images/weapons/%s.png" % str(pair[0])
 		if ResourceLoader.exists(wp):
 			tex.texture = load(wp)
-		cell.add_child(tex)
+		tex_panel.add_child(tex)
+		cell.add_child(tex_panel)
 		var nm := Label.new()
 		nm.text = tr(str(pair[1]))
 		nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

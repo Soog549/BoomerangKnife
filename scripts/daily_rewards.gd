@@ -14,8 +14,8 @@ extends Control
 func _ready() -> void:
 	GameState.record_login()
 	var wheel := FortuneWheel.new()
-	wheel.position = Vector2(210, 880)
-	wheel.size = Vector2(300, 300)
+	wheel.position = Vector2(160, 800)
+	wheel.size = Vector2(400, 400)
 	wheel.finished.connect(_on_fortune_finished)
 	add_child(wheel)
 	var hint := Label.new()
