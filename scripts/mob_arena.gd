@@ -162,7 +162,17 @@ func _ready() -> void:
 	field_bottom = float(H) - 110.0
 	max_hp *= GameState.class_bonus("hp")
 	hp = max_hp
-	var ap := "res://assets/images/avatars/avatar_%d.png" % GameState.avatar
+	const CF := ["warrior", "rogue", "mage", "archer", "knight", "berserker", "assassin", "paladin",
+		"druid", "monk", "pirate", "samurai", "ninja", "viking", "gunslinger", "alchemist",
+		"necromancer", "engineer", "bounty_hunter", "shaman", "champion", "princess", "fist",
+		"kinetic", "pyro", "cryo", "psion", "telekinetic", "kimaster", "aurate", "graviton",
+		"symbiote", "empath"]
+	var ci: int = clampi(GameState.avatar, 0, CF.size() - 1)
+	var ap := "res://assets/images/classes_full/%s.png" % CF[ci]
+	if not ResourceLoader.exists(ap):
+		ap = "res://assets/images/classes/%s.png" % CF[ci]
+	if not ResourceLoader.exists(ap):
+		ap = "res://assets/images/avatars/avatar_%d.png" % GameState.avatar
 	if ResourceLoader.exists(ap):
 		avatar_tex = load(ap)
 	_build_pause()
