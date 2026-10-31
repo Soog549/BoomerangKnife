@@ -82,7 +82,7 @@ func _build_profile_panel() -> void:
 	notch_shift()
 	var panel := PanelContainer.new()
 	panel.position = Vector2(16, 54)
-	panel.custom_minimum_size = Vector2(330, 84)
+	panel.custom_minimum_size = Vector2(380, 132)
 	add_child(panel)
 	var hb := HBoxContainer.new()
 	hb.add_theme_constant_override("separation", 10)
@@ -110,7 +110,7 @@ func _build_profile_panel() -> void:
 	var bar := ProgressBar.new()
 	bar.max_value = 100
 	bar.value = GameState.player_xp % 100
-	bar.custom_minimum_size = Vector2(0, 14)
+	bar.custom_minimum_size = Vector2(0, 8)
 	bar.show_percentage = false
 	vb.add_child(bar)
 	var cls := Label.new()

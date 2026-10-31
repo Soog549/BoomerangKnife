@@ -891,7 +891,10 @@ func _draw() -> void:
 		draw_arc(Vector2(float(r["x"]), float(r["y"])), float(r["rad"]), 0.0, TAU, 28, Color(1, 0.9, 0.5, maxf(0.0, float(r["t"]) / 0.35)), 4.0)
 	var hint := "Тяни в поле - движение · Тап - нож · WASD/Пробел"
 	if GameState.control_mode == "keyboard":
-		hint = tr("WASD/стрелки - движение · ЛКМ/Пробел - нож · мышь в поле - стик")
+		if DisplayServer.is_touchscreen_available():
+			hint = tr("Свайп по полю — движение · тап — бросок · удерживай — цель")
+		else:
+			hint = tr("WASD/стрелки - движение · ПКМ/пробел - бросок · нажимай и тяни - цель")
 	elif GameState.control_mode == "touch":
 		hint = tr("Тяни в поле - движение · Тап - бросок ножа")
 	draw_string(ThemeDB.fallback_font, Vector2(44, 190), hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.9, 0.8))

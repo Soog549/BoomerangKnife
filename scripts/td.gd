@@ -342,7 +342,7 @@ func _draw() -> void:
 		if sel:
 			draw_string(ThemeDB.fallback_font, Vector2(r.position.x + 128.0, r.position.y + 51.0),
 				tr("ВЫБРАН"), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1.0, 0.95, 0.7, 0.9))
-	draw_string(ThemeDB.fallback_font, Vector2(40, 1116), tr("Выбери башню и кликни по полю · клик по башне - апгрейд"), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.7, 0.9, 0.8))
+	draw_string(ThemeDB.fallback_font, Vector2(40, 1116), tr("Выбери башню и коснись поля · коснись башни — апгрейд"), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.7, 0.9, 0.8))
 	if over:
 		draw_rect(Rect2(0, 400, W, 180), Color(0, 0, 0, 0.75))
 		draw_string(ThemeDB.fallback_font, Vector2(0, 470), tr("ЯДРО ПАЛО"), HORIZONTAL_ALIGNMENT_CENTER, W, 44, Color(1, 0.35, 0.35))
