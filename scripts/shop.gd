@@ -39,11 +39,44 @@ func _fix_layout() -> void:
 		sc.offset_top = 248.0
 		sc.offset_left = 80.0
 		sc.offset_right = -80.0
+		sc.offset_bottom = -104.0
+	# НАЗАД — к реальному низу экрана (а не к 1280 на высоких устройствах)
+	var vp: Vector2 = get_viewport_rect().size
+	var back := get_node_or_null("Scroll/BackButton")
+	if back == null:
+		back = _find_back(self)
+	if back is Control:
+		var b := back as Control
+		b.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		b.position = Vector2(36.0, vp.y - 96.0)
+		b.custom_minimum_size = Vector2(200.0, 52.0)
+		b.size = Vector2(200.0, 52.0)
+
+
+func _find_back(n: Node) -> Node:
+	if n is Button and str((n as Button).text).find("НАЗАД") != -1:
+		return n
+	for c in n.get_children():
+		var r := _find_back(c)
+		if r != null:
+			return r
+	return null
 
 func _on_coins(total: int) -> void:
 	wallet_label.text = tr("Монеты %d  ·  Кристаллы %d  ·  Осколки %d") % [total, GameState.crystals, GameState.shards]
 
 var _slot_filter := ""
+
+
+var _shop_page := 0
+
+const SHOP_PAGES := [
+	["ПЕРСОНАЖ", ["_build_class_weapons", "_build_class_gallery"]],
+	["ОБРАЗЫ", ["_build_skins", "_build_sets", "_build_avatars"]],
+	["РЕЖИМЫ", ["_build_modes", "_build_boosters", "_build_consumables"]],
+	["СНАРЯЖЕНИЕ", ["_build_equipment"]],
+	["ПРОЧЕЕ", ["_build_glyphs", "_build_iap", "_build_crystal_ad_packs", "_build_donations"]],
+]
 
 
 func _rebuild() -> void:
@@ -89,18 +122,11 @@ func _rebuild() -> void:
 	else:
 		crystal_earn_btn.text = tr("Кристаллы: лимит на сегодня")
 		crystal_earn_btn.disabled = true
-	_build_class_weapons()
-	_build_class_gallery()
-	_build_iap()
-	_build_crystal_ad_packs()
-	_build_skins()
-	_build_sets()
-	_build_avatars()
-	_build_modes()
-	_build_boosters()
-	_build_consumables()
-	_build_equipment()
-	_build_glyphs()
+	_build_page_tabs()
+	_build_pager()
+	var page: Array = SHOP_PAGES[clampi(_shop_page, 0, SHOP_PAGES.size() - 1)]
+	for m in page[1]:
+		call(str(m))
 
 func _skin_price(index: int) -> int:
 	return Economy.skin_price(index)
@@ -756,3 +782,52 @@ func _build_class_gallery() -> void:
 				Toast.show(tr("Класс выбран"))
 				_rebuild())
 		grid.add_child(cell)
+
+
+func _build_page_tabs() -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	for i in SHOP_PAGES.size():
+		var b := Button.new()
+		b.text = tr(str(SHOP_PAGES[i][0]))
+		b.custom_minimum_size = Vector2(0, 44)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", 13)
+		b.disabled = i == _shop_page
+		var idx: int = i
+		b.pressed.connect(func() -> void:
+			_shop_page = idx
+			AudioManager.play("click")
+			_rebuild())
+		row.add_child(b)
+	items_box.add_child(row)
+
+
+func _build_pager() -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var prev := Button.new()
+	prev.text = "◀"
+	prev.custom_minimum_size = Vector2(70, 44)
+	prev.disabled = _shop_page <= 0
+	prev.pressed.connect(func() -> void:
+		_shop_page = maxi(0, _shop_page - 1)
+		AudioManager.play("click")
+		_rebuild())
+	row.add_child(prev)
+	var mid := Label.new()
+	mid.text = "%d / %d" % [_shop_page + 1, SHOP_PAGES.size()]
+	mid.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	mid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	mid.add_theme_font_size_override("font_size", 16)
+	row.add_child(mid)
+	var nxt := Button.new()
+	nxt.text = "▶"
+	nxt.custom_minimum_size = Vector2(70, 44)
+	nxt.disabled = _shop_page >= SHOP_PAGES.size() - 1
+	nxt.pressed.connect(func() -> void:
+		_shop_page = mini(SHOP_PAGES.size() - 1, _shop_page + 1)
+		AudioManager.play("click")
+		_rebuild())
+	row.add_child(nxt)
+	items_box.add_child(row)
