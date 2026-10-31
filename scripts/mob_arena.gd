@@ -824,7 +824,7 @@ func _draw() -> void:
 			draw_circle(Vector2(kx, ky), 10.0, Color(0.95, 0.8, 0.3))
 	# игрок (масштаб 1.45 — корабль не должен проигрывать мобам)
 	if _ground_mode and avatar_tex != null:
-		_draw_rig(px, py, 150.0, 150.0 * 0.7, avatar_tex.get_size())
+		_draw_rig(px, py, 196.0, 196.0 * 0.72, avatar_tex.get_size())
 	if _ground_mode:
 		if shield > 0.0:
 			var gsa: float = clampf(shield / max_shield, 0.15, 1.0)
@@ -1200,9 +1200,20 @@ func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
 			if _rig_t > 1.2:
 				rig_play("idle")
 	var base_y: float = py + crouch
-	# ноги
-	draw_texture_rect_region(avatar_tex, Rect2(px - gw * 0.5 + s_legs.x, base_y - gh * 0.40 + s_legs.y, gw, gh * 0.44),
-		Rect2(ts.x * 0.10, ts.y * 0.58, ts.x * 0.80, ts.y * 0.42))
+	# ноги: две половины, попеременный шаг от бедра
+	var step_amp: float = 0.10
+	var stride: float = sin(_anim_t * 7.0) * step_amp
+	var hip_y: float = base_y - gh * 0.42
+	# левая нога
+	draw_set_transform(Vector2(px - gw * 0.16 + s_legs.x, hip_y), -stride, Vector2.ONE)
+	draw_texture_rect_region(avatar_tex, Rect2(-gw * 0.22, -gh * 0.02 + s_legs.y * 0.4, gw * 0.44, gh * 0.46),
+		Rect2(ts.x * 0.12, ts.y * 0.56, ts.x * 0.38, ts.y * 0.44))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	# правая нога
+	draw_set_transform(Vector2(px + gw * 0.16 + s_legs.x, hip_y), stride, Vector2.ONE)
+	draw_texture_rect_region(avatar_tex, Rect2(-gw * 0.22, -gh * 0.02 + s_legs.y * 0.4, gw * 0.44, gh * 0.46),
+		Rect2(ts.x * 0.50, ts.y * 0.56, ts.x * 0.38, ts.y * 0.44))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	# торс (с наклоном вокруг таза)
 	draw_set_transform(Vector2(px + s_torso.x, base_y - gh * 0.36), r_torso, Vector2.ONE)
 	draw_texture_rect_region(avatar_tex, Rect2(-gw * 0.5, -gh * 0.44 + s_torso.y, gw, gh * 0.46),
