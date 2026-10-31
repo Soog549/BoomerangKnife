@@ -1,7 +1,7 @@
 extends Control
 
 const APP_VERSION := ""
-const STYLE_ORDER := ["base", "imperial", "epic", "space", "anime", "eurasia", "norse", "kids", "cyber", "dark", "icon-flat", "noir"]
+const STYLE_ORDER := ["base", "imperial", "epic", "space", "anime", "eurasia", "norse", "kids", "cyber", "dark", "icon-flat", "noir", "holiday", "wuxia", "biomech", "arcade"]
 var _row_values: Array = []
 const DIFF_ORDER := ["easy", "normal", "hard", "survival"]
 
