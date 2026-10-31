@@ -88,10 +88,11 @@ func _ready() -> void:
 	_add_personal_rows()
 	_add_footer()
 	# Убираем дубль выбора класса (старая пара Label+OptionButton) — оставлен один ряд «КЛАСС».
-	for n in ["Center/VBox/AvatarLabel", "Center/VBox/AvatarRow"]:
-		var node := get_node_or_null(n)
+	for n in ["AvatarLabel", "AvatarRow"]:
+		var node := find_child(n, true, false)
 		if node is CanvasItem:
 			(node as CanvasItem).visible = false
+	_wrap_in_scroll()
 
 func _normalize_layout() -> void:
 	var center := get_node_or_null("Center")
@@ -221,7 +222,7 @@ func _style_preview() -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
 	style_preview_tex = TextureRect.new()
-	style_preview_tex.custom_minimum_size = Vector2(180, 120)
+	style_preview_tex.custom_minimum_size = Vector2(150, 110)
 	style_preview_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	row.add_child(style_preview_tex)
 	var info := Label.new()
@@ -444,3 +445,25 @@ func _cycle_surv(d: int) -> void:
 	GameState.save_settings()
 	AudioManager.play("click")
 	_rebuild_settings()
+
+
+func _wrap_in_scroll() -> void:
+	var center := get_node_or_null("Center")
+	var vb := get_node_or_null("Center/VBox")
+	if vb == null or center == null:
+		return
+	if get_node_or_null("Scroll") != null:
+		return
+	var sc := ScrollContainer.new()
+	sc.name = "Scroll"
+	sc.set_anchors_preset(Control.PRESET_FULL_RECT)
+	sc.offset_left = 24.0
+	sc.offset_right = -24.0
+	sc.offset_top = 96.0
+	sc.offset_bottom = -100.0
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(sc)
+	vb.get_parent().remove_child(vb)
+	sc.add_child(vb)
+	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	center.visible = false

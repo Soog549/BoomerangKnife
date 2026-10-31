@@ -263,13 +263,13 @@ func _draw() -> void:
 		draw_rect(Rect2(0, 0, W, H), Color(0.05, 0.06, 0.10))
 	# сетка
 	for x in range(GX + 1):
-		draw_line(Vector2(x * CELL, 0), Vector2(x * CELL, GY * CELL), Color(0.12, 0.16, 0.22))
+		draw_line(Vector2(x * CELL, 0), Vector2(x * CELL, GY * CELL), Color(1, 1, 1, 0.045))
 	for y in range(15):
-		draw_line(Vector2(0, y * CELL), Vector2(W, y * CELL), Color(0.12, 0.16, 0.22))
+		draw_line(Vector2(0, y * CELL), Vector2(W, y * CELL), Color(1, 1, 1, 0.045))
 	# путь
 	for i in range(path.size() - 1):
-		draw_line(path[i], path[i + 1], Color(0.30, 0.45, 0.35), 46.0)
-		draw_line(path[i], path[i + 1], Color(0.45, 0.70, 0.50), 26.0)
+		draw_line(path[i], path[i + 1], Color(0.16, 0.13, 0.11, 0.92), 46.0)
+		draw_line(path[i], path[i + 1], Color(0.62, 0.50, 0.32), 26.0)
 	# башни
 	for tw in towers:
 		var tt: Dictionary = TOWER_TYPES[int(tw["type"])]
