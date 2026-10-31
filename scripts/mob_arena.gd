@@ -105,6 +105,8 @@ var rig_head: Texture2D = null
 var rig_torso: Texture2D = null
 var rig_leg_l: Texture2D = null
 var rig_leg_r: Texture2D = null
+var rig_arm_l: Texture2D = null
+var rig_arm_r: Texture2D = null
 var stick_r := 62.0
 
 func _ready() -> void:
@@ -185,6 +187,10 @@ func _ready() -> void:
 		rig_torso = load(rp + "torso.png")
 		rig_leg_l = load(rp + "leg_l.png")
 		rig_leg_r = load(rp + "leg_r.png")
+		var pl := rp + "arm_l.png"
+		if ResourceLoader.exists(pl):
+			rig_arm_l = load(pl)
+			rig_arm_r = load(rp + "arm_r.png")
 	_build_pause()
 	PauseUI.normalize(_pm)
 	_build_action_buttons()
@@ -1202,6 +1208,22 @@ func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
 		draw_set_transform(Vector2(px + gw * 0.15, hip.y), stride, Vector2.ONE)
 		draw_texture_rect(rig_leg_r, Rect2(-lw * 0.5, 0, lw, gh * 0.46), false)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		# ОТДЕЛЬНЫЕ РУКИ (вращение в локте)
+		if rig_arm_l != null:
+			var arm_ang: float = -stride * 0.9
+			if _rig_state == "attack":
+				arm_ang = -0.55 * sin(clampf(_rig_t / 0.28, 0.0, 1.0) * PI)
+			if _rig_state == "block":
+				arm_ang = 0.35
+			var aw: float = rig_arm_l.get_width() * (gh * 0.22 / rig_arm_l.get_height())
+			var elbow_y: float = hip.y - gh * 0.075
+			draw_set_transform(Vector2(px - gw * 0.33, elbow_y), arm_ang, Vector2.ONE)
+			draw_texture_rect(rig_arm_l, Rect2(-aw * 0.5, 0, aw, gh * 0.22), false)
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			var aw2: float = rig_arm_r.get_width() * (gh * 0.22 / rig_arm_r.get_height())
+			draw_set_transform(Vector2(px + gw * 0.33, elbow_y), -arm_ang, Vector2.ONE)
+			draw_texture_rect(rig_arm_r, Rect2(-aw2 * 0.5, 0, aw2, gh * 0.22), false)
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		# торс
 		var tw2: float = rig_torso.get_width() * (gh * 0.46 / rig_torso.get_height())
 		var th2: float = gh * 0.46
