@@ -233,3 +233,39 @@ func play_skin_music() -> void:
 		return
 	var i: int = clampi(GameState.selected_skin, 0, 11)
 	play_music("skin_%d" % (i + 1))
+
+
+const STYLE_MUSIC := {
+	"imperial": 21, "imperial-2": 21, "imperial-3": 21,
+	"cyber": 22, "dark": 22, "space-2": 22,
+	"norse": 23, "eurasia": 23, "wuxia": 23,
+	"space": 24, "noir": 26, "biomech": 26,
+	"kids": 25, "anime": 25, "holiday": 25,
+	"arcade": 28, "epic": 21, "base": 27, "icon-flat": 27,
+}
+
+
+func play_for_style(style: String, db_offset: float = 0.0) -> void:
+	var idx: int = int(STYLE_MUSIC.get(style, 21))
+	var path := "res://assets/audio/music-%02d.ogg" % idx
+	if not ResourceLoader.exists(path):
+		play_music("menu")
+		return
+	var key := "style_%02d" % idx
+	if _music == key and _music_player.playing:
+		return
+	_music = key
+	_music_player.stream = load(path) as AudioStream
+	_music_player.volume_db = _music_db() + db_offset
+	_music_player.play()
+
+
+func play_series_theme(season: int) -> void:
+	var path := "res://assets/audio/theme-s%d.ogg" % (3 if season <= 3 else 4)
+	if not ResourceLoader.exists(path):
+		play_music("menu")
+		return
+	_music = "theme_s%d" % season
+	_music_player.stream = load(path) as AudioStream
+	_music_player.volume_db = _music_db()
+	_music_player.play()

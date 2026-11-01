@@ -58,7 +58,7 @@ func _ready() -> void:
 	_show_splash()
 	_build_profile_panel()
 	_add_bottom_nav()
-	AudioManager.play_music("menu")
+	AudioManager.play_for_style(GameState.style_pack)
 	Achievements.check_all()
 	GameState.apply_orientation()
 	# Яндекс Игры: кнопка «выход» не работает в iframe — прячем на web
