@@ -1105,6 +1105,12 @@ func load_settings() -> void:
 	armor_palette = int(cfg.get_value("settings", "armor_palette", 0))
 	player_id = str(cfg.get_value("settings", "player_id", ""))
 	season_points = int(cfg.get_value("settings", "season_points", 0))
+	season_start_unix = int(cfg.get_value("settings", "season_start_unix", 0))
+	var _ts = cfg.get_value("settings", "tutorial_seen", "{}")
+	if _ts is String and _ts != "":
+		var _tsp = JSON.parse_string(_ts)
+		if _tsp is Dictionary:
+			tutorial_seen = _tsp
 	var _sc = cfg.get_value("settings", "season_claimed", "[]")
 	if _sc is String and _sc != "":
 		var _sp = JSON.parse_string(_sc)
@@ -1209,6 +1215,8 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "daily_ch", JSON.stringify(daily_ch))
 	cfg.set_value("settings", "season_points", season_points)
 	cfg.set_value("settings", "season_claimed", JSON.stringify(season_claimed))
+	cfg.set_value("settings", "tutorial_seen", JSON.stringify(tutorial_seen))
+	cfg.set_value("settings", "season_start_unix", season_start_unix)
 	cfg.set_value("settings", "aim_mode", aim_mode)
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
@@ -1549,6 +1557,8 @@ var tracker: Dictionary = {}
 var daily_ch: Dictionary = {}
 var season_points := 0
 var season_claimed: Array = []
+var tutorial_seen: Dictionary = {}
+var season_start_unix := 0
 var aim_mode := 0
 
 
@@ -1931,3 +1941,34 @@ func daily_ready_count() -> int:
 		if daily_ch_progress(item) >= int(item["target"]):
 			n += 1
 	return n
+
+
+func season_init() -> void:
+	if season_start_unix <= 0:
+		season_start_unix = int(Time.get_unix_time_from_system())
+		save_settings()
+
+
+func season_days_left() -> int:
+	season_init()
+	var passed: int = int((int(Time.get_unix_time_from_system()) - season_start_unix) / 86400)
+	return maxi(0, 30 - passed)
+
+
+func tip_shown(mode: String) -> bool:
+	return bool(tutorial_seen.get(mode, false))
+
+
+func mark_tip(mode: String) -> void:
+	tutorial_seen[mode] = true
+	save_settings()
+
+
+func reset_modes_only() -> void:
+	mode_progress.clear()
+	continue_mode = ""
+	best_rush_waves = 0
+	best_survival_waves = 0
+	high_score = 0
+	recent_runs.clear()
+	save_settings()

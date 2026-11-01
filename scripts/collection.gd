@@ -250,6 +250,17 @@ func _render(col: VBoxContainer) -> void:
 		_render(col))
 	pager.add_child(nxt)
 	col.add_child(pager)
+	if _coll_tab == 1:
+		var opened := 0
+		for a in ACH:
+			if GameState.arena_ach.has(str(a[2])):
+				opened += 1
+		var pl := Label.new()
+		pl.text = tr("Открыто %d / %d") % [opened, ACH.size()]
+		pl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		pl.add_theme_font_size_override("font_size", 14)
+		pl.add_theme_color_override("font_color", Color(1.0, 0.86, 0.45))
+		col.add_child(pl)
 
 	var from_i: int = _coll_page * COLL_PER
 	var to_i: int = mini(data.size(), from_i + COLL_PER)

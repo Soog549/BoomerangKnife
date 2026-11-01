@@ -453,7 +453,20 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 	if equipped_id != "" and equipped_id != eq_id:
 		var cur: Dictionary = ItemsDB.find_item(str(it.get("slot", "")), equipped_id)
 		if not cur.is_empty():
+			var delta_text := ""
+			var mine: Dictionary = it.get("stats", {})
+			var theirs: Dictionary = cur.get("stats", {})
+			var keys: Array = ["dmg", "hp", "def", "speed", "crit", "block"]
+			for k in keys:
+				var dv: float = float(mine.get(k, 0.0)) - float(theirs.get(k, 0.0))
+				if absf(dv) < 0.001:
+					continue
+				var nm: String = str(ItemsDB.STAT_LABELS.get(k, k))
+				var val: String = ("%+.2f" % dv) if k in ["speed", "crit"] else ("%+d" % int(round(dv)))
+				delta_text += "%s %s  " % [nm, val]
 			sub = sub + "   |   " + tr("сейчас: %s") % str(cur.get("name", ""))
+			if delta_text != "":
+				sub = sub + "   (" + delta_text.strip_edges() + ")"
 	var label_panel: VBoxContainer = _row_panel(str(it.get("name", it.get("label", ""))), sub)
 	var title_label: Label = label_panel.get_child(0) as Label
 	if title_label != null:

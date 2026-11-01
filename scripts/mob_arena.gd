@@ -218,6 +218,15 @@ func _ready() -> void:
 		GameState.survival_arena = false
 		_ground_mode = true
 	_mode_key = "frontier" if GameState.frontier_mode else ("rush" if _rush_mode else ("survival" if _survival_arena else "arena"))
+	if not GameState.tip_shown(_mode_key):
+		GameState.mark_tip(_mode_key)
+		var tips := {
+			"arena": "Свайп — движение · тап — бросок · УДАР вблизи",
+			"frontier": "Держи рубеж: волны идут одна за другой",
+			"rush": "Босс-раш: каждый раунд — босс",
+			"survival": "Выживание: сколько волн продержишься?",
+		}
+		Toast.show(tr(str(tips.get(_mode_key, ""))))
 	if GameState.continue_mode == _mode_key and GameState.mode_has(_mode_key):
 		var sav: Dictionary = GameState.mode_load(_mode_key)
 		wave = int(sav.get("wave", 1))
@@ -1103,6 +1112,18 @@ func _build_shop() -> void:
 	vb.add_child(_shop_btn(tr("ЩИТ +50 — 100"), func() -> void: _shop_buy("shield")))
 	vb.add_child(_shop_btn(tr("HP +50 — 150"), func() -> void: _shop_buy("hp")))
 	vb.add_child(_shop_btn(tr("НАЧАТЬ"), func() -> void: _start_round()))
+	if GameState.mode_has(_mode_key):
+		var sav2: Dictionary = GameState.mode_load(_mode_key)
+		vb.add_child(_shop_btn(tr("ПРОДОЛЖИТЬ (волна %d)") % int(sav2.get("wave", 1)), func() -> void:
+			wave = int(sav2.get("wave", 1))
+			score = int(sav2.get("score", 0))
+			coins = int(sav2.get("coins", coins))
+			max_hp = float(sav2.get("max_hp", max_hp))
+			hp = float(sav2.get("hp", max_hp))
+			ammo = int(sav2.get("ammo", ammo))
+			wave_quota = 1 if _rush_mode else mini(3 + wave, 12)
+			wave_killed = 0
+			_start_round()))
 	vb.add_child(_shop_btn(tr("В МЕНЮ"), func() -> void: _to_menu()))
 	_refresh_shop()
 	shop_panel.visible = GameState.arena_tutorial_done

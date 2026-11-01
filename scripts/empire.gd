@@ -66,6 +66,21 @@ func _ready() -> void:
 	dcl.add_theme_color_override("font_color", Color(0.6, 0.9, 0.75))
 	dcl.position = Vector2(24, 120.0)
 	add_child(dcl)
+	var sl := Label.new()
+	sl.text = tr("Сезон: осталось %d дн.") % GameState.season_days_left()
+	sl.add_theme_font_size_override("font_size", 13)
+	sl.add_theme_color_override("font_color", Color(1.0, 0.86, 0.5))
+	sl.position = Vector2(24, 142.0)
+	add_child(sl)
+	if GameState.can_claim_daily():
+		var gift := Button.new()
+		gift.text = tr("ПОДАРОК")
+		gift.position = Vector2(560, 120.0)
+		gift.size = Vector2(136, 56)
+		gift.pressed.connect(func() -> void:
+			AudioManager.play("click")
+			get_tree().change_scene_to_file("res://scenes/daily_rewards.tscn"))
+		add_child(gift)
 	add_child(rec)
 
 
