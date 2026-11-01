@@ -40,7 +40,22 @@ const TOWER_TYPES := [
 	{"name": "ЭНЕРГИЯ", "cost": 90, "dmg": 50.0, "cd": 1.4,  "range": 185.0, "col": Color(1.0, 0.55, 0.9)},
 ]
 
+func _td_restore() -> void:
+	if GameState.continue_mode == "td" and GameState.mode_has("td"):
+		var sav: Dictionary = GameState.mode_load("td")
+		wave = int(sav.get("wave", wave))
+		coins = int(sav.get("coins", coins))
+		core_hp = int(sav.get("core_hp", core_hp))
+		Telemetry.event("td_restore", {"wave": wave})
+	GameState.continue_mode = ""
+
+
+func _td_checkpoint() -> void:
+	GameState.mode_save("td", {"wave": wave, "coins": coins, "core_hp": core_hp})
+
+
 func _ready() -> void:
+	_td_restore()
 	PauseUI.normalize(get_node_or_null("UI/PauseMenu"))
 	var _hb := get_node_or_null("UI/HomeButton")
 	if _hb != null:
@@ -110,6 +125,7 @@ func _on_path(pos: Vector2) -> bool:
 
 func _start_wave() -> void:
 	wave += 1
+	_td_checkpoint()
 	if wave > GameState.max_level_reached:
 		GameState.max_level_reached = wave
 		GameState.save_settings()
@@ -212,6 +228,7 @@ func _process(dt: float) -> void:
 					GameState.add_coins(10 + 5 * int(wave))
 					GameState.save_settings()
 				over = true
+				GameState.mode_clear("td")
 			continue
 		keep_m.append(m)
 	mobs = keep_m
