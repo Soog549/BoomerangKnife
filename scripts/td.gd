@@ -158,9 +158,9 @@ func _unhandled_input(e: InputEvent) -> void:
 			_start_wave()
 			return
 		# выбор типа башни (низ экрана)
-		if p.y < 150.0:
+		if p.y > float(H) - 190.0:
 			for i in 3:
-				var r := Rect2(12.0 + float(i) * 196.0, 84.0, 186.0, 60.0)
+				var r := Rect2(12.0 + float(i) * 196.0, float(H) - 176.0, 186.0, 60.0)
 				if r.has_point(p):
 					sel_type = i
 					return
@@ -285,8 +285,16 @@ func _draw() -> void:
 		draw_line(Vector2(0, y * CELL), Vector2(W, y * CELL), Color(1, 1, 1, 0.045))
 	# путь
 	for i in range(path.size() - 1):
-		draw_line(path[i], path[i + 1], Color(0.16, 0.13, 0.11, 0.92), 46.0)
-		draw_line(path[i], path[i + 1], Color(0.62, 0.50, 0.32), 26.0)
+		draw_line(path[i], path[i + 1], Color(0.16, 0.13, 0.11, 0.92), 64.0)
+		draw_line(path[i], path[i + 1], Color(0.62, 0.50, 0.32), 40.0)
+	# стык тропы с ядром
+	if path.size() >= 2:
+		var last: Vector2 = path[path.size() - 1]
+		draw_line(last, Vector2(360, 1006), Color(0.16, 0.13, 0.11, 0.92), 64.0)
+		draw_line(last, Vector2(360, 1006), Color(0.62, 0.50, 0.32), 40.0)
+		draw_circle(last, 32.0, Color(0.16, 0.13, 0.11, 0.92))
+		draw_circle(last, 20.0, Color(0.62, 0.50, 0.32))
+
 	# башни
 	for tw in towers:
 		var tt: Dictionary = TOWER_TYPES[int(tw["type"])]
@@ -330,7 +338,6 @@ func _draw() -> void:
 	# Ворота Империи (наш стиль) вокруг ядра
 	draw_rect(Rect2(298, 966, 28, 110), Color(0.85, 0.70, 0.30))
 	draw_rect(Rect2(394, 966, 28, 110), Color(0.85, 0.70, 0.30))
-	draw_arc(Vector2(360, 812), 48.0, PI, TAU, 26, Color(1.0, 0.85, 0.35), 10.0)
 	draw_rect(Rect2(306, 966, 12, 110), Color(0.55, 0.12, 0.12))
 	draw_rect(Rect2(402, 966, 12, 110), Color(0.55, 0.12, 0.12))
 	if core_tex:
@@ -338,14 +345,15 @@ func _draw() -> void:
 	else:
 		draw_circle(core, 40.0, Color(0.2, 0.85, 0.5))
 		draw_circle(core, 26.0, Color(0.75, 1.0, 0.85))
-	draw_string(ThemeDB.fallback_font, Vector2(280, 990), tr("ЯДРО %d/%d") % [core_hp, CORE_HP], HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(1, 1, 1))
+	draw_string(ThemeDB.fallback_font, Vector2(0, core.y - 74.0), tr("ЯДРО %d/%d") % [core_hp, CORE_HP], HORIZONTAL_ALIGNMENT_CENTER, W, 20, Color(1, 1, 1))
 	# HUD
+	draw_rect(Rect2(0, 0, W, 46), Color(0, 0, 0, 0.5))
 	draw_string(ThemeDB.fallback_font, Vector2(20, 30), tr("TD ПРОТОТИП  ВОЛНА %d  МОНЕТЫ %d") % [wave, coins], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
 	# кнопки типов
 	for i in 3:
 		var tt: Dictionary = TOWER_TYPES[i]
 		var sel: bool = i == sel_type
-		var r := Rect2(12.0 + float(i) * 196.0, 84.0, 186.0, 60.0)
+		var r := Rect2(12.0 + float(i) * 196.0, float(H) - 176.0, 186.0, 60.0)
 		var accent: Color = tt["col"]
 		draw_rect(Rect2(r.position + Vector2(0, 3), r.size), Color(0, 0, 0, 0.35))
 		draw_rect(r, Color(0.10, 0.12, 0.18, 0.92))
@@ -359,7 +367,7 @@ func _draw() -> void:
 		if sel:
 			draw_string(ThemeDB.fallback_font, Vector2(r.position.x + 128.0, r.position.y + 51.0),
 				tr("ВЫБРАН"), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1.0, 0.95, 0.7, 0.9))
-	draw_string(ThemeDB.fallback_font, Vector2(40, 1116), tr("Выбери башню и коснись поля · коснись башни — апгрейд"), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.7, 0.9, 0.8))
+	draw_string(ThemeDB.fallback_font, Vector2(0, float(H) - 200.0), tr("Выбери башню и коснись поля · коснись башни — апгрейд"), HORIZONTAL_ALIGNMENT_CENTER, W, 16, Color(0.85, 0.88, 0.95))
 	if over:
 		draw_rect(Rect2(0, 400, W, 180), Color(0, 0, 0, 0.75))
 		draw_string(ThemeDB.fallback_font, Vector2(0, 470), tr("ЯДРО ПАЛО"), HORIZONTAL_ALIGNMENT_CENTER, W, 44, Color(1, 0.35, 0.35))
