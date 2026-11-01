@@ -590,6 +590,7 @@ func _add_extra_rows() -> void:
 	if vb == null:
 		return
 	vb.add_child(_prow(tr("АКЦЕНТ"), _accent_name(), _cycle_accent))
+	vb.add_child(_prow(tr("ТЕМА"), tr("СВЕТЛАЯ") if GameState.theme_light else tr("ТЁМНАЯ"), _toggle_theme))
 	vb.add_child(_prow(tr("ЦИФРЫ УРОНА"), tr("ВКЛ") if GameState.damage_numbers else tr("ВЫКЛ"), _toggle_damage_numbers))
 	vb.add_child(_prow(tr("СВАЙП"), tr(GameState.swipe_name()), _cycle_swipe))
 	vb.add_child(_prow(tr("ЦВЕТ БРОНИ"), _armor_name(), _cycle_armor))
@@ -729,3 +730,10 @@ func _toggle_damage_numbers(_d: int) -> void:
 	GameState.save_settings()
 	AudioManager.play("click")
 	_rebuild_settings()
+
+
+func _toggle_theme(_d: int) -> void:
+	GameState.theme_light = not GameState.theme_light
+	GameState.save_settings()
+	AudioManager.play("click")
+	get_tree().reload_current_scene()

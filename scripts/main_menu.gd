@@ -50,6 +50,9 @@ const MENU_VIEWS := {
 var _view := "root"
 
 func _ready() -> void:
+	if not GameState.onboarding_done:
+		get_tree().change_scene_to_file("res://scenes/onboarding.tscn")
+		return
 	AudioManager.play("click")
 	_apply_pack_bg()
 	_show_splash()

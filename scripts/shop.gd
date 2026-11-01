@@ -69,6 +69,7 @@ var _slot_filter := ""
 
 
 var _shop_page := 0
+var _eq_sort := 0
 
 const SHOP_PAGES := [
 	["ПЕРСОНАЖ", ["_build_class_weapons", "_build_class_gallery"]],
@@ -398,6 +399,23 @@ func _build_equipment() -> void:
 		sl.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0))
 		sl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		items_box.add_child(sl)
+	var sort_row := HBoxContainer.new()
+	sort_row.add_theme_constant_override("separation", 6)
+	var sorts := [["ЦЕНА", 0], ["КАЧЕСТВО", 1], ["УРОВЕНЬ", 2]]
+	for sd in sorts:
+		var sb2 := Button.new()
+		sb2.text = tr(str(sd[0]))
+		sb2.custom_minimum_size = Vector2(0, 38)
+		sb2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		sb2.add_theme_font_size_override("font_size", 12)
+		sb2.disabled = int(sd[1]) == _eq_sort
+		var key: int = int(sd[1])
+		sb2.pressed.connect(func() -> void:
+			_eq_sort = key
+			AudioManager.play("click")
+			_rebuild())
+		sort_row.add_child(sb2)
+	items_box.add_child(sort_row)
 	var auto_b := Button.new()
 	auto_b.text = tr("АВТО-ЭКИП (лучшее)")
 	auto_b.custom_minimum_size = Vector2(0, 44)
@@ -452,7 +470,14 @@ func _build_equipment() -> void:
 		slot_title.text = "%s  (%d/%d)" % [_slot_label(slot), own_cnt, Economy.items(str(slot)).size()]
 		slot_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		items_box.add_child(slot_title)
-		for it in ItemsDB.build_slot(str(slot)):
+		var slot_items: Array = ItemsDB.build_slot(str(slot))
+		if _eq_sort == 0:
+			slot_items.sort_custom(func(a, b) -> bool: return int(a["price"]) < int(b["price"]))
+		elif _eq_sort == 1:
+			slot_items.sort_custom(func(a, b) -> bool: return int(a["quality"]) > int(b["quality"]))
+		else:
+			slot_items.sort_custom(func(a, b) -> bool: return int(a["req_level"]) < int(b["req_level"]))
+		for it in slot_items:
 			items_box.add_child(_make_equip_row(it))
 
 func _slot_label(slot: String) -> String:

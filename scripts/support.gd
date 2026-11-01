@@ -12,7 +12,7 @@ const FAQ := [
 
 func _ready() -> void:
 	var bg := ColorRect.new()
-	bg.color = Color(0.05, 0.06, 0.10, 1.0)
+	bg.color = GameState.ui_bg_color()
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 

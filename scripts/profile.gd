@@ -364,6 +364,13 @@ func _add_clans_button() -> void:
 		AudioManager.play("click")
 		get_tree().change_scene_to_file("res://scenes/achievements_screen.tscn"))
 	stats_box.add_child(ach_btn)
+	var cs := Button.new()
+	cs.text = tr("СТАТИСТИКА КЛАССОВ")
+	cs.custom_minimum_size = Vector2(0, 46)
+	cs.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		get_tree().change_scene_to_file("res://scenes/class_stats.tscn"))
+	stats_box.add_child(cs)
 
 
 func _title_for_level() -> String:

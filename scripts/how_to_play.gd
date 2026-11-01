@@ -5,7 +5,7 @@ extends Control
 
 func _ready() -> void:
 	var bg := ColorRect.new()
-	bg.color = Color(0.06, 0.07, 0.12, 1.0)
+	bg.color = GameState.ui_bg_color()
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 

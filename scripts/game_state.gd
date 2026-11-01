@@ -1131,6 +1131,7 @@ func load_settings() -> void:
 	damage_numbers = bool(cfg.get_value("settings", "damage_numbers", true))
 	chest_day = str(cfg.get_value("settings", "chest_day", ""))
 	theme_light = bool(cfg.get_value("settings", "theme_light", false))
+	onboarding_done = bool(cfg.get_value("settings", "onboarding_done", false))
 	var _cw = cfg.get_value("settings", "class_wins", "{}")
 	if _cw is String and _cw != "":
 		var _cwp = JSON.parse_string(_cw)
@@ -1238,6 +1239,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "class_battles", JSON.stringify(class_battles))
 	cfg.set_value("settings", "class_wins", JSON.stringify(class_wins))
 	cfg.set_value("settings", "theme_light", theme_light)
+	cfg.set_value("settings", "onboarding_done", onboarding_done)
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
@@ -1586,6 +1588,7 @@ var chest_day := ""
 var class_battles: Dictionary = {}
 var class_wins: Dictionary = {}
 var training_mode := false
+var onboarding_done := false
 var theme_light := false
 
 
