@@ -107,7 +107,7 @@ func _cell(row: Array, path: String, idx: int, by_ach: bool) -> Control:
 	v.custom_minimum_size = Vector2(310, 300)
 	var tex := TextureRect.new()
 	var use_path := path
-	if not by_ach:
+	if not by_ach and not ResourceLoader.exists(use_path):
 		use_path = "res://assets/images/packs/%s/card-%d.png" % [GameState.style_pack, (idx % 3) + 1]
 	if ResourceLoader.exists(use_path):
 		tex.texture = load(use_path)

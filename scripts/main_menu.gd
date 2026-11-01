@@ -161,15 +161,21 @@ func _build_view(view: String) -> void:
 	if items.is_empty():
 		return
 	if view == "root":
+		# Фиксированный слот под «ПРОДОЛЖИТЬ» — кнопки ниже не смещаются
+		var cont_box := VBoxContainer.new()
+		cont_box.name = "ContinueBox"
+		cont_box.custom_minimum_size = Vector2(0, 132)
+		cont_box.add_theme_constant_override("separation", 6)
+		menu_list.add_child(cont_box)
 		for m in GameState.modes_with_saves():
 			var mode: String = str(m)
 			var cont := Button.new()
-			cont.custom_minimum_size = Vector2(0, 64)
+			cont.custom_minimum_size = Vector2(0, 62)
 			var summ: String = GameState.mode_summary(mode)
 			cont.text = tr("ПРОДОЛЖИТЬ: %s") % GameState.mode_label(mode) + (("  ·  " + summ) if summ != "" else "")
-			cont.add_theme_font_size_override("font_size", 18)
+			cont.add_theme_font_size_override("font_size", 17)
 			cont.pressed.connect(func(): _continue_mode(mode))
-			menu_list.add_child(cont)
+			cont_box.add_child(cont)
 	for item: Array in items:
 		var btn := Button.new()
 		btn.custom_minimum_size = Vector2(0, 64)

@@ -97,9 +97,10 @@ func _build_consumables() -> void:
 
 func _build_equipment() -> void:
 	var owned_items: Array = []
-	for it in Economy.all_equipment():
-		if GameState.is_equipment_owned(it.id):
-			owned_items.append(it)
+	for slot in ItemsDB.SLOTS:
+		for it in ItemsDB.build_slot(str(slot)):
+			if GameState.is_equipment_owned(str(it["id"])):
+				owned_items.append(it)
 	if owned_items.is_empty():
 		UIKit.section(rows, tr("СНАРЯЖЕНИЕ"))
 		UIKit.item(rows, tr("Пока пусто — загляни в магазин"), tr("МАГАЗИН"), func() -> void:
@@ -107,28 +108,32 @@ func _build_equipment() -> void:
 			get_tree().change_scene_to_file("res://scenes/shop.tscn"), true)
 		return
 	UIKit.section(rows, tr("СНАРЯЖЕНИЕ"))
-	var counts := {}
+	var counts: Dictionary = GameState.equipment_set_counts()
+	if not counts.is_empty():
+		var best_set := ""
+		var best := 0
+		for k in counts:
+			if int(counts[k]) > best:
+				best = int(counts[k])
+				best_set = str(k)
+		UIKit.item(rows, tr("Сет «%s»: %d/6") % [best_set, best], "+", func() -> void: pass, true)
 	for it in owned_items:
-		counts[it.slot] = int(counts.get(it.slot, 0)) + 1
-	var summary := ""
-	for slot in counts:
-		summary += "%s: %d  " % [tr(str(slot)), counts[slot]]
-	UIKit.item(rows, tr("Всего: ") + summary, "—", func() -> void: pass, true)
-	for it in owned_items:
-		var eq_id: String = it.id
-		var equipped := GameState.equipped_in(it.slot) == eq_id
-		var txt := "%s — %s" % [tr(it.label), tr(it.desc)]
-		if equipped:
-			UIKit.item(rows, txt, tr("СНЯТЬ"), func() -> void:
-				GameState.unequip_slot(it.slot)
+		var eq_id: String = str(it["id"])
+		var slot: String = str(it["slot"])
+		var equipped: bool = GameState.equipped_in(slot) == eq_id
+		var sub := "%s · ур.%d · %s%s" % [
+			str(it.get("quality_name", "")), int(it.get("req_level", 1)),
+			str(it.get("stats_text", "")), ("  —  " + tr("надето")) if equipped else ""]
+		UIKit.item(rows, "%s — %s" % [str(it.get("name", "")), sub],
+			tr("СНЯТЬ") if equipped else tr("НАДЕТЬ"),
+			func() -> void:
 				AudioManager.play("click")
-				_rebuild())
-		else:
-			UIKit.item(rows, txt, tr("НАДЕТЬ"), func() -> void:
-				GameState.equip_item(eq_id)
-				AudioManager.play("level")
-				_rebuild())
-
+				if equipped:
+					GameState.unequip_slot(slot)
+				else:
+					GameState.equip_item(eq_id)
+				_rebuild(),
+			false)
 
 func _build_glyphs() -> void:
 	UIKit.section(rows, tr("ГЛИФЫ"))

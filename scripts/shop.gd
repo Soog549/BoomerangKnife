@@ -469,6 +469,8 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 				GameState.equip_item(eq_id)
 				AudioManager.play("level")
 				_rebuild())
+	elif locked:
+		btn = _row_btn(true, "", tr("нужен ур. %d") % req, Callable())
 	elif GameState.coins >= price:
 		btn = _row_btn(GameState.coins < price, "", tr("КУПИТЬ"), func() -> void:
 			if GameState.spend_coins(price):
