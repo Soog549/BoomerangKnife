@@ -1128,6 +1128,13 @@ func load_settings() -> void:
 			tracker = _tp
 	aim_mode = int(cfg.get_value("settings", "aim_mode", 0))
 	swipe_sens = int(cfg.get_value("settings", "swipe_sens", 1))
+	damage_numbers = bool(cfg.get_value("settings", "damage_numbers", true))
+	chest_day = str(cfg.get_value("settings", "chest_day", ""))
+	var _cb = cfg.get_value("settings", "class_battles", "{}")
+	if _cb is String and _cb != "":
+		var _cbp = JSON.parse_string(_cb)
+		if _cbp is Dictionary:
+			class_battles = _cbp
 	var _il = cfg.get_value("settings", "item_levels", "{}")
 	if _il is String and _il != "":
 		var _ip = JSON.parse_string(_il)
@@ -1220,6 +1227,9 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "season_start_unix", season_start_unix)
 	cfg.set_value("settings", "aim_mode", aim_mode)
 	cfg.set_value("settings", "swipe_sens", swipe_sens)
+	cfg.set_value("settings", "damage_numbers", damage_numbers)
+	cfg.set_value("settings", "chest_day", chest_day)
+	cfg.set_value("settings", "class_battles", JSON.stringify(class_battles))
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
@@ -1563,6 +1573,9 @@ var tutorial_seen: Dictionary = {}
 var season_start_unix := 0
 var aim_mode := 0
 var swipe_sens := 1
+var damage_numbers := true
+var chest_day := ""
+var class_battles: Dictionary = {}
 
 
 func mode_save(mode: String, data: Dictionary) -> void:
@@ -1997,3 +2010,64 @@ func swipe_name() -> String:
 
 func streak_bonus_mult() -> float:
 	return 1.0 + 0.15 * float(clampi(login_streak, 0, 6))
+
+
+func item_score(it: Dictionary) -> float:
+	var stats: Dictionary = it.get("stats", {})
+	var s := 0.0
+	for k in stats.keys():
+		var v: float = float(stats[k])
+		if k in ["speed", "crit", "luck", "dodge", "throw"]:
+			s += v * 100.0
+		else:
+			s += v
+	return s
+
+
+func auto_equip_best() -> int:
+	var changed := 0
+	for slot in EQUIPMENT_SLOTS:
+		var best_id := ""
+		var best_score := -1.0
+		for it in ItemsDB.build_slot(str(slot)):
+			var eid := str(it["id"])
+			if not is_equipment_owned(eid):
+				continue
+			var sc := item_score(it) * (1.0 + 0.08 * float(item_level(eid)))
+			if sc > best_score:
+				best_score = sc
+				best_id = eid
+		if best_id != "" and equipped_in(str(slot)) != best_id:
+			equip_item(best_id)
+			changed += 1
+	return changed
+
+
+func chest_available() -> bool:
+	return chest_day != today_key()
+
+
+func claim_chest() -> Dictionary:
+	if not chest_available():
+		return {}
+	chest_day = today_key()
+	var roll := randi() % 3
+	var rew := {}
+	if roll == 0:
+		add_coins(120)
+		rew = {"kind": "coins", "amount": 120}
+	elif roll == 1:
+		crystals += 3
+		rew = {"kind": "crystals", "amount": 3}
+	else:
+		add_coins(60)
+		crystals += 1
+		rew = {"kind": "mix", "amount": 61}
+	save_settings()
+	return rew
+
+
+func track_class_battle() -> void:
+	var k := str(avatar)
+	class_battles[k] = int(class_battles.get(k, 0)) + 1
+	save_settings()

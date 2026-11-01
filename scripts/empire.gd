@@ -72,6 +72,17 @@ func _ready() -> void:
 	sl.add_theme_color_override("font_color", Color(1.0, 0.86, 0.5))
 	sl.position = Vector2(24, 142.0)
 	add_child(sl)
+	if GameState.chest_available():
+		var chest := Button.new()
+		chest.text = tr("🎁 СУНДУК")
+		chest.position = Vector2(400, 120.0)
+		chest.size = Vector2(150, 56)
+		chest.pressed.connect(func() -> void:
+			AudioManager.play("level")
+			var rew: Dictionary = GameState.claim_chest()
+			Toast.show(tr("Сундук: %s") % str(rew.get("amount", 0)))
+			get_tree().reload_current_scene())
+		add_child(chest)
 	if GameState.can_claim_daily():
 		var gift := Button.new()
 		gift.text = tr("ПОДАРОК")

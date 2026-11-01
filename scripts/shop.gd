@@ -398,6 +398,15 @@ func _build_equipment() -> void:
 		sl.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0))
 		sl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		items_box.add_child(sl)
+	var auto_b := Button.new()
+	auto_b.text = tr("АВТО-ЭКИП (лучшее)")
+	auto_b.custom_minimum_size = Vector2(0, 44)
+	auto_b.pressed.connect(func() -> void:
+		var ch := GameState.auto_equip_best()
+		AudioManager.play("level")
+		Toast.show(tr("Экипировано: %d") % ch)
+		_rebuild())
+	items_box.add_child(auto_b)
 	var frow := HBoxContainer.new()
 	frow.add_theme_constant_override("separation", 6)
 	var fdefs := [["", "ВСЕ"], ["helmet", "ШЛЕМ"], ["armor", "БРОНЯ"], ["boots", "БОТЫ"],
@@ -460,6 +469,12 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 		sub = sub + "  ·  " + tr("нужен уровень %d") % req
 	else:
 		sub = sub + "  ·  %d" % price + " " + tr("монет")
+	if not owned and equipped_id != "":
+		var cur2: Dictionary = ItemsDB.find_item(str(it.get("slot", "")), equipped_id)
+		if not cur2.is_empty():
+			var d1: float = GameState.item_score(it)
+			var d2: float = GameState.item_score(cur2)
+			sub = ("↑ " + sub) if d1 > d2 + 0.01 else (("↓ " + sub) if d1 < d2 - 0.01 else ("= " + sub))
 	if equipped_id != "" and equipped_id != eq_id:
 		var cur: Dictionary = ItemsDB.find_item(str(it.get("slot", "")), equipped_id)
 		if not cur.is_empty():

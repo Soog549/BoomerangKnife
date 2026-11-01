@@ -1170,6 +1170,7 @@ func _shop_buy(kind: String) -> void:
 	_refresh_shop()
 
 func _start_round() -> void:
+	GameState.track_class_battle()
 	started = true
 	ammo = max_knives
 	shop_panel.visible = false

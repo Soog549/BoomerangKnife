@@ -457,3 +457,8 @@ func _add_identity() -> void:
 		AudioManager.play("level")
 		Toast.show(tr("Результат скопирован — вставь в соцсети")))
 	stats_box.add_child(share)
+	var cb := Label.new()
+	cb.text = tr("Боёв за класс: %d") % int(GameState.class_battles.get(str(GameState.avatar), 0))
+	cb.add_theme_font_size_override("font_size", 13)
+	cb.add_theme_color_override("font_color", Color(0.8, 0.9, 1.0))
+	stats_box.add_child(cb)
