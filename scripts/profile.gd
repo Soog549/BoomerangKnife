@@ -327,6 +327,14 @@ func _add_clans_button() -> void:
 		add_child(dlg)
 		dlg.popup_centered())
 	stats_box.add_child(b)
+	var pr := Button.new()
+	pr.text = tr("СЕЗОН И ИСПЫТАНИЯ")
+	pr.custom_minimum_size = Vector2(0, 48)
+	pr.add_theme_font_size_override("font_size", 15)
+	pr.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		get_tree().change_scene_to_file("res://scenes/progress.tscn"))
+	stats_box.add_child(pr)
 
 
 func _title_for_level() -> String:

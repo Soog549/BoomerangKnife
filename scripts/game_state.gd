@@ -1104,6 +1104,17 @@ func load_settings() -> void:
 	high_contrast = bool(cfg.get_value("settings", "high_contrast", false))
 	armor_palette = int(cfg.get_value("settings", "armor_palette", 0))
 	player_id = str(cfg.get_value("settings", "player_id", ""))
+	season_points = int(cfg.get_value("settings", "season_points", 0))
+	var _sc = cfg.get_value("settings", "season_claimed", "[]")
+	if _sc is String and _sc != "":
+		var _sp = JSON.parse_string(_sc)
+		if _sp is Array:
+			season_claimed = _sp
+	var _dc = cfg.get_value("settings", "daily_ch", "{}")
+	if _dc is String and _dc != "":
+		var _dp = JSON.parse_string(_dc)
+		if _dp is Dictionary:
+			daily_ch = _dp
 	var _tr = cfg.get_value("settings", "tracker", "{}")
 	if _tr is String and _tr != "":
 		var _tp = JSON.parse_string(_tr)
@@ -1195,6 +1206,9 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "armor_palette", armor_palette)
 	cfg.set_value("settings", "player_id", player_id)
 	cfg.set_value("settings", "tracker", JSON.stringify(tracker))
+	cfg.set_value("settings", "daily_ch", JSON.stringify(daily_ch))
+	cfg.set_value("settings", "season_points", season_points)
+	cfg.set_value("settings", "season_claimed", JSON.stringify(season_claimed))
 	cfg.set_value("settings", "aim_mode", aim_mode)
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
@@ -1532,6 +1546,9 @@ var high_contrast := false
 var armor_palette := 0
 var player_id := ""
 var tracker: Dictionary = {}
+var daily_ch: Dictionary = {}
+var season_points := 0
+var season_claimed: Array = []
 var aim_mode := 0
 
 
@@ -1831,3 +1848,76 @@ func tracker_progress() -> Array:
 			rows.append({"label": str(it["label"]), "value": mini(val, target), "target": target})
 		out.append({"name": str(g["name"]), "rows": rows, "done": done_count, "total": rows.size()})
 	return out
+
+
+const CH_POOL := [
+	{"key": "arena_waves", "label": "Пройди 3 волны в арене", "target": 3, "reward": 60},
+	{"key": "campaign_levels", "label": "Очисти 1 уровень кампании", "target": 1, "reward": 50},
+	{"key": "boss_kills", "label": "Победи босса", "target": 1, "reward": 80},
+	{"key": "shop_buys", "label": "Купи предмет в магазине", "target": 1, "reward": 40},
+	{"key": "items_upgraded", "label": "Улучши предмет", "target": 1, "reward": 45},
+	{"key": "daily_spin", "label": "Крути рулетку", "target": 1, "reward": 30},
+]
+
+
+func today_key() -> String:
+	return Time.get_date_string_from_system()
+
+
+func ensure_daily_challenges() -> void:
+	if str(daily_ch.get("date", "")) == today_key():
+		return
+	var day_seed: int = hash(today_key())
+	var picked: Array = []
+	var idx := 0
+	for i in 3:
+		idx = abs(day_seed + i * 7) % CH_POOL.size()
+		var item: Dictionary = CH_POOL[idx].duplicate(true)
+		item["id"] = "%s_%d" % [today_key(), i]
+		item["claimed"] = false
+		item["base"] = track_value(str(item["key"]))
+		picked.append(item)
+	daily_ch = {"date": today_key(), "items": picked}
+	save_settings()
+
+
+func daily_challenges() -> Array:
+	ensure_daily_challenges()
+	return daily_ch.get("items", [])
+
+
+func daily_ch_progress(item: Dictionary) -> int:
+	var base: int = int(item.get("base", 0))
+	return maxi(0, track_value(str(item["key"])) - base)
+
+
+func claim_daily_challenge(ch_id: String) -> bool:
+	ensure_daily_challenges()
+	for item in daily_ch.get("items", []):
+		if str(item["id"]) != ch_id or bool(item["claimed"]):
+			continue
+		if daily_ch_progress(item) < int(item["target"]):
+			return false
+		item["claimed"] = true
+		add_coins(int(item["reward"]))
+		season_points += int(item["reward"]) / 4
+		save_settings()
+		return true
+	return false
+
+
+const SEASON_LEVELS := 30
+const SEASON_POINTS_PER_LEVEL := 120
+
+
+func season_level() -> int:
+	return clampi(1 + season_points / SEASON_POINTS_PER_LEVEL, 1, SEASON_LEVELS)
+
+
+func season_claim_level(lv: int) -> bool:
+	if lv > season_level() or season_claimed.has(lv):
+		return false
+	season_claimed.append(lv)
+	add_coins(40 + lv * 10)
+	save_settings()
+	return true
