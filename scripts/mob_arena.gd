@@ -791,7 +791,7 @@ func _draw() -> void:
 	draw_rect(Rect2(bx - 2, by - 2, bw + 4, 22), Color(0, 0, 0, 0.55))
 	draw_rect(Rect2(bx, by, bw, 18), Color(0.18, 0.10, 0.10, 0.95))
 	var hpr: float = clampf(hp / maxf(1.0, max_hp), 0.0, 1.0)
-	draw_rect(Rect2(bx, by, bw * hpr, 18), Color(0.85, 0.25, 0.28))
+	draw_rect(Rect2(bx, by, bw * hpr, 18), GameState.accent())
 	draw_string(ThemeDB.fallback_font, Vector2(bx + 8, by + 14), "%d / %d" % [int(maxf(hp, 0.0)), int(max_hp)],
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 1, 1, 0.95))
 	if max_shield > 0.0 and shield > 0.0:
@@ -1172,14 +1172,14 @@ func _build_action_buttons() -> void:
 	melee_btn.text = "УДАР"
 	melee_btn.position = Vector2(x, 1080.0)
 	melee_btn.size = Vector2(120, 120)
-	melee_btn.modulate = Color(1, 1, 1, 0.55)
+	melee_btn.modulate = Color(1, 1, 1, GameState.ui_alpha)
 	melee_btn.pressed.connect(_melee)
 	_pl.add_child(melee_btn)
 	var throw_btn := Button.new()
 	throw_btn.text = "БРОСОК"
 	throw_btn.position = Vector2(x - 132.0 if GameState.btn_side == "right" else x + 132.0, 1080.0)
 	throw_btn.size = Vector2(116, 116)
-	throw_btn.modulate = Color(1, 1, 1, 0.55)
+	throw_btn.modulate = Color(1, 1, 1, GameState.ui_alpha)
 	throw_btn.pressed.connect(_throw_auto)
 	_pl.add_child(throw_btn)
 

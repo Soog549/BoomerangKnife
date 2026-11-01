@@ -86,6 +86,7 @@ const AVATAR_PATHS := [
 func _ready() -> void:
 	_normalize_layout()
 	_add_personal_rows()
+	_add_extra_rows()
 	_add_reset_row()
 	_add_footer()
 	# Убираем дубль выбора класса (старая пара Label+OptionButton) — оставлен один ряд «КЛАСС».
@@ -573,3 +574,111 @@ func _skin_preview_row() -> HBoxContainer:
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(info)
 	return row
+
+
+func _add_extra_rows() -> void:
+	var vb := get_node_or_null("Center/VBox")
+	if vb == null:
+		return
+	vb.add_child(_prow(tr("АКЦЕНТ"), _accent_name(), _cycle_accent))
+	vb.add_child(_prow(tr("РАЗМЕР КНОПОК"), _btn_scale_name(), _cycle_btn_scale))
+	vb.add_child(_prow(tr("ПРОЗРАЧНОСТЬ"), "%d%%" % int(round(GameState.ui_alpha * 100.0)), _cycle_alpha))
+	vb.add_child(_prow(tr("КРУПНЫЙ ТЕКСТ"), tr("ВКЛ") if GameState.big_text else tr("ВЫКЛ"), _toggle_big))
+	vb.add_child(_prow(tr("КОНТРАСТ"), tr("ВКЛ") if GameState.high_contrast else tr("ВЫКЛ"), _toggle_contrast))
+
+	var how := Button.new()
+	how.text = tr("КАК ИГРАТЬ")
+	how.custom_minimum_size = Vector2(0, 46)
+	how.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://scenes/how_to_play.tscn"))
+	vb.add_child(how)
+	var head := Label.new()
+	head.text = tr("ПРЕСЕТЫ")
+	head.add_theme_font_size_override("font_size", 14)
+	head.add_theme_color_override("font_color", Color(1.0, 0.86, 0.45))
+	vb.add_child(head)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	for pr in [["НОВИЧОК", 0], ["ХАРДКОР", 1], ["ЛЕВША", 2], ["ЭКОНОМ", 3]]:
+		var b := Button.new()
+		b.text = tr(str(pr[0]))
+		b.custom_minimum_size = Vector2(0, 44)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", 12)
+		var key: int = int(pr[1])
+		b.pressed.connect(func() -> void: _apply_preset(key))
+		row.add_child(b)
+	vb.add_child(row)
+
+
+func _accent_name() -> String:
+	return ["БИРЮЗА", "СИНИЙ", "ФИОЛЕТ", "КОРАЛЛ", "ЗОЛОТО", "ЗЕЛЁНЫЙ", "РОЗА", "СЕРЫЙ"][clampi(GameState.accent_index, 0, 7)]
+
+
+func _btn_scale_name() -> String:
+	match GameState.btn_scale_index:
+		0:
+			return tr("МАЛЫЕ")
+		1:
+			return tr("СРЕДНИЕ")
+	return tr("КРУПНЫЕ")
+
+
+func _cycle_accent(_d: int) -> void:
+	GameState.accent_index = (GameState.accent_index + 1) % 8
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _cycle_btn_scale(_d: int) -> void:
+	GameState.btn_scale_index = (GameState.btn_scale_index + 1) % 3
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _cycle_alpha(_d: int) -> void:
+	GameState.ui_alpha = clampf(GameState.ui_alpha + 0.1, 0.35, 1.0)
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _toggle_big(_d: int) -> void:
+	GameState.big_text = not GameState.big_text
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _toggle_contrast(_d: int) -> void:
+	GameState.high_contrast = not GameState.high_contrast
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _apply_preset(key: int) -> void:
+	match key:
+		0:
+			GameState.difficulty = "easy"
+			GameState.btn_scale_index = 2
+			GameState.ui_alpha = 0.9
+			GameState.big_text = true
+			GameState.btn_side = "right"
+		1:
+			GameState.difficulty = "hard"
+			GameState.btn_scale_index = 0
+			GameState.ui_alpha = 0.55
+			GameState.big_text = false
+			GameState.btn_side = "right"
+		2:
+			GameState.btn_side = "left"
+			GameState.btn_scale_index = 1
+		3:
+			GameState.shake_enabled = false
+			GameState.particles_enabled = false
+			GameState.ui_alpha = 0.7
+	AudioManager.play("level")
+	GameState.save_settings()
+	_rebuild_settings()

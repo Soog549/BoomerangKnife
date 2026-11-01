@@ -1097,6 +1097,11 @@ func load_settings() -> void:
 	best_rush_waves = cfg.get_value("settings", "best_rush_waves", 0)
 	best_survival_waves = cfg.get_value("settings", "best_survival_waves", 0)
 	haptics_level = int(cfg.get_value("settings", "haptics_level", 2))
+	accent_index = int(cfg.get_value("settings", "accent_index", 0))
+	btn_scale_index = int(cfg.get_value("settings", "btn_scale_index", 1))
+	ui_alpha = float(cfg.get_value("settings", "ui_alpha", 0.75))
+	big_text = bool(cfg.get_value("settings", "big_text", false))
+	high_contrast = bool(cfg.get_value("settings", "high_contrast", false))
 	var _il = cfg.get_value("settings", "item_levels", "{}")
 	if _il is String and _il != "":
 		var _ip = JSON.parse_string(_il)
@@ -1174,6 +1179,11 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "haptics_level", haptics_level)
 	cfg.set_value("settings", "recent_runs", JSON.stringify(recent_runs))
 	cfg.set_value("settings", "item_levels", JSON.stringify(item_levels))
+	cfg.set_value("settings", "accent_index", accent_index)
+	cfg.set_value("settings", "btn_scale_index", btn_scale_index)
+	cfg.set_value("settings", "ui_alpha", ui_alpha)
+	cfg.set_value("settings", "big_text", big_text)
+	cfg.set_value("settings", "high_contrast", high_contrast)
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
@@ -1502,6 +1512,11 @@ var continue_mode := ""
 var haptics_level := 2
 var recent_runs: Array = []
 var item_levels: Dictionary = {}
+var accent_index := 0
+var btn_scale_index := 1
+var ui_alpha := 0.75
+var big_text := false
+var high_contrast := false
 
 
 func mode_save(mode: String, data: Dictionary) -> void:
@@ -1682,3 +1697,23 @@ func upgrade_item(eq_id: String) -> bool:
 	item_levels[eq_id] = item_level(eq_id) + 1
 	save_settings()
 	return true
+
+
+const ACCENTS := [
+	Color(0.35, 0.85, 0.75), Color(0.40, 0.70, 1.00), Color(0.75, 0.50, 1.00),
+	Color(1.00, 0.55, 0.45), Color(1.00, 0.82, 0.35), Color(0.55, 0.95, 0.45),
+	Color(0.95, 0.45, 0.70), Color(0.75, 0.80, 0.90),
+]
+
+
+func accent() -> Color:
+	return ACCENTS[clampi(accent_index, 0, ACCENTS.size() - 1)]
+
+
+func ui_scale_mult() -> float:
+	match btn_scale_index:
+		0:
+			return 0.85
+		1:
+			return 1.0
+	return 1.18
