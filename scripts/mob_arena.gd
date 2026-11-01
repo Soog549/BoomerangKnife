@@ -15,6 +15,8 @@ const MOB_TYPES := {
 	"runner":  {"hp": 20.0, "speed": 55.0, "cd": 1.4, "proj": "needle",  "col": Color(0.88, 0.30, 0.40), "r": 44.0},
 	"drone":   {"hp": 40.0, "speed": 38.0, "cd": 2.4, "proj": "shuriken","col": Color(0.72, 0.30, 1.00), "r": 54.0},
 	"anomaly": {"hp": 70.0, "speed": 24.0, "cd": 3.8, "proj": "stone",   "col": Color(1.00, 0.82, 0.30), "r": 64.0},
+	"armored": {"hp": 95.0, "speed": 20.0, "cd": 3.2, "proj": "stone",   "col": Color(0.45, 0.55, 0.70), "r": 66.0},
+	"swift":   {"hp": 14.0, "speed": 95.0, "cd": 1.1, "proj": "needle",  "col": Color(0.40, 0.95, 0.85), "r": 36.0},
 	"boss":    {"hp": 240.0, "speed": 16.0, "cd": 2.6, "proj": "stone",  "col": Color(0.75, 0.15, 0.25), "r": 84.0},
 }
 const PROJ := {
@@ -283,7 +285,7 @@ func _spawn_mob() -> void:
 		mobs.append({
 			"kind": _practice_kind, "x": randf_range(90.0, W - 90.0), "y": -40.0,
 			"hp": ph, "max": ph, "cd": (float(pt["cd"]) + 0.8) * _diff_cd_mult(), "t": 0.0, "r": float(pt["r"]),
-			"col": pt["col"], "speed": float(pt["speed"]) * 0.7, "proj": str(pt["proj"]), "var": randi() % 2, "id": mob_seq,
+			"col": pt["col"], "speed": float(pt["speed"]) * 0.7 * (1.0 + 0.03 * float(wave)), "proj": str(pt["proj"]), "var": randi() % 2, "id": mob_seq,
 		})
 		return
 	if wave % 3 == 0 and not _boss_alive():
@@ -296,6 +298,12 @@ func _spawn_mob() -> void:
 		})
 		return
 	var kinds: Array = ["runner", "runner", "drone"]
+	if wave >= 2:
+		kinds.append("swift")
+	if wave >= 3:
+		kinds.append("armored")
+	if wave >= 5:
+		kinds.append("anomaly")
 	if wave >= 2:
 		kinds.append("drone")
 	if wave >= 3:
