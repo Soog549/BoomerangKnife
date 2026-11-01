@@ -45,6 +45,7 @@ func _ready() -> void:
 	ScoreManager.reset()
 	_connect_ui()
 	_apply_boosters()
+	_campaign_restore()
 	_start_level()
 	game_over_screen.hide()
 	pause_menu.hide()
@@ -197,6 +198,24 @@ func _predict_target(t: Target) -> Vector2:
 	var flight_time := dist / maxf(knife_speed, 1.0)
 	return t.predict_position(flight_time)
 
+func _campaign_restore() -> void:
+	if GameState.continue_mode == "campaign" and GameState.mode_has("campaign"):
+		var sav: Dictionary = GameState.mode_load("campaign")
+		levels_completed = int(sav.get("level", levels_completed))
+		ScoreManager.score = int(sav.get("score", ScoreManager.score))
+		ScoreManager.set_lives(int(sav.get("lives", ScoreManager.lives)))
+		Telemetry.event("campaign_restore", {"level": levels_completed})
+	GameState.continue_mode = ""
+
+
+func _campaign_checkpoint() -> void:
+	GameState.mode_save("campaign", {
+		"level": levels_completed,
+		"score": ScoreManager.score,
+		"lives": ScoreManager.lives,
+	})
+
+
 func _start_level() -> void:
 	_clear_target()
 	_spawn_targets()
@@ -265,6 +284,7 @@ func _on_target_cleared() -> void:
 		tutorial_overlay.on_target_cleared()
 	ScoreManager.next_level()
 	levels_completed += 1
+	_campaign_checkpoint()
 	if levels_completed == 3 or levels_completed == 4:
 		Toast.show(tr("ТРЕНИРОВКА: %d/5 мишеней") % levels_completed)
 	if levels_completed == 5:

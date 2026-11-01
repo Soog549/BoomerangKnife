@@ -98,6 +98,7 @@ var _ground_mode := false
 var _rush_mode := false
 var _survival_arena := false
 var _anim_t := 0.0
+var _mode_key := ""
 var _rig_state := "idle"
 var _rig_t := 0.0
 var avatar_tex: Texture2D = null
@@ -213,6 +214,18 @@ func _ready() -> void:
 		_survival_arena = true
 		GameState.survival_arena = false
 		_ground_mode = true
+	_mode_key = "frontier" if GameState.frontier_mode else ("rush" if _rush_mode else ("survival" if _survival_arena else "arena"))
+	if GameState.continue_mode == _mode_key and GameState.mode_has(_mode_key):
+		var sav: Dictionary = GameState.mode_load(_mode_key)
+		wave = int(sav.get("wave", 1))
+		score = int(sav.get("score", 0))
+		coins = int(sav.get("coins", coins))
+		max_hp = float(sav.get("max_hp", max_hp))
+		hp = float(sav.get("hp", max_hp))
+		ammo = int(sav.get("ammo", ammo))
+		wave_quota = 1 if _rush_mode else mini(3 + wave, 12)
+		wave_killed = 0
+	GameState.continue_mode = ""
 	replay_btn = Button.new()
 	replay_btn.text = tr("ПОВТОР")
 	replay_btn.position = Vector2(W * 0.5 - 120.0, H * 0.38 + 160.0)
@@ -497,6 +510,10 @@ func _process(dt: float) -> void:
 		banner_t = 1.6
 		rig_play("win")
 		AudioManager.play("level")
+		GameState.mode_save(_mode_key, {
+			"wave": wave, "score": score, "coins": coins,
+			"hp": hp, "max_hp": max_hp, "ammo": ammo,
+		})
 		if wave == 5 and GameState.unlock_arena_ach("wave5"):
 			_ach_toast(tr("ВОЛНА 5"))
 		if wave == 10 and GameState.unlock_arena_ach("wave10"):

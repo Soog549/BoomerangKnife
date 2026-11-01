@@ -1096,6 +1096,11 @@ func load_settings() -> void:
 	endless_best_wave = cfg.get_value("settings", "endless_best_wave", 0)
 	best_rush_waves = cfg.get_value("settings", "best_rush_waves", 0)
 	best_survival_waves = cfg.get_value("settings", "best_survival_waves", 0)
+	var _mp = cfg.get_value("settings", "mode_progress", "{}")
+	if _mp is String and _mp != "":
+		var _parsed = JSON.parse_string(_mp)
+		if _parsed is Dictionary:
+			mode_progress = _parsed
 	endless_play_count = cfg.get_value("settings", "endless_play_count", 0)
 	best_score_total = cfg.get_value("settings", "best_score_total", 0)
 	leaderboard = cfg.get_value("settings", "leaderboard", [])
@@ -1155,6 +1160,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "high_score", high_score)
 	cfg.set_value("settings", "best_rush_waves", best_rush_waves)
 	cfg.set_value("settings", "best_survival_waves", best_survival_waves)
+	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
 	cfg.set_value("settings", "last_mode_scene", last_mode_scene)
@@ -1435,3 +1441,69 @@ func record_mode_wave(rush: bool, waves: int) -> bool:
 			save_settings()
 			return true
 	return false
+
+# ================= ПРОГРЕСС ПО РЕЖИМАМ (чекпоинты) =================
+var mode_progress: Dictionary = {}
+var continue_mode := ""
+
+
+func mode_save(mode: String, data: Dictionary) -> void:
+	data["saved_unix"] = int(Time.get_unix_time_from_system())
+	mode_progress[mode] = data
+	save_settings()
+	Telemetry.event("mode_checkpoint", {"mode": mode})
+
+
+func mode_load(mode: String) -> Dictionary:
+	var d = mode_progress.get(mode, {})
+	return d if d is Dictionary else {}
+
+
+func mode_has(mode: String) -> bool:
+	return mode_progress.has(mode) and not mode_load(mode).is_empty()
+
+
+func mode_clear(mode: String) -> void:
+	if mode_progress.erase(mode):
+		save_settings()
+
+
+func mode_label(mode: String) -> String:
+	match mode:
+		"campaign":
+			return tr("КАМПАНИЯ")
+		"arena":
+			return tr("АРЕНА")
+		"frontier":
+			return tr("ЗАЩИТА РУБЕЖА")
+		"rush":
+			return tr("БОСС-РАШ")
+		"survival":
+			return tr("ВЫЖИВАНИЕ")
+		"td":
+			return tr("ОБОРОНА")
+		"duel":
+			return tr("ДУЭЛЬ")
+	return mode
+
+
+func mode_summary(mode: String) -> String:
+	var d: Dictionary = mode_load(mode)
+	if d.is_empty():
+		return ""
+	var parts: Array = []
+	if d.has("wave"):
+		parts.append(tr("волна %d") % int(d["wave"]))
+	if d.has("level"):
+		parts.append(tr("уровень %d") % int(d["level"]))
+	if d.has("score"):
+		parts.append(tr("счёт %d") % int(d["score"]))
+	return " · ".join(parts)
+
+
+func modes_with_saves() -> Array:
+	var out: Array = []
+	for m in mode_progress.keys():
+		if mode_has(str(m)):
+			out.append(str(m))
+	return out

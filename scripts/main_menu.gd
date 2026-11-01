@@ -160,12 +160,16 @@ func _build_view(view: String) -> void:
 	var items: Array = MENU_VIEWS.get(view, [])
 	if items.is_empty():
 		return
-	if view == "root" and GameState.last_mode_scene != "" and ResourceLoader.exists(GameState.last_mode_scene):
-		var cont := Button.new()
-		cont.custom_minimum_size = Vector2(0, 64)
-		cont.text = "ПРОДОЛЖИТЬ"
-		cont.pressed.connect(func(): _go(GameState.last_mode_scene))
-		menu_list.add_child(cont)
+	if view == "root":
+		for m in GameState.modes_with_saves():
+			var mode: String = str(m)
+			var cont := Button.new()
+			cont.custom_minimum_size = Vector2(0, 64)
+			var summ: String = GameState.mode_summary(mode)
+			cont.text = tr("ПРОДОЛЖИТЬ: %s") % GameState.mode_label(mode) + (("  ·  " + summ) if summ != "" else "")
+			cont.add_theme_font_size_override("font_size", 18)
+			cont.pressed.connect(func(): _continue_mode(mode))
+			menu_list.add_child(cont)
 	for item: Array in items:
 		var btn := Button.new()
 		btn.custom_minimum_size = Vector2(0, 64)
@@ -247,3 +251,20 @@ func _add_shop_corner() -> void:
 		AudioManager.play("click")
 		get_tree().change_scene_to_file("res://scenes/shop.tscn"))
 	add_child(b)
+
+
+func _continue_mode(mode: String) -> void:
+	GameState.continue_mode = mode
+	match mode:
+		"campaign":
+			_go("res://scenes/game.tscn")
+		"td":
+			_go("res://scenes/td.tscn")
+		"duel":
+			_go("res://scenes/duel.tscn")
+		_:
+			GameState.frontier_mode = mode == "frontier"
+			GameState.rush_mode = mode == "rush"
+			GameState.survival_arena = mode == "survival"
+			GameState.last_mode_scene = "res://scenes/mob_arena.tscn"
+			_go("res://scenes/mob_arena.tscn")
