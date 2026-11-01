@@ -82,7 +82,7 @@ func _build_profile_panel() -> void:
 	notch_shift()
 	var panel := PanelContainer.new()
 	panel.position = Vector2(16, 54)
-	panel.custom_minimum_size = Vector2(380, 132)
+	panel.custom_minimum_size = Vector2(420, 132)
 	add_child(panel)
 	var hb := HBoxContainer.new()
 	hb.add_theme_constant_override("separation", 10)

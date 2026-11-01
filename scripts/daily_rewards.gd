@@ -24,7 +24,7 @@ func _ready() -> void:
 	var hint := Label.new()
 	hint.text = tr("ФОРТУНА · 1 прокрут в день (нажми на колесо)")
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hint.position = Vector2(0, wheel_y + wheel_w + 24.0)
+	hint.position = Vector2(0, minf(wheel_y + wheel_w + 24.0, vp.y - 150.0))
 	hint.size = Vector2(720, 24)
 	hint.add_theme_font_size_override("font_size", 15)
 	add_child(hint)
