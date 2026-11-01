@@ -108,7 +108,15 @@ func _cell(row: Array, path: String, idx: int, by_ach: bool) -> Control:
 	var tex := TextureRect.new()
 	var use_path := path
 	if not by_ach and not ResourceLoader.exists(use_path):
-		use_path = "res://assets/images/packs/%s/card-%d.png" % [GameState.style_pack, (idx % 3) + 1]
+		var warts: Array = ["world_forest", "world_steppe", "world_ruin", "world_abyss",
+			"world_neon", "world_ice", "world_electro", "world_cosmos"]
+		var wp := "res://assets/images/worlds/%s.png" % str(warts[idx % warts.size()])
+		if ResourceLoader.exists(wp):
+			use_path = wp
+		else:
+			use_path = "res://assets/images/packs/%s/card-%d.png" % [GameState.style_pack, (idx % 3) + 1]
+	if by_ach and not ResourceLoader.exists(use_path):
+		use_path = "res://assets/images/packs/%s/ach-%d.png" % [GameState.style_pack, (idx % 3) + 1]
 	if ResourceLoader.exists(use_path):
 		tex.texture = load(use_path)
 	tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE

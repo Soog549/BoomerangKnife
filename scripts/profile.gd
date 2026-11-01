@@ -101,6 +101,7 @@ func _rebuild() -> void:
 		con_parts.append("%s x%d" % [c.label, GameState.consumable_count(c.id)])
 	_add_stat(tr("Предметы"), ", ".join(PackedStringArray(con_parts)) if not con_parts.is_empty() else "—")
 	_add_equipment_strip()
+	_add_runs()
 
 
 func _rebuild_preview() -> void:
@@ -285,3 +286,24 @@ func _add_equipment_strip() -> void:
 		col.add_child(l)
 		row.add_child(col)
 	stats_box.add_child(row)
+
+
+func _add_runs() -> void:
+	if GameState.recent_runs.is_empty():
+		return
+	var head := Label.new()
+	head.text = tr("ПОСЛЕДНИЕ ЗАБЕГИ")
+	head.add_theme_font_size_override("font_size", 15)
+	head.add_theme_color_override("font_color", Color(1.0, 0.86, 0.45))
+	stats_box.add_child(head)
+	for r in GameState.recent_runs:
+		if not (r is Dictionary):
+			continue
+		var line := Label.new()
+		line.text = "%s · %s %d · %s %d" % [
+			GameState.mode_label(str(r.get("mode", ""))),
+			tr("волна"), int(r.get("wave", 0)),
+			tr("счёт"), int(r.get("score", 0))]
+		line.add_theme_font_size_override("font_size", 13)
+		line.add_theme_color_override("font_color", Color(0.8, 0.86, 0.95))
+		stats_box.add_child(line)

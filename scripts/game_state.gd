@@ -1097,6 +1097,11 @@ func load_settings() -> void:
 	best_rush_waves = cfg.get_value("settings", "best_rush_waves", 0)
 	best_survival_waves = cfg.get_value("settings", "best_survival_waves", 0)
 	haptics_level = int(cfg.get_value("settings", "haptics_level", 2))
+	var _il = cfg.get_value("settings", "item_levels", "{}")
+	if _il is String and _il != "":
+		var _ip = JSON.parse_string(_il)
+		if _ip is Dictionary:
+			item_levels = _ip
 	var _rr = cfg.get_value("settings", "recent_runs", "[]")
 	if _rr is String and _rr != "":
 		var _rp = JSON.parse_string(_rr)
@@ -1168,6 +1173,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "best_survival_waves", best_survival_waves)
 	cfg.set_value("settings", "haptics_level", haptics_level)
 	cfg.set_value("settings", "recent_runs", JSON.stringify(recent_runs))
+	cfg.set_value("settings", "item_levels", JSON.stringify(item_levels))
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
@@ -1495,6 +1501,7 @@ var mode_progress: Dictionary = {}
 var continue_mode := ""
 var haptics_level := 2
 var recent_runs: Array = []
+var item_levels: Dictionary = {}
 
 
 func mode_save(mode: String, data: Dictionary) -> void:
@@ -1606,7 +1613,8 @@ func equipment_bonus(key: String) -> float:
 		if it.is_empty():
 			continue
 		var stats: Dictionary = it.get("stats", {})
-		total += float(stats.get(key, 0.0))
+		var lv: int = item_level(eid)
+		total += float(stats.get(key, 0.0)) * (1.0 + 0.08 * float(lv))
 	return total
 
 
@@ -1647,3 +1655,30 @@ func add_run(mode: String, wave: int, score: int) -> void:
 	while recent_runs.size() > 5:
 		recent_runs.pop_back()
 	save_settings()
+
+
+func item_level(eq_id: String) -> int:
+	return int(item_levels.get(eq_id, 0))
+
+
+func upgrade_cost(eq_id: String) -> int:
+	var base: int = 0
+	for slot in EQUIPMENT_SLOTS:
+		for it in ItemsDB.build_slot(str(slot)):
+			if str(it["id"]) == eq_id:
+				base = int(it["price"])
+				break
+	if base == 0:
+		base = 150
+	return int(base * 0.35 * (1.0 + float(item_level(eq_id))))
+
+
+func upgrade_item(eq_id: String) -> bool:
+	var cost := upgrade_cost(eq_id)
+	if coins < cost:
+		return false
+	if not spend_coins(cost):
+		return false
+	item_levels[eq_id] = item_level(eq_id) + 1
+	save_settings()
+	return true

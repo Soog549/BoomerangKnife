@@ -76,6 +76,7 @@ const SHOP_PAGES := [
 	["РЕЖИМЫ", ["_build_modes", "_build_boosters", "_build_consumables"]],
 	["СНАРЯЖЕНИЕ", ["_build_equipment"]],
 	["ПРОЧЕЕ", ["_build_glyphs", "_build_iap", "_build_crystal_ad_packs", "_build_donations"]],
+	["СЕТЫ", ["_build_sets_page"]],
 ]
 
 
@@ -442,6 +443,9 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 	var sub: String = "%s · ур.%d · %s" % [qname, req, stext]
 	if owned:
 		sub = sub + "  —  " + (tr("надето") if equipped_id == eq_id else tr("в сумке"))
+		var lv: int = GameState.item_level(eq_id)
+		if lv > 0:
+			sub = sub + "  ·  +%d ур." % lv
 	elif locked:
 		sub = sub + "  ·  " + tr("нужен уровень %d") % req
 	else:
@@ -496,6 +500,19 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 	else:
 		btn = _row_btn(GameState.coins < price, "", tr("НУЖНО %d м.") % price, Callable())
 	row.add_child(btn)
+	if owned:
+		var lv2: int = GameState.item_level(eq_id)
+		var cost: int = GameState.upgrade_cost(eq_id)
+		var ub := Button.new()
+		ub.text = tr("УЛУЧШИТЬ (%d)") % cost
+		ub.custom_minimum_size = Vector2(150, 46)
+		ub.disabled = GameState.coins < cost
+		ub.add_theme_font_size_override("font_size", 12)
+		ub.pressed.connect(func() -> void:
+			if GameState.upgrade_item(eq_id):
+				AudioManager.play("level")
+				_rebuild())
+		row.add_child(ub)
 	return row
 
 func _on_crystal_earn_pressed() -> void:
@@ -858,3 +875,29 @@ func _build_pager() -> void:
 		_rebuild())
 	row.add_child(nxt)
 	items_box.add_child(row)
+
+
+func _build_sets_page() -> void:
+	var head := Label.new()
+	head.text = tr("НАБОРЫ (СЕТЫ)")
+	head.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	head.add_theme_font_size_override("font_size", 20)
+	items_box.add_child(head)
+	var hint := Label.new()
+	hint.text = tr("2 предмета: +3% HP · 4: +5% HP и урон · 6: +10% HP, +8% урон, +5% скорость")
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.add_theme_font_size_override("font_size", 13)
+	hint.add_theme_color_override("font_color", Color(0.75, 0.82, 0.95))
+	items_box.add_child(hint)
+
+	var counts: Dictionary = GameState.equipment_set_counts()
+	var sets: Array = ["стража", "легиона", "степи", "бездны", "империи"]
+	for s in sets:
+		var have: int = int(counts.get(s, 0))
+		var row := _row_panel("Сет «%s»" % s, "%d / 6   ·   %s" % [have, tr("собери предметы этого сета")])
+		var title: Label = row.get_child(0) as Label
+		if title != null:
+			title.add_theme_color_override("font_color",
+				Color(1.0, 0.86, 0.4) if have >= 6 else Color(0.85, 0.9, 1.0))
+		items_box.add_child(row)
