@@ -545,7 +545,7 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 	if not ResourceLoader.exists(ip) and it.slot == "shield":
 		ip = "res://assets/images/shields/%s.png" % eq_id
 	if ResourceLoader.exists(ip):
-		row.add_child(_thumb(ip, 56))
+		row.add_child(_rarity_thumb(ip, 56, it.get("color", Color(0.8, 0.8, 0.85))))
 	row.add_child(label_panel)
 	if not owned and eq_id.contains("_v"):
 		var nb := Label.new()
@@ -991,3 +991,21 @@ func _build_sets_page() -> void:
 			title.add_theme_color_override("font_color",
 				Color(1.0, 0.86, 0.4) if have >= 6 else Color(0.85, 0.9, 1.0))
 		items_box.add_child(row)
+
+
+func _rarity_thumb(path: String, px: int, col: Color) -> PanelContainer:
+	var panel := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.08, 0.09, 0.14, 0.85)
+	sb.set_corner_radius_all(10)
+	sb.border_color = col
+	sb.set_border_width_all(2)
+	sb.set_content_margin_all(4)
+	panel.add_theme_stylebox_override("panel", sb)
+	var tex := TextureRect.new()
+	tex.custom_minimum_size = Vector2(px, px)
+	tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tex.texture = load(path)
+	panel.add_child(tex)
+	return panel
