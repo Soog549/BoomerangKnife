@@ -102,6 +102,7 @@ func _rebuild() -> void:
 	_add_stat(tr("Предметы"), ", ".join(PackedStringArray(con_parts)) if not con_parts.is_empty() else "—")
 	_add_equipment_strip()
 	_add_runs()
+	_add_upgrade_hint()
 	_add_identity()
 	_add_title_and_frame()
 	_add_clans_button()
@@ -291,15 +292,32 @@ func _add_equipment_strip() -> void:
 	stats_box.add_child(row)
 
 
+var _log_filter := ""
+
+
 func _add_runs() -> void:
-	if GameState.recent_runs.is_empty():
+	var runs: Array = []
+	for r in GameState.recent_runs:
+		if _log_filter == "" or str(r.get("mode", "")) == _log_filter:
+			runs.append(r)
+	if runs.is_empty() and GameState.recent_runs.is_empty():
 		return
+	var fbtn := Button.new()
+	fbtn.text = tr("ФИЛЬТР: %s") % (tr("ВСЕ") if _log_filter == "" else GameState.mode_label(_log_filter))
+	fbtn.custom_minimum_size = Vector2(0, 40)
+	fbtn.add_theme_font_size_override("font_size", 13)
+	fbtn.pressed.connect(func() -> void:
+		var modes := ["", "arena", "frontier", "rush", "survival", "campaign", "td"]
+		var i := modes.find(_log_filter)
+		_log_filter = str(modes[(i + 1) % modes.size()])
+		_rebuild())
+	stats_box.add_child(fbtn)
 	var head := Label.new()
 	head.text = tr("ПОСЛЕДНИЕ ЗАБЕГИ")
 	head.add_theme_font_size_override("font_size", 15)
 	head.add_theme_color_override("font_color", Color(1.0, 0.86, 0.45))
 	stats_box.add_child(head)
-	var top := GameState.recent_runs.duplicate()
+	var top := runs.duplicate()
 	top.sort_custom(func(a, b) -> bool: return int(a.get("score", 0)) > int(b.get("score", 0)))
 	var top_head := Label.new()
 	top_head.text = tr("ТОП-5 ЗАБЕГОВ")
@@ -315,7 +333,7 @@ func _add_runs() -> void:
 		tr2.add_theme_font_size_override("font_size", 13)
 		tr2.add_theme_color_override("font_color", Color(1.0, 0.88, 0.55) if i == 0 else Color(0.82, 0.88, 0.96))
 		stats_box.add_child(tr2)
-	for r in GameState.recent_runs:
+	for r in runs:
 		if not (r is Dictionary):
 			continue
 		var line := Label.new()
@@ -487,3 +505,30 @@ func _add_identity() -> void:
 	cw.add_theme_font_size_override("font_size", 13)
 	cw.add_theme_color_override("font_color", Color(0.7, 0.95, 0.8))
 	stats_box.add_child(cw)
+
+
+func _add_upgrade_hint() -> void:
+	var best_slot := ""
+	var best_gain := 0.0
+	for slot in GameState.EQUIPMENT_SLOTS:
+		var eq_id: String = GameState.equipped_in(str(slot))
+		var cur := 0.0
+		if eq_id != "":
+			var ci: Dictionary = ItemsDB.find_item(str(slot), eq_id)
+			if not ci.is_empty():
+				cur = GameState.item_score(ci) * (1.0 + 0.08 * float(GameState.item_level(eq_id)))
+		for it in ItemsDB.build_slot(str(slot)):
+			if not GameState.is_equipment_owned(str(it["id"])):
+				continue
+			var sc: float = GameState.item_score(it) * (1.0 + 0.08 * float(GameState.item_level(str(it["id"]))))
+			if sc - cur > best_gain:
+				best_gain = sc - cur
+				best_slot = str(slot)
+	if best_slot == "":
+		return
+	var l := Label.new()
+	l.text = tr("Совет: надень лучший предмет в слоте «%s»") % tr(best_slot)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.add_theme_font_size_override("font_size", 13)
+	l.add_theme_color_override("font_color", Color(0.95, 0.85, 0.45))
+	stats_box.add_child(l)
