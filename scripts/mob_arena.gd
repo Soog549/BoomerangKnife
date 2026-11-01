@@ -598,7 +598,12 @@ func _process(dt: float) -> void:
 		m["y"] = float(m["y"]) + float(m["speed"]) * dt
 		m["t"] = float(m["t"]) + dt
 		m["flash"] = max(0.0, float(m.get("flash", 0.0)) - dt * 3.5)
-		if float(m["t"]) >= float(m["cd"]):
+		var cd_now: float = float(m["cd"])
+		if str(m.get("kind", "")) == "boss":
+			var ratio: float = float(m["hp"]) / maxf(1.0, float(m.get("max", m["hp"])))
+			if ratio < 0.4:
+				cd_now = float(m["cd"]) * 0.55
+		if float(m["t"]) >= cd_now:
 			m["t"] = 0.0
 			var p: Dictionary = PROJ[str(m["proj"])]
 			var dx: float = px - float(m["x"])
