@@ -60,6 +60,12 @@ func _ready() -> void:
 	rec.add_theme_font_size_override("font_size", 16)
 	rec.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
 	rec.position = Vector2(24, 96.0)
+	var dcl := Label.new()
+	dcl.text = tr("Испытания: %d · сброс через %s") % [GameState.daily_ready_count(), GameState.ad_reset_in_text()]
+	dcl.add_theme_font_size_override("font_size", 13)
+	dcl.add_theme_color_override("font_color", Color(0.6, 0.9, 0.75))
+	dcl.position = Vector2(24, 120.0)
+	add_child(dcl)
 	add_child(rec)
 
 

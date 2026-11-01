@@ -299,6 +299,22 @@ func _add_runs() -> void:
 	head.add_theme_font_size_override("font_size", 15)
 	head.add_theme_color_override("font_color", Color(1.0, 0.86, 0.45))
 	stats_box.add_child(head)
+	var top := GameState.recent_runs.duplicate()
+	top.sort_custom(func(a, b) -> bool: return int(a.get("score", 0)) > int(b.get("score", 0)))
+	var top_head := Label.new()
+	top_head.text = tr("ТОП-5 ЗАБЕГОВ")
+	top_head.add_theme_font_size_override("font_size", 14)
+	top_head.add_theme_color_override("font_color", Color(0.75, 0.88, 1.0))
+	stats_box.add_child(top_head)
+	for i in mini(5, top.size()):
+		var tr2 := Label.new()
+		var rr: Dictionary = top[i]
+		tr2.text = "%d. %s · %s %d · %s %d" % [
+			i + 1, GameState.mode_label(str(rr.get("mode", ""))),
+			tr("волна"), int(rr.get("wave", 0)), tr("счёт"), int(rr.get("score", 0))]
+		tr2.add_theme_font_size_override("font_size", 13)
+		tr2.add_theme_color_override("font_color", Color(1.0, 0.88, 0.55) if i == 0 else Color(0.82, 0.88, 0.96))
+		stats_box.add_child(tr2)
 	for r in GameState.recent_runs:
 		if not (r is Dictionary):
 			continue

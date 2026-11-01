@@ -1921,3 +1921,13 @@ func season_claim_level(lv: int) -> bool:
 	add_coins(40 + lv * 10)
 	save_settings()
 	return true
+
+
+func daily_ready_count() -> int:
+	var n := 0
+	for item in daily_challenges():
+		if bool(item.get("claimed", false)):
+			continue
+		if daily_ch_progress(item) >= int(item["target"]):
+			n += 1
+	return n

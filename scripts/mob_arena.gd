@@ -66,6 +66,8 @@ var shop_layer: CanvasLayer
 var shop_panel: Control
 var shop_info: Label
 var replay_btn: Button
+var shop_btn_over: Button
+var revive_btn: Button
 var toast_t := 0.0
 var toast_text := ""
 var toast_col := Color(1, 1, 1)
@@ -234,6 +236,35 @@ func _ready() -> void:
 	replay_btn.visible = false
 	replay_btn.pressed.connect(_restart)
 	add_child(replay_btn)
+
+	shop_btn_over = Button.new()
+	shop_btn_over.text = tr("МАГАЗИН")
+	shop_btn_over.position = Vector2(W * 0.5 - 250.0, H * 0.38 + 228.0)
+	shop_btn_over.size = Vector2(200, 52)
+	shop_btn_over.visible = false
+	shop_btn_over.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		get_tree().change_scene_to_file("res://scenes/shop.tscn"))
+	add_child(shop_btn_over)
+
+	revive_btn = Button.new()
+	revive_btn.text = tr("ВТОРОЙ ШАНС · 20 💎")
+	revive_btn.position = Vector2(W * 0.5 + 50.0, H * 0.38 + 228.0)
+	revive_btn.size = Vector2(200, 52)
+	revive_btn.visible = false
+	revive_btn.pressed.connect(func() -> void:
+		if GameState.crystals >= 20:
+			GameState.crystals -= 20
+			GameState.save_settings()
+			hp = max_hp * 0.6
+			shield = max_shield
+			over = false
+			GameState.mode_clear(_mode_key)
+			AudioManager.play("level")
+			Telemetry.event("revive", {"mode": _mode_key})
+		else:
+			Toast.show(tr("Нужно 20 кристаллов")))
+	add_child(revive_btn)
 
 func _spawn_mob() -> void:
 	mob_seq += 1
@@ -419,6 +450,10 @@ func _process(dt: float) -> void:
 	_anim_t += dt
 	if replay_btn != null:
 		replay_btn.visible = over
+		if is_instance_valid(shop_btn_over):
+			shop_btn_over.visible = over
+		if is_instance_valid(revive_btn):
+			revive_btn.visible = over
 	if over:
 		queue_redraw()
 		return

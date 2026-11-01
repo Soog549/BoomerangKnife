@@ -132,6 +132,13 @@ func _build_profile_panel() -> void:
 	coins_l.add_theme_font_size_override("font_size", 14)
 	coins_l.add_theme_color_override("font_color", Color(1.0, 0.86, 0.4))
 	vb.add_child(coins_l)
+	var ready: int = GameState.daily_ready_count()
+	if ready > 0:
+		var dot := Label.new()
+		dot.text = "● " + tr("Испытания: %d готово") % ready
+		dot.add_theme_font_size_override("font_size", 13)
+		dot.add_theme_color_override("font_color", Color(0.55, 0.95, 0.65))
+		vb.add_child(dot)
 	vb.add_child(go_char)
 
 func _show_splash() -> void:
