@@ -1390,7 +1390,47 @@ func chapter_next_unlock() -> int:
 
 func class_bonus(key: String) -> float:
 	var b: Dictionary = CLASS_BONUS.get(GameState.avatar, {})
-	return float(b.get(key, 1.0))
+	var base: float = float(b.get(key, 1.0))
+	var sb: Dictionary = set_bonus(key)
+	return base * float(sb.get(key, 1.0))
+
+
+const EQUIPMENT_SLOTS := ["helmet", "armor", "boots", "weapon", "ring", "shield"]
+
+
+func equipment_set_counts() -> Dictionary:
+	var counts: Dictionary = {}
+	for slot in EQUIPMENT_SLOTS:
+		var eid: String = equipped_in(slot)
+		if eid == "":
+			continue
+		var it: Dictionary = ItemsDB.find_item(slot, eid)
+		if it.is_empty():
+			continue
+		var s: String = str(it.get("set", ""))
+		if s == "":
+			continue
+		counts[s] = int(counts.get(s, 0)) + 1
+	return counts
+
+
+func set_bonus(key: String) -> Dictionary:
+	var best := 0
+	for v in equipment_set_counts().values():
+		best = maxi(best, int(v))
+	var out: Dictionary = {}
+	if best >= 2:
+		out["hp"] = 1.03
+	if best >= 4:
+		out["hp"] = 1.05
+		out["dmg"] = 1.05
+	if best >= 6:
+		out["hp"] = 1.10
+		out["dmg"] = 1.08
+		out["speed"] = 1.05
+	if key == "":
+		return out
+	return out
 
 func export_profile() -> String:
 	save_settings()

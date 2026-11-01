@@ -439,7 +439,10 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 	var title_label: Label = label_panel.get_child(0) as Label
 	if title_label != null:
 		title_label.add_theme_color_override("font_color", it.get("color", Color(1, 1, 1)))
-	var ip := "res://assets/images/equipment/%s.png" % eq_id
+	var qi: int = int(it.get("quality", 0)) + 1
+	var ip := "res://assets/images/equipment/%s_q%d.png" % [str(it.get("slot", "")), qi]
+	if not ResourceLoader.exists(ip):
+		ip = "res://assets/images/equipment/%s.png" % eq_id
 	if not ResourceLoader.exists(ip) and it.slot == "shield":
 		ip = "res://assets/images/shields/%s.png" % eq_id
 	if ResourceLoader.exists(ip):
