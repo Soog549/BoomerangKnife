@@ -94,6 +94,8 @@ func _ready() -> void:
 		if node is CanvasItem:
 			(node as CanvasItem).visible = false
 	_wrap_in_scroll()
+	_bottom_spacer()
+	_bring_back_to_front()
 
 func _normalize_layout() -> void:
 	var center := get_node_or_null("Center")
@@ -127,6 +129,7 @@ func _add_personal_rows() -> void:
 	vb.add_child(_prow(tr("ВЫЖИВАНИЕ"), tr("ВКЛ") if GameState.survival_mode else tr("ВЫКЛ"), _cycle_surv))
 	vb.add_child(_prow(tr("КНОПКИ"), tr("СПРАВА") if GameState.btn_side == "right" else tr("СЛЕВА"), _cycle_btn_side))
 	vb.add_child(_prow(tr("СКИН"), str(GameState.current_skin().get("label", "—")), _cycle_skin))
+	vb.add_child(_skin_preview_row())
 	vb.add_child(_prow(tr("ВИБРАЦИЯ"), tr(_haptics_name()), _cycle_haptics))
 	vb.add_child(_profile_row())
 
@@ -202,11 +205,10 @@ func _prow(title: String, value: String, cb: Callable) -> HBoxContainer:
 
 
 func _cycle_class(d: int) -> void:
-	var owned: Array = GameState.owned_avatars
-	if owned.is_empty():
-		owned = [0]
-	var idx: int = owned.find(GameState.avatar)
-	GameState.avatar = int(owned[(idx + d + owned.size()) % owned.size()])
+	var total: int = AVATAR_TYPES.size()
+	if total <= 0:
+		return
+	GameState.avatar = (GameState.avatar + d + total) % total
 	GameState.save_settings()
 	AudioManager.play("click")
 	_rebuild_settings()
@@ -291,11 +293,6 @@ func _add_footer() -> void:
 	var vb := get_node_or_null("Center/VBox")
 	if vb == null:
 		return
-	var pers := Button.new()
-	pers.text = tr("ПЕРСОНАЛИЗАЦИЯ (моя игра)")
-	pers.custom_minimum_size = Vector2(0, 48)
-	pers.pressed.connect(func() -> void: get_tree().change_scene_to_file("res://scenes/my_game.tscn"))
-	vb.add_child(pers)
 	var diag := Button.new()
 	diag.text = tr("ДИАГНОСТИКА")
 	diag.custom_minimum_size = Vector2(0, 48)
@@ -516,3 +513,63 @@ func _cycle_haptics(_d: int) -> void:
 	GameState.save_settings()
 	AudioManager.play("click")
 	_rebuild_settings()
+
+
+func _bottom_spacer() -> void:
+	var vb := get_node_or_null("Center/VBox")
+	if vb == null:
+		return
+	if vb.get_node_or_null("BottomSpacer") != null:
+		return
+	var sp := Control.new()
+	sp.name = "BottomSpacer"
+	sp.custom_minimum_size = Vector2(0, 120)
+	vb.add_child(sp)
+
+
+func _bring_back_to_front() -> void:
+	var vp: Vector2 = get_viewport_rect().size
+	var back: Control = null
+	for n in get_children():
+		if n is Button and str((n as Button).text).find("НАЗАД") != -1:
+			back = n as Control
+			break
+	if back == null:
+		var found := find_child("BackButton", true, false)
+		if found is Button:
+			back = found as Control
+	if back == null:
+		return
+	back.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	back.position = Vector2(36.0, vp.y - 96.0)
+	back.size = Vector2(200.0, 52.0)
+	back.z_index = 50
+	back.move_to_front()
+
+
+const SKIN_FILES := [
+	"knife_gold", "knife_neon", "knife_ice", "knife_ruby", "knife_shadow", "knife_elektro",
+	"knife_toxic", "knife_cosmos", "knife_zona", "knife_desert", "knife_retro", "knife_empire",
+]
+
+
+func _skin_preview_row() -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	var idx: int = clampi(GameState.selected_skin, 0, SKIN_FILES.size() - 1)
+	var tex := TextureRect.new()
+	tex.custom_minimum_size = Vector2(48, 48)
+	tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var path := "res://assets/images/knives/%s.png" % SKIN_FILES[idx]
+	if ResourceLoader.exists(path):
+		tex.texture = load(path)
+	row.add_child(tex)
+	var info := Label.new()
+	info.text = tr("Скин меняет вид ножа и его цвет в бою")
+	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	info.add_theme_font_size_override("font_size", 13)
+	info.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0))
+	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(info)
+	return row
