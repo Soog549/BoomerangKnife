@@ -90,16 +90,7 @@ func _rebuild() -> void:
 	trust.add_theme_color_override("font_color", Color(0.55, 0.9, 0.75, 0.9))
 	trust.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	items_box.add_child(trust)
-	var ad_ok := true
-	if AdService.has_method("is_available"):
-		ad_ok = bool(AdService.call("is_available"))
-	var adl := Label.new()
-	adl.text = tr("Реклама: %s") % (tr("доступна") if ad_ok else tr("недоступна"))
-	adl.add_theme_font_size_override("font_size", 12)
-	adl.add_theme_color_override("font_color",
-		Color(0.55, 0.9, 0.7, 0.9) if ad_ok else Color(1.0, 0.6, 0.55, 0.9))
-	adl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	items_box.add_child(adl)
+
 	# Единый предпросмотр персонажа (полное тело, как в профиле)
 	var pv := TextureRect.new()
 	var cls_idx: int = clampi(GameState.avatar, 0, CLASS_WPN.size() - 1) if CLASS_WPN.size() > 0 else 0
@@ -837,7 +828,9 @@ func _build_class_weapons() -> void:
 		cell.custom_minimum_size = Vector2(300, 130)
 		var tex_panel := PanelContainer.new()
 		var sb := StyleBoxFlat.new()
-		sb.bg_color = Color(0.85, 0.88, 1.0, 0.10)
+		sb.bg_color = Color(0.92, 0.94, 1.0, 0.16)
+		sb.border_color = Color(1.0, 0.9, 0.6, 0.55)
+		sb.set_border_width_all(2)
 		sb.set_corner_radius_all(14)
 		sb.set_content_margin_all(6)
 		tex_panel.add_theme_stylebox_override("panel", sb)

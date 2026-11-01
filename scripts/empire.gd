@@ -59,22 +59,22 @@ func _ready() -> void:
 	rec.text = "РАШ: %d  ·  ВЫЖ: %d" % [GameState.best_rush_waves, GameState.best_survival_waves]
 	rec.add_theme_font_size_override("font_size", 16)
 	rec.add_theme_color_override("font_color", Color(1.0, 0.85, 0.35))
-	rec.position = Vector2(24, 96.0)
+	rec.position = Vector2(24, 92.0)
 	var dcl := Label.new()
-	dcl.text = tr("Испытания: %d · сброс через %s") % [GameState.daily_ready_count(), GameState.ad_reset_in_text()]
+	dcl.text = "Испытания: " + str(GameState.daily_ready_count()) + " · сброс через " + GameState.ad_reset_in_text()
 	dcl.add_theme_font_size_override("font_size", 13)
 	dcl.add_theme_color_override("font_color", Color(0.6, 0.9, 0.75))
-	dcl.position = Vector2(24, 120.0)
+	dcl.position = Vector2(24, 112.0)
 	add_child(dcl)
 	var sl := Label.new()
-	sl.text = tr("Сезон: осталось %d дн.") % GameState.season_days_left()
+	sl.text = "Сезон: осталось " + str(GameState.season_days_left()) + " дн."
 	sl.add_theme_font_size_override("font_size", 13)
 	sl.add_theme_color_override("font_color", Color(1.0, 0.86, 0.5))
-	sl.position = Vector2(24, 142.0)
+	sl.position = Vector2(24, 132.0)
 	add_child(sl)
 	var train := Button.new()
 	train.text = tr("ТРЕНИРОВКА")
-	train.position = Vector2(250, 120.0)
+	train.position = Vector2(250, 206.0)
 	train.size = Vector2(140, 56)
 	train.pressed.connect(func() -> void:
 		GameState.training_mode = true
@@ -84,7 +84,7 @@ func _ready() -> void:
 	if GameState.chest_available():
 		var chest := Button.new()
 		chest.text = tr("🎁 СУНДУК")
-		chest.position = Vector2(400, 120.0)
+		chest.position = Vector2(410, 206.0)
 		chest.size = Vector2(150, 56)
 		chest.pressed.connect(func() -> void:
 			AudioManager.play("level")

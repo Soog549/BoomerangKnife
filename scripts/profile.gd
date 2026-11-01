@@ -57,10 +57,11 @@ func _ready() -> void:
 func _rebuild() -> void:
 	var skin: Dictionary = GameState.current_skin()
 	avatar_rect.color = skin.blade
-	avatar_label.text = tr("Скин: %s") % skin.label
+	avatar_label.text = ""
 	var av_idx := clampi(GameState.avatar, 0, AVATAR_PATHS.size() - 1)
 	type_avatar.texture = load(AVATAR_PATHS[av_idx])
 	_add_stat(tr("Персонаж"), tr(AVATAR_TYPES[av_idx]))
+	_add_stat(tr("Скин"), str(skin.label))
 
 	for child in stats_box.get_children():
 		child.queue_free()
@@ -132,6 +133,43 @@ func _rebuild_preview() -> void:
 			_rebuild_preview())
 		tier_row.add_child(b)
 	preview_box.add_child(tier_row)
+
+	# ART_BODY — для «ТЕЛО» показываем полноростовой арт класса + иконки надетого
+	if _tier == 2:
+		var ci2: int = clampi(GameState.avatar, 0, CLASS_FILES.size() - 1)
+		var ap := "res://assets/images/classes_full/%s.png" % CLASS_FILES[ci2]
+		if not ResourceLoader.exists(ap):
+			ap = "res://assets/images/classes/%s.png" % CLASS_FILES[ci2]
+		if ResourceLoader.exists(ap):
+			var art := TextureRect.new()
+			art.texture = load(ap)
+			art.custom_minimum_size = Vector2(240, 360)
+			art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			art.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+			preview_box.add_child(art)
+			var erow := HBoxContainer.new()
+			erow.alignment = BoxContainer.ALIGNMENT_CENTER
+			erow.add_theme_constant_override("separation", 6)
+			for slot in GameState.EQUIPMENT_SLOTS:
+				var eid: String = GameState.equipped_in(str(slot))
+				if eid == "":
+					continue
+				var it: Dictionary = ItemsDB.find_item(str(slot), eid)
+				if it.is_empty():
+					continue
+				var q: int = int(it.get("quality", 0)) + 1
+				var ip := "res://assets/images/equipment/%s_q%d.png" % [str(slot), q]
+				if ResourceLoader.exists(ip):
+					var t2 := TextureRect.new()
+					t2.texture = load(ip)
+					t2.custom_minimum_size = Vector2(48, 48)
+					t2.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+					t2.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+					erow.add_child(t2)
+			preview_box.add_child(erow)
+			return
+
 
 	var av := CharacterPreview.new()
 	var tier_names := ["warrior-head.png", "warrior-bust.png", "warrior-body.png"]

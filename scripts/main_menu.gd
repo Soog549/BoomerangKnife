@@ -178,7 +178,10 @@ func _build_view(view: String) -> void:
 		cont_box.custom_minimum_size = Vector2(0, 132)
 		cont_box.add_theme_constant_override("separation", 6)
 		menu_list.add_child(cont_box)
-		for m in GameState.modes_with_saves():
+		var modes_with := GameState.modes_with_saves()
+		while modes_with.size() > 2:
+			modes_with.pop_front()
+		for m in modes_with:
 			var mode: String = str(m)
 			var cont := Button.new()
 			cont.custom_minimum_size = Vector2(0, 62)

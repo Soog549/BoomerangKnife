@@ -1105,7 +1105,8 @@ func load_settings() -> void:
 	armor_palette = int(cfg.get_value("settings", "armor_palette", 0))
 	player_id = str(cfg.get_value("settings", "player_id", ""))
 	season_points = int(cfg.get_value("settings", "season_points", 0))
-	season_start_unix = int(cfg.get_value("settings", "season_start_unix", 0))
+	var _ssu = cfg.get_value("settings", "season_start_unix", 0)
+	season_start_unix = int(str(_ssu).to_int()) if str(_ssu) != "" else 0
 	var _ts = cfg.get_value("settings", "tutorial_seen", "{}")
 	if _ts is String and _ts != "":
 		var _tsp = JSON.parse_string(_ts)

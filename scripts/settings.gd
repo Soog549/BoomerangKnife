@@ -227,7 +227,7 @@ func _style_preview() -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
 	style_preview_tex = TextureRect.new()
-	style_preview_tex.custom_minimum_size = Vector2(150, 110)
+	style_preview_tex.custom_minimum_size = Vector2(180, 130)
 	style_preview_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	row.add_child(style_preview_tex)
 	var info := Label.new()
@@ -533,7 +533,7 @@ func _bottom_spacer() -> void:
 		return
 	var sp := Control.new()
 	sp.name = "BottomSpacer"
-	sp.custom_minimum_size = Vector2(0, 120)
+	sp.custom_minimum_size = Vector2(0, 170)
 	vb.add_child(sp)
 
 
