@@ -55,7 +55,7 @@ func _apply_skin() -> void:
 	var tex_path: String = KNIFE_TEX_PATHS[GameState.selected_skin]
 	if ResourceLoader.exists(tex_path):
 		sprite.texture = load(tex_path) as Texture2D
-		sprite.scale = Vector2(0.36, 0.36)  # подгони под габарит процедурного ножа
+		sprite.scale = Vector2(0.52, 0.52)  # подгони под габарит процедурного ножа
 		sprite.visible = true
 		blade.visible = false
 		handle.visible = false
