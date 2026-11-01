@@ -84,6 +84,7 @@ const AVATAR_PATHS := [
 ]
 
 func _ready() -> void:
+	_apply_style_bg()
 	_normalize_layout()
 	_add_personal_rows()
 	_add_extra_rows()
@@ -737,3 +738,16 @@ func _toggle_theme(_d: int) -> void:
 	GameState.save_settings()
 	AudioManager.play("click")
 	get_tree().reload_current_scene()
+
+func _apply_style_bg() -> void:
+	var p := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
+	if not ResourceLoader.exists(p):
+		return
+	var tr := TextureRect.new()
+	tr.texture = load(p)
+	tr.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(tr)
+	move_child(tr, 0)

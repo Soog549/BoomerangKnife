@@ -4,6 +4,7 @@ extends Control
 ## См. LORE-WORLDS.md. Строит UI в коде поверх фоновой текстуры.
 
 func _ready()-> void:
+	_apply_style_bg()
 	AudioManager.play_music("menu")
 	GameState.apply_orientation()
 	_build()
@@ -86,3 +87,16 @@ func _on_world(i: int) -> void:
 func _on_back()-> void:
 	AudioManager.play("click")
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func _apply_style_bg() -> void:
+	var p := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
+	if not ResourceLoader.exists(p):
+		return
+	var tr := TextureRect.new()
+	tr.texture = load(p)
+	tr.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(tr)
+	move_child(tr, 0)

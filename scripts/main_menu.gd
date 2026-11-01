@@ -47,6 +47,7 @@ const MENU_VIEWS := {
 var _view := "root"
 
 func _ready() -> void:
+	_apply_style_bg()
 	if not GameState.onboarding_done:
 		get_tree().change_scene_to_file("res://scenes/onboarding.tscn")
 		return
@@ -322,3 +323,16 @@ func _add_bottom_nav() -> void:
 			dot.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
 			dot.position = Vector2(b.position.x + b.size.x - 18.0, b.position.y - 6.0)
 			bar.add_child(dot)
+
+func _apply_style_bg() -> void:
+	var p := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
+	if not ResourceLoader.exists(p):
+		return
+	var tr := TextureRect.new()
+	tr.texture = load(p)
+	tr.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(tr)
+	move_child(tr, 0)
