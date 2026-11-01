@@ -89,6 +89,16 @@ func _rebuild() -> void:
 	trust.add_theme_color_override("font_color", Color(0.55, 0.9, 0.75, 0.9))
 	trust.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	items_box.add_child(trust)
+	var ad_ok := true
+	if AdService.has_method("is_available"):
+		ad_ok = bool(AdService.call("is_available"))
+	var adl := Label.new()
+	adl.text = tr("Реклама: %s") % (tr("доступна") if ad_ok else tr("недоступна"))
+	adl.add_theme_font_size_override("font_size", 12)
+	adl.add_theme_color_override("font_color",
+		Color(0.55, 0.9, 0.7, 0.9) if ad_ok else Color(1.0, 0.6, 0.55, 0.9))
+	adl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	items_box.add_child(adl)
 	# Единый предпросмотр персонажа (полное тело, как в профиле)
 	var pv := TextureRect.new()
 	var cls_idx: int = clampi(GameState.avatar, 0, CLASS_WPN.size() - 1) if CLASS_WPN.size() > 0 else 0

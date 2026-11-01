@@ -590,6 +590,7 @@ func _add_extra_rows() -> void:
 	if vb == null:
 		return
 	vb.add_child(_prow(tr("АКЦЕНТ"), _accent_name(), _cycle_accent))
+	vb.add_child(_prow(tr("СВАЙП"), tr(GameState.swipe_name()), _cycle_swipe))
 	vb.add_child(_prow(tr("ЦВЕТ БРОНИ"), _armor_name(), _cycle_armor))
 	vb.add_child(_prow(tr("РАЗМЕР КНОПОК"), _btn_scale_name(), _cycle_btn_scale))
 	vb.add_child(_prow(tr("ПРОЗРАЧНОСТЬ"), "%d%%" % int(round(GameState.ui_alpha * 100.0)), _cycle_alpha))
@@ -710,6 +711,13 @@ func _armor_name() -> String:
 
 func _cycle_armor(_d: int) -> void:
 	GameState.armor_palette = (GameState.armor_palette + 1) % 4
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()
+
+
+func _cycle_swipe(_d: int) -> void:
+	GameState.swipe_sens = (GameState.swipe_sens + 1) % 3
 	GameState.save_settings()
 	AudioManager.play("click")
 	_rebuild_settings()

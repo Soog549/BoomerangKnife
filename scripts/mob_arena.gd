@@ -516,8 +516,8 @@ func _process(dt: float) -> void:
 		mv = mv.normalized()
 	if joy_on and joy_vec.length() > DEAD:
 		mv = joy_vec.normalized() * clamp((joy_vec.length() - DEAD) / (1.0 - DEAD), 0.0, 1.0)
-	px = clamp(px + mv.x * MOVE_SPEED * dt, 50.0, W - 50.0)
-	py = clamp(py + mv.y * MOVE_SPEED * dt, AREA_TOP, field_bottom)
+	px = clamp(px + mv.x * MOVE_SPEED * GameState.swipe_mult() * dt, 50.0, W - 50.0)
+	py = clamp(py + mv.y * MOVE_SPEED * GameState.swipe_mult() * dt, AREA_TOP, field_bottom)
 
 	wave_t += dt
 	if false and wave_t > 15.0:

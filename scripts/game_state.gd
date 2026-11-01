@@ -1127,6 +1127,7 @@ func load_settings() -> void:
 		if _tp is Dictionary:
 			tracker = _tp
 	aim_mode = int(cfg.get_value("settings", "aim_mode", 0))
+	swipe_sens = int(cfg.get_value("settings", "swipe_sens", 1))
 	var _il = cfg.get_value("settings", "item_levels", "{}")
 	if _il is String and _il != "":
 		var _ip = JSON.parse_string(_il)
@@ -1218,6 +1219,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "tutorial_seen", JSON.stringify(tutorial_seen))
 	cfg.set_value("settings", "season_start_unix", season_start_unix)
 	cfg.set_value("settings", "aim_mode", aim_mode)
+	cfg.set_value("settings", "swipe_sens", swipe_sens)
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
@@ -1560,6 +1562,7 @@ var season_claimed: Array = []
 var tutorial_seen: Dictionary = {}
 var season_start_unix := 0
 var aim_mode := 0
+var swipe_sens := 1
 
 
 func mode_save(mode: String, data: Dictionary) -> void:
@@ -1972,3 +1975,25 @@ func reset_modes_only() -> void:
 	high_score = 0
 	recent_runs.clear()
 	save_settings()
+
+
+func swipe_mult() -> float:
+	match swipe_sens:
+		0:
+			return 0.75
+		1:
+			return 1.0
+	return 1.3
+
+
+func swipe_name() -> String:
+	match swipe_sens:
+		0:
+			return "МЕДЛЕННАЯ"
+		1:
+			return "ОБЫЧНАЯ"
+	return "БЫСТРАЯ"
+
+
+func streak_bonus_mult() -> float:
+	return 1.0 + 0.15 * float(clampi(login_streak, 0, 6))

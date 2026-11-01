@@ -132,13 +132,27 @@ func _add_special() -> void:
 		var dd: String = str(z["d"])
 		var mm: String = str(z.get("m", ""))
 		b.pressed.connect(func() -> void:
-			GameState.difficulty = dd
-			GameState.rush_mode = mm == "rush"
-			GameState.survival_arena = mm == "surv"
-			GameState.save_settings()
 			AudioManager.play("click")
-			GameState.last_mode_scene = "res://scenes/mob_arena.tscn"
-			get_tree().change_scene_to_file("res://scenes/mob_arena.tscn"))
+			var best_txt := ""
+			if mm == "rush":
+				best_txt = tr("Рекорд: %d") % GameState.best_rush_waves
+			elif mm == "surv":
+				best_txt = tr("Рекорд: %d") % GameState.best_survival_waves
+			var dlg := ConfirmationDialog.new()
+			dlg.title = str(z["t"])
+			dlg.dialog_text = "%s\n%s\n%s" % [
+				tr("Сложность: %s") % dd, best_txt, tr("Начать?")]
+			dlg.ok_button_text = tr("НАЧАТЬ")
+			dlg.cancel_button_text = tr("Отмена")
+			add_child(dlg)
+			dlg.confirmed.connect(func() -> void:
+				GameState.difficulty = dd
+				GameState.rush_mode = mm == "rush"
+				GameState.survival_arena = mm == "surv"
+				GameState.save_settings()
+				GameState.last_mode_scene = "res://scenes/mob_arena.tscn"
+				get_tree().change_scene_to_file("res://scenes/mob_arena.tscn"))
+			dlg.popup_centered())
 		add_child(b)
 
 

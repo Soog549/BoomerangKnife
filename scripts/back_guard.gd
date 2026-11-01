@@ -6,6 +6,10 @@ extends Node
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		handle_back()
+	elif what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		var sc := get_tree().current_scene
+		if sc != null and sc.has_method("_toggle_pause") and not sc.get("paused"):
+			sc.call("_toggle_pause")
 
 
 func handle_back() -> void:
