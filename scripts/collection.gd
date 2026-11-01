@@ -62,10 +62,7 @@ func _ready() -> void:
 	col.add_theme_constant_override("separation", 10)
 	sc.add_child(col)
 
-	col.add_child(_header(tr("КАРТОЧКИ ЛОРА")))
-	col.add_child(_grid(LORE, "res://assets/images/fanclub/cards/card-%02d.png", false))
-	col.add_child(_header(tr("КАРТОЧКИ ДОСТИЖЕНИЙ")))
-	col.add_child(_grid(ACH, "res://assets/images/fanclub/achievements/ach-%02d.png", true))
+	_render(col)
 
 	var back := Button.new()
 	back.text = tr("НАЗАД")
@@ -170,3 +167,75 @@ func _open_detail(nm: String, rar: String, path: String, unlocked: bool) -> void
 	close.size = Vector2(600, 56)
 	close.pressed.connect(func() -> void: layer.queue_free())
 	box.add_child(close)
+
+
+var _coll_tab := 0
+var _coll_page := 0
+const COLL_PER := 12
+
+
+func _coll_data() -> Array:
+	return LORE if _coll_tab == 0 else ACH
+
+
+func _render(col: VBoxContainer) -> void:
+	for ch in col.get_children():
+		ch.queue_free()
+	var tabs := HBoxContainer.new()
+	tabs.add_theme_constant_override("separation", 8)
+	for i in 2:
+		var b := Button.new()
+		b.text = tr("ЛОР") if i == 0 else tr("ДОСТИЖЕНИЯ")
+		b.custom_minimum_size = Vector2(0, 46)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.disabled = i == _coll_tab
+		var idx: int = i
+		b.pressed.connect(func() -> void:
+			_coll_tab = idx
+			_coll_page = 0
+			AudioManager.play("click")
+			_render(col))
+		tabs.add_child(b)
+	col.add_child(tabs)
+
+	var data := _coll_data()
+	var pages: int = maxi(1, int(ceil(float(data.size()) / float(COLL_PER))))
+	_coll_page = clampi(_coll_page, 0, pages - 1)
+
+	var pager := HBoxContainer.new()
+	pager.add_theme_constant_override("separation", 8)
+	var prev := Button.new()
+	prev.text = "◀"
+	prev.custom_minimum_size = Vector2(70, 44)
+	prev.disabled = _coll_page <= 0
+	prev.pressed.connect(func() -> void:
+		_coll_page = maxi(0, _coll_page - 1)
+		_render(col))
+	pager.add_child(prev)
+	var mid := Label.new()
+	mid.text = "%d / %d" % [_coll_page + 1, pages]
+	mid.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	mid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pager.add_child(mid)
+	var nxt := Button.new()
+	nxt.text = "▶"
+	nxt.custom_minimum_size = Vector2(70, 44)
+	nxt.disabled = _coll_page >= pages - 1
+	nxt.pressed.connect(func() -> void:
+		_coll_page = mini(pages - 1, _coll_page + 1)
+		_render(col))
+	pager.add_child(nxt)
+	col.add_child(pager)
+
+	var from_i: int = _coll_page * COLL_PER
+	var to_i: int = mini(data.size(), from_i + COLL_PER)
+	var page_data: Array = data.slice(from_i, to_i)
+	var g := GridContainer.new()
+	g.columns = 2
+	g.add_theme_constant_override("h_separation", 14)
+	g.add_theme_constant_override("v_separation", 14)
+	var pattern: String = ("res://assets/images/fanclub/cards/card-%02d.png" if _coll_tab == 0
+		else "res://assets/images/fanclub/achievements/ach-%02d.png")
+	for i in page_data.size():
+		g.add_child(_cell(page_data[i], pattern % (from_i + i + 1), from_i + i, _coll_tab == 1))
+	col.add_child(g)
