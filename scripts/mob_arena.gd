@@ -1249,10 +1249,10 @@ func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
 		# ноги
 		var lw: float = rig_leg_l.get_width() * (gh * 0.46 / rig_leg_l.get_height())
 		draw_set_transform(Vector2(px - gw * 0.15, hip.y), -stride, Vector2.ONE)
-		draw_texture_rect(rig_leg_l, Rect2(-lw * 0.5, 0, lw, gh * 0.46), false)
+		draw_texture_rect(rig_leg_l, Rect2(-lw * 0.5, 0, lw, gh * 0.46), false, GameState.armor_tint())
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		draw_set_transform(Vector2(px + gw * 0.15, hip.y), stride, Vector2.ONE)
-		draw_texture_rect(rig_leg_r, Rect2(-lw * 0.5, 0, lw, gh * 0.46), false)
+		draw_texture_rect(rig_leg_r, Rect2(-lw * 0.5, 0, lw, gh * 0.46), false, GameState.armor_tint())
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		# ОТДЕЛЬНЫЕ РУКИ (вращение в локте)
 		if rig_arm_l != null:
@@ -1290,12 +1290,12 @@ func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
 		var tw2: float = rig_torso.get_width() * (gh * 0.46 / rig_torso.get_height())
 		var th2: float = gh * 0.46
 		draw_set_transform(Vector2(px, hip.y - th2 * 0.02), lean, Vector2.ONE)
-		draw_texture_rect(rig_torso, Rect2(-tw2 * 0.5, -th2 + br, tw2, th2), false)
+		draw_texture_rect(rig_torso, Rect2(-tw2 * 0.5, -th2 + br, tw2, th2), false, GameState.armor_tint())
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		# голова
 		var hw2: float = rig_head.get_width() * (gh * 0.24 / rig_head.get_height())
 		draw_set_transform(Vector2(px + head_dx, hip.y - th2 + br * 1.4 - gh * 0.02), lean * 1.3, Vector2.ONE)
-		draw_texture_rect(rig_head, Rect2(-hw2 * 0.5, -gh * 0.24, hw2, gh * 0.24), false)
+		draw_texture_rect(rig_head, Rect2(-hw2 * 0.5, -gh * 0.24, hw2, gh * 0.24), false, GameState.armor_tint())
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		return
 	_rig_t += get_process_delta_time()

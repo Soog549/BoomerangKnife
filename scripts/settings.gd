@@ -581,6 +581,7 @@ func _add_extra_rows() -> void:
 	if vb == null:
 		return
 	vb.add_child(_prow(tr("АКЦЕНТ"), _accent_name(), _cycle_accent))
+	vb.add_child(_prow(tr("ЦВЕТ БРОНИ"), _armor_name(), _cycle_armor))
 	vb.add_child(_prow(tr("РАЗМЕР КНОПОК"), _btn_scale_name(), _cycle_btn_scale))
 	vb.add_child(_prow(tr("ПРОЗРАЧНОСТЬ"), "%d%%" % int(round(GameState.ui_alpha * 100.0)), _cycle_alpha))
 	vb.add_child(_prow(tr("КРУПНЫЙ ТЕКСТ"), tr("ВКЛ") if GameState.big_text else tr("ВЫКЛ"), _toggle_big))
@@ -681,4 +682,15 @@ func _apply_preset(key: int) -> void:
 			GameState.ui_alpha = 0.7
 	AudioManager.play("level")
 	GameState.save_settings()
+	_rebuild_settings()
+
+
+func _armor_name() -> String:
+	return ["СТАЛЬ", "ТЕПЛО", "ЛЁД", "ХВОЯ"][clampi(GameState.armor_palette, 0, 3)]
+
+
+func _cycle_armor(_d: int) -> void:
+	GameState.armor_palette = (GameState.armor_palette + 1) % 4
+	GameState.save_settings()
+	AudioManager.play("click")
 	_rebuild_settings()

@@ -1102,6 +1102,8 @@ func load_settings() -> void:
 	ui_alpha = float(cfg.get_value("settings", "ui_alpha", 0.75))
 	big_text = bool(cfg.get_value("settings", "big_text", false))
 	high_contrast = bool(cfg.get_value("settings", "high_contrast", false))
+	armor_palette = int(cfg.get_value("settings", "armor_palette", 0))
+	aim_mode = int(cfg.get_value("settings", "aim_mode", 0))
 	var _il = cfg.get_value("settings", "item_levels", "{}")
 	if _il is String and _il != "":
 		var _ip = JSON.parse_string(_il)
@@ -1184,6 +1186,8 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "ui_alpha", ui_alpha)
 	cfg.set_value("settings", "big_text", big_text)
 	cfg.set_value("settings", "high_contrast", high_contrast)
+	cfg.set_value("settings", "armor_palette", armor_palette)
+	cfg.set_value("settings", "aim_mode", aim_mode)
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
@@ -1517,6 +1521,8 @@ var btn_scale_index := 1
 var ui_alpha := 0.75
 var big_text := false
 var high_contrast := false
+var armor_palette := 0
+var aim_mode := 0
 
 
 func mode_save(mode: String, data: Dictionary) -> void:
@@ -1717,3 +1723,24 @@ func ui_scale_mult() -> float:
 		1:
 			return 1.0
 	return 1.18
+
+
+const ARMOR_TINTS := [
+	Color(1.0, 1.0, 1.0),
+	Color(1.0, 0.82, 0.72),
+	Color(0.78, 0.9, 1.0),
+	Color(0.85, 1.0, 0.86),
+]
+
+
+func armor_tint() -> Color:
+	return ARMOR_TINTS[clampi(armor_palette, 0, ARMOR_TINTS.size() - 1)]
+
+
+func aim_mode_name() -> String:
+	match aim_mode:
+		0:
+			return "АВТО"
+		1:
+			return "РУЧНОЙ"
+	return "ГИБРИД"

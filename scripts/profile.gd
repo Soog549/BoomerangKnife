@@ -102,6 +102,8 @@ func _rebuild() -> void:
 	_add_stat(tr("Предметы"), ", ".join(PackedStringArray(con_parts)) if not con_parts.is_empty() else "—")
 	_add_equipment_strip()
 	_add_runs()
+	_add_title_and_frame()
+	_add_clans_button()
 
 
 func _rebuild_preview() -> void:
@@ -307,3 +309,76 @@ func _add_runs() -> void:
 		line.add_theme_font_size_override("font_size", 13)
 		line.add_theme_color_override("font_color", Color(0.8, 0.86, 0.95))
 		stats_box.add_child(line)
+
+
+func _add_clans_button() -> void:
+	var b := Button.new()
+	b.text = tr("КЛАНЫ И ДРУЗЬЯ · ВЕДУТСЯ РАБОТЫ")
+	b.custom_minimum_size = Vector2(0, 46)
+	b.add_theme_font_size_override("font_size", 13)
+	b.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
+	b.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		var dlg := AcceptDialog.new()
+		dlg.title = tr("КЛАНЫ И ДРУЗЬЯ")
+		dlg.dialog_text = tr("Раздел в разработке: кланы, друзья и совместные рейды появятся в одном из обновлений.")
+		dlg.ok_button_text = tr("ПОНЯТНО")
+		add_child(dlg)
+		dlg.popup_centered())
+	stats_box.add_child(b)
+
+
+func _title_for_level() -> String:
+	var lv: int = GameState.player_level
+	if lv >= 30:
+		return "ИМПЕРАТОР"
+	if lv >= 22:
+		return "ЛЕГАТ"
+	if lv >= 16:
+		return "ЦЕНТУРИОН"
+	if lv >= 10:
+		return "ВЕТЕРАН"
+	if lv >= 5:
+		return "ЛЕГИОНЕР"
+	if lv >= 2:
+		return "СТРАЖНИК"
+	return "НОВИЧОК"
+
+
+func _frame_color() -> Color:
+	var lv: int = GameState.player_level
+	if lv >= 30:
+		return Color(1.0, 0.84, 0.35)
+	if lv >= 22:
+		return Color(0.85, 0.55, 1.0)
+	if lv >= 16:
+		return Color(0.45, 0.7, 1.0)
+	if lv >= 10:
+		return Color(0.5, 0.95, 0.75)
+	return Color(0.75, 0.75, 0.8)
+
+
+func _add_title_and_frame() -> void:
+	var head := Label.new()
+	head.text = tr("ТИТУЛ: %s") % tr(_title_for_level())
+	head.add_theme_font_size_override("font_size", 16)
+	head.add_theme_color_override("font_color", _frame_color())
+	stats_box.add_child(head)
+
+	var av := get_node_or_null("AvatarPreview")
+	if av == null:
+		av = find_child("CharacterPreview", true, false)
+	if av is Control:
+		var c := av as Control
+		var frame := Panel.new()
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0, 0, 0, 0)
+		sb.border_color = _frame_color()
+		sb.set_border_width_all(4)
+		sb.set_corner_radius_all(12)
+		frame.add_theme_stylebox_override("panel", sb)
+		frame.position = c.position - Vector2(6, 6)
+		frame.size = c.size + Vector2(12, 12)
+		frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		c.get_parent().add_child(frame)
+		c.get_parent().move_child(frame, c.get_index())
