@@ -32,9 +32,11 @@ func _build()-> void:
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
 		var thumb := TextureRect.new()
-		thumb.custom_minimum_size = Vector2(64, 64)
+		thumb.custom_minimum_size = Vector2(72, 72)
+		thumb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		thumb.clip_contents = false
 		thumb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		var art_path := "res://assets/images/worlds/%s.png" % str(w.get("art", ""))
 		if ResourceLoader.exists(art_path):
 			thumb.texture = load(art_path)
