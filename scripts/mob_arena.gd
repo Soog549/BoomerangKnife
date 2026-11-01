@@ -781,6 +781,25 @@ func _process(dt: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	# HUD_BARS — компактные полосы HP/щита с цифрами
+	var bx: float = 20.0
+	var by: float = 62.0
+	var bw: float = 300.0
+	draw_rect(Rect2(bx - 2, by - 2, bw + 4, 22), Color(0, 0, 0, 0.55))
+	draw_rect(Rect2(bx, by, bw, 18), Color(0.18, 0.10, 0.10, 0.95))
+	var hpr: float = clampf(hp / maxf(1.0, max_hp), 0.0, 1.0)
+	draw_rect(Rect2(bx, by, bw * hpr, 18), Color(0.85, 0.25, 0.28))
+	draw_string(ThemeDB.fallback_font, Vector2(bx + 8, by + 14), "%d / %d" % [int(maxf(hp, 0.0)), int(max_hp)],
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 1, 1, 0.95))
+	if max_shield > 0.0 and shield > 0.0:
+		var sr: float = clampf(shield / maxf(1.0, max_shield), 0.0, 1.0)
+		var sy: float = by + 22.0
+		draw_rect(Rect2(bx - 2, sy - 2, bw + 4, 16), Color(0, 0, 0, 0.5))
+		draw_rect(Rect2(bx, sy, bw, 12), Color(0.10, 0.16, 0.28, 0.95))
+		draw_rect(Rect2(bx, sy, bw * sr, 12), Color(0.35, 0.65, 1.0))
+		draw_string(ThemeDB.fallback_font, Vector2(bx + 8, sy + 11), "%d" % int(shield),
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1, 1, 1, 0.9))
+
 	if arena_bg:
 		draw_texture_rect(arena_bg, Rect2(0, 0, W, H), false)
 	else:

@@ -376,6 +376,17 @@ func _build_equipment() -> void:
 	header.text = tr("— СНАРЯЖЕНИЕ —")
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	items_box.add_child(header)
+	var sc_counts: Dictionary = GameState.equipment_set_counts()
+	if not sc_counts.is_empty():
+		var line := "Сеты: "
+		for k in sc_counts:
+			line += "%s %d/6   " % [str(k), int(sc_counts[k])]
+		var sl := Label.new()
+		sl.text = tr(line)
+		sl.add_theme_font_size_override("font_size", 13)
+		sl.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0))
+		sl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		items_box.add_child(sl)
 	var frow := HBoxContainer.new()
 	frow.add_theme_constant_override("separation", 6)
 	var fdefs := [["", "ВСЕ"], ["helmet", "ШЛЕМ"], ["armor", "БРОНЯ"], ["boots", "БОТЫ"],
@@ -435,6 +446,10 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 		sub = sub + "  ·  " + tr("нужен уровень %d") % req
 	else:
 		sub = sub + "  ·  %d" % price + " " + tr("монет")
+	if equipped_id != "" and equipped_id != eq_id:
+		var cur: Dictionary = ItemsDB.find_item(str(it.get("slot", "")), equipped_id)
+		if not cur.is_empty():
+			sub = sub + "   |   " + tr("сейчас: %s") % str(cur.get("name", ""))
 	var label_panel: VBoxContainer = _row_panel(str(it.get("name", it.get("label", ""))), sub)
 	var title_label: Label = label_panel.get_child(0) as Label
 	if title_label != null:

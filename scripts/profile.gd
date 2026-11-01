@@ -100,6 +100,8 @@ func _rebuild() -> void:
 	for c: Dictionary in Economy.CONSUMABLE_ITEMS:
 		con_parts.append("%s x%d" % [c.label, GameState.consumable_count(c.id)])
 	_add_stat(tr("Предметы"), ", ".join(PackedStringArray(con_parts)) if not con_parts.is_empty() else "—")
+	_add_equipment_strip()
+
 
 func _rebuild_preview() -> void:
 	if preview_box != null and is_instance_valid(preview_box):
@@ -247,3 +249,39 @@ func _cycle_avatar(d: int) -> void:
 	GameState.save_settings()
 	_update_avatar_tex()
 	AudioManager.play("click")
+
+
+func _add_equipment_strip() -> void:
+	var head := Label.new()
+	head.text = tr("ЭКИПИРОВКА")
+	head.add_theme_font_size_override("font_size", 15)
+	head.add_theme_color_override("font_color", Color(1.0, 0.86, 0.45))
+	stats_box.add_child(head)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	for slot in ItemsDB.SLOTS:
+		var col := VBoxContainer.new()
+		col.custom_minimum_size = Vector2(104, 0)
+		var eid: String = GameState.equipped_in(str(slot))
+		var tex := TextureRect.new()
+		tex.custom_minimum_size = Vector2(56, 56)
+		tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		var title := "—"
+		if eid != "":
+			var it: Dictionary = ItemsDB.find_item(str(slot), eid)
+			if not it.is_empty():
+				var q: int = int(it.get("quality", 0)) + 1
+				var ip := "res://assets/images/equipment/%s_q%d.png" % [str(slot), q]
+				if ResourceLoader.exists(ip):
+					tex.texture = load(ip)
+				title = str(it.get("name", "—"))
+		col.add_child(tex)
+		var l := Label.new()
+		l.text = title
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.add_theme_font_size_override("font_size", 11)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		col.add_child(l)
+		row.add_child(col)
+	stats_box.add_child(row)
