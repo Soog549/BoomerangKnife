@@ -1103,6 +1103,12 @@ func load_settings() -> void:
 	big_text = bool(cfg.get_value("settings", "big_text", false))
 	high_contrast = bool(cfg.get_value("settings", "high_contrast", false))
 	armor_palette = int(cfg.get_value("settings", "armor_palette", 0))
+	player_id = str(cfg.get_value("settings", "player_id", ""))
+	var _tr = cfg.get_value("settings", "tracker", "{}")
+	if _tr is String and _tr != "":
+		var _tp = JSON.parse_string(_tr)
+		if _tp is Dictionary:
+			tracker = _tp
 	aim_mode = int(cfg.get_value("settings", "aim_mode", 0))
 	var _il = cfg.get_value("settings", "item_levels", "{}")
 	if _il is String and _il != "":
@@ -1187,6 +1193,8 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "big_text", big_text)
 	cfg.set_value("settings", "high_contrast", high_contrast)
 	cfg.set_value("settings", "armor_palette", armor_palette)
+	cfg.set_value("settings", "player_id", player_id)
+	cfg.set_value("settings", "tracker", JSON.stringify(tracker))
 	cfg.set_value("settings", "aim_mode", aim_mode)
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
@@ -1522,6 +1530,8 @@ var ui_alpha := 0.75
 var big_text := false
 var high_contrast := false
 var armor_palette := 0
+var player_id := ""
+var tracker: Dictionary = {}
 var aim_mode := 0
 
 
@@ -1744,3 +1754,80 @@ func aim_mode_name() -> String:
 		1:
 			return "РУЧНОЙ"
 	return "ГИБРИД"
+
+
+func ensure_player_id() -> String:
+	if player_id == "":
+		var alphabet := "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+		var out := ""
+		seed(Time.get_unix_time_from_system() + randi())
+		for i in 8:
+			out += alphabet[randi() % alphabet.length()]
+		player_id = out
+		save_settings()
+	return player_id
+
+
+func track(key: String, amount: int = 1) -> void:
+	tracker[key] = int(tracker.get(key, 0)) + amount
+	save_settings()
+
+
+func track_value(key: String) -> int:
+	return int(tracker.get(key, 0))
+
+
+func reset_daily_tracker() -> void:
+	for k in ["daily_arena", "daily_campaign", "daily_shop", "daily_spin"]:
+		tracker.erase(k)
+
+
+const TRACKER_GROUPS := [
+	{
+		"name": "БОЙ",
+		"items": [
+			{"key": "arena_waves", "label": "Волн в арене", "target": 10},
+			{"key": "campaign_levels", "label": "Уровней кампании", "target": 8},
+			{"key": "boss_kills", "label": "Боссов побеждено", "target": 3},
+		],
+	},
+	{
+		"name": "РАЗВИТИЕ",
+		"items": [
+			{"key": "shop_buys", "label": "Покупок в магазине", "target": 5},
+			{"key": "items_upgraded", "label": "Улучшений предметов", "target": 3},
+			{"key": "classes_used", "label": "Классов опробовано", "target": 3},
+		],
+	},
+	{
+		"name": "СООБЩЕСТВО",
+		"items": [
+			{"key": "link_tg", "label": "Подписка на Telegram", "target": 1},
+			{"key": "link_boosty", "label": "Поддержка на Boosty", "target": 1},
+			{"key": "link_itch", "label": "Страница itch.io", "target": 1},
+		],
+	},
+	{
+		"name": "ЕЖЕДНЕВНО",
+		"items": [
+			{"key": "daily_claim", "label": "Ежедневная награда", "target": 1},
+			{"key": "daily_spin", "label": "Рулетка", "target": 1},
+			{"key": "daily_arena", "label": "Бой в арене", "target": 1},
+		],
+	},
+]
+
+
+func tracker_progress() -> Array:
+	var out: Array = []
+	for g in TRACKER_GROUPS:
+		var rows: Array = []
+		var done_count := 0
+		for it in g["items"]:
+			var val: int = track_value(str(it["key"]))
+			var target: int = int(it["target"])
+			if val >= target:
+				done_count += 1
+			rows.append({"label": str(it["label"]), "value": mini(val, target), "target": target})
+		out.append({"name": str(g["name"]), "rows": rows, "done": done_count, "total": rows.size()})
+	return out

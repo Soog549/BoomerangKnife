@@ -102,6 +102,7 @@ func _rebuild() -> void:
 	_add_stat(tr("Предметы"), ", ".join(PackedStringArray(con_parts)) if not con_parts.is_empty() else "—")
 	_add_equipment_strip()
 	_add_runs()
+	_add_identity()
 	_add_title_and_frame()
 	_add_clans_button()
 
@@ -382,3 +383,53 @@ func _add_title_and_frame() -> void:
 		frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		c.get_parent().add_child(frame)
 		c.get_parent().move_child(frame, c.get_index())
+
+
+func _add_identity() -> void:
+	var pid: String = GameState.ensure_player_id()
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var idl := Label.new()
+	idl.text = "ID: %s" % pid
+	idl.add_theme_font_size_override("font_size", 15)
+	idl.add_theme_color_override("font_color", Color(0.75, 0.86, 1.0))
+	idl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(idl)
+	var copy_b := Button.new()
+	copy_b.text = tr("КОПИРОВАТЬ")
+	copy_b.custom_minimum_size = Vector2(150, 40)
+	copy_b.pressed.connect(func() -> void:
+		DisplayServer.clipboard_set(pid)
+		AudioManager.play("click")
+		Toast.show(tr("ID скопирован")))
+	row.add_child(copy_b)
+	stats_box.add_child(row)
+
+	var st := Label.new()
+	st.text = tr("СТАТИСТИКА: волн %d · уровней %d · боссов %d · покупок %d") % [
+		GameState.track_value("arena_waves"), GameState.track_value("campaign_levels"),
+		GameState.track_value("boss_kills"), GameState.track_value("shop_buys")]
+	st.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	st.add_theme_font_size_override("font_size", 13)
+	st.add_theme_color_override("font_color", Color(0.82, 0.88, 0.96))
+	stats_box.add_child(st)
+
+	var rec := Label.new()
+	rec.text = tr("РЕКОРДЫ: счёт %d · раш %d · выживание %d") % [
+		GameState.high_score, GameState.best_rush_waves, GameState.best_survival_waves]
+	rec.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	rec.add_theme_font_size_override("font_size", 13)
+	rec.add_theme_color_override("font_color", Color(1.0, 0.86, 0.45))
+	stats_box.add_child(rec)
+
+	var share := Button.new()
+	share.text = tr("ПОДЕЛИТЬСЯ РЕЗУЛЬТАТОМ")
+	share.custom_minimum_size = Vector2(0, 46)
+	share.pressed.connect(func() -> void:
+		var txt := "BoomerangKnife · ID %s · ур.%d · счёт %d · раш %d · выживание %d" % [
+			pid, GameState.player_level, GameState.high_score,
+			GameState.best_rush_waves, GameState.best_survival_waves]
+		DisplayServer.clipboard_set(txt)
+		AudioManager.play("level")
+		Toast.show(tr("Результат скопирован — вставь в соцсети")))
+	stats_box.add_child(share)

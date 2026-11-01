@@ -89,6 +89,7 @@ func _refresh_quest() -> void:
 
 func _on_claim_pressed() -> void:
 	var reward := GameState.claim_daily()
+	GameState.track("daily_claim")
 	if reward > 0:
 		AudioManager.play("level")
 	message_label.text = tr("Получено +%d монет!") % reward
@@ -112,6 +113,7 @@ func _fortune_pressed() -> void:
 		message_label.text = tr("Фортуна уже использована сегодня. Возвращайся завтра!")
 		return
 	var r := GameState.claim_fortune()
+	GameState.track("daily_spin")
 	if r.is_empty():
 		return
 	AudioManager.play("level")

@@ -511,6 +511,10 @@ func _process(dt: float) -> void:
 		banner_t = 1.6
 		rig_play("win")
 		AudioManager.play("level")
+		GameState.track("arena_waves")
+		GameState.track("daily_arena")
+		if wave % 3 == 0:
+			GameState.track("boss_kills")
 		GameState.mode_save(_mode_key, {
 			"wave": wave, "score": score, "coins": coins,
 			"hp": hp, "max_hp": max_hp, "ammo": ammo,

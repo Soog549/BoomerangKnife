@@ -16,6 +16,7 @@ func _ready() -> void:
 	AudioManager.play("click")
 	_build_nav()
 	_add_progress()
+	_add_tracker()
 	_rebuild()
 	GameState.stats_changed.connect(_rebuild)
 	GameState.economy_changed.connect(_rebuild)
@@ -136,3 +137,32 @@ func _claim(obj: Dictionary) -> void:
 func _on_back_pressed() -> void:
 	AudioManager.play("click")
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+
+func _add_tracker() -> void:
+	var y: float = 150.0
+	var head := Label.new()
+	head.text = tr("ТРЕКЕР ЗАДАНИЙ")
+	head.position = Vector2(40, y)
+	head.add_theme_font_size_override("font_size", 18)
+	head.add_theme_color_override("font_color", GameState.accent())
+	add_child(head)
+	y += 28.0
+	for g in GameState.tracker_progress():
+		var gl := Label.new()
+		gl.text = "%s  (%d/%d)" % [str(g["name"]), int(g["done"]), int(g["total"])]
+		gl.position = Vector2(40, y)
+		gl.add_theme_font_size_override("font_size", 15)
+		gl.add_theme_color_override("font_color", Color(1.0, 0.86, 0.45))
+		add_child(gl)
+		y += 22.0
+		for r in g["rows"]:
+			var line := Label.new()
+			line.text = "   %s — %d/%d" % [str(r["label"]), int(r["value"]), int(r["target"])]
+			line.position = Vector2(40, y)
+			line.add_theme_font_size_override("font_size", 13)
+			line.add_theme_color_override("font_color",
+				Color(0.6, 0.95, 0.7) if int(r["value"]) >= int(r["target"]) else Color(0.78, 0.84, 0.92))
+			add_child(line)
+			y += 20.0
+		y += 6.0

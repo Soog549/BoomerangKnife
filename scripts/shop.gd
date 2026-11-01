@@ -494,6 +494,8 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 		btn = _row_btn(GameState.coins < price, "", tr("КУПИТЬ"), func() -> void:
 			if GameState.spend_coins(price):
 				GameState.purchase_equipment(eq_id)
+				GameState.track("shop_buys")
+				GameState.track("daily_shop")
 				GameState.equip_item(eq_id)
 				AudioManager.play("level")
 				_rebuild())
@@ -510,6 +512,7 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 		ub.add_theme_font_size_override("font_size", 12)
 		ub.pressed.connect(func() -> void:
 			if GameState.upgrade_item(eq_id):
+				GameState.track("items_upgraded")
 				AudioManager.play("level")
 				_rebuild())
 		row.add_child(ub)
@@ -705,7 +708,14 @@ func _build_donations() -> void:
 			AudioManager.play("level")
 			GameState.mark_supporter()
 			Telemetry.event("donate_click", {"channel": str(d.label)})
-			OS.shell_open(str(d.url))
+			var url := str(d.url)
+			if url.contains("t.me"):
+				GameState.track("link_tg")
+			elif url.contains("boosty"):
+				GameState.track("link_boosty")
+			elif url.contains("itch.io"):
+				GameState.track("link_itch")
+			OS.shell_open(url)
 			_note("Спасибо за поддержку! Вы — Меценат Империи.")
 			_rebuild())
 		row.add_child(btn)

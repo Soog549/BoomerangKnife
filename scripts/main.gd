@@ -284,6 +284,8 @@ func _on_target_cleared() -> void:
 		tutorial_overlay.on_target_cleared()
 	ScoreManager.next_level()
 	levels_completed += 1
+	GameState.track("campaign_levels")
+	GameState.track("daily_campaign")
 	_campaign_checkpoint()
 	if levels_completed == 3 or levels_completed == 4:
 		Toast.show(tr("ТРЕНИРОВКА: %d/5 мишеней") % levels_completed)
