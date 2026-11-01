@@ -45,8 +45,8 @@ func _ready() -> void:
 	ScoreManager.reset()
 	_connect_ui()
 	_apply_boosters()
-	_campaign_restore()
 	_start_level()
+	_campaign_restore()
 	game_over_screen.hide()
 	pause_menu.hide()
 	if not GameState.tutorial_done:

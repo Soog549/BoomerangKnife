@@ -97,7 +97,7 @@ func _cell(row: Array, path: String, idx: int, by_ach: bool) -> Control:
 	else:
 		unlocked = GameState.relics_total >= int(row[2])
 	var v := VBoxContainer.new()
-	v.custom_minimum_size = Vector2(310, 470)
+	v.custom_minimum_size = Vector2(310, 300)
 	var tex := TextureRect.new()
 	var use_path := path
 	if not by_ach:
@@ -171,7 +171,7 @@ func _open_detail(nm: String, rar: String, path: String, unlocked: bool) -> void
 
 var _coll_tab := 0
 var _coll_page := 0
-const COLL_PER := 12
+const COLL_PER := 6
 
 
 func _coll_data() -> Array:

@@ -393,18 +393,18 @@ func _build_equipment() -> void:
 			_rebuild())
 		frow.add_child(fb)
 	items_box.add_child(frow)
-	for slot: String in Economy.EQUIPMENT:
+	for slot: String in ItemsDB.SLOTS:
 		if _slot_filter != "" and str(slot) != _slot_filter:
 			continue
 		var slot_title := Label.new()
 		var own_cnt := 0
-		for _it in Economy.items(str(slot)):
+		for _it in ItemsDB.build_slot(str(slot)):
 			if GameState.is_equipment_owned(_it.id):
 				own_cnt += 1
 		slot_title.text = "%s  (%d/%d)" % [_slot_label(slot), own_cnt, Economy.items(str(slot)).size()]
 		slot_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		items_box.add_child(slot_title)
-		for it in Economy.items(str(slot)):
+		for it in ItemsDB.build_slot(str(slot)):
 			items_box.add_child(_make_equip_row(it))
 
 func _slot_label(slot: String) -> String:
@@ -424,14 +424,21 @@ func _make_equip_row(it: Dictionary) -> HBoxContainer:
 	var equipped_id := GameState.equipped_in(it.slot)
 	var price: int = it.price
 
-	var label_panel: VBoxContainer
+	var qname: String = str(it.get("quality_name", ""))
+	var req: int = int(it.get("req_level", 1))
+	var stext: String = str(it.get("stats_text", ""))
+	var locked: bool = GameState.player_level < req
+	var sub: String = "%s · ур.%d · %s" % [qname, req, stext]
 	if owned:
-		if equipped_id == eq_id:
-			label_panel = _row_panel(tr(it.label), "%s — %s  " % [tr(it.desc), tr("надето")])
-		else:
-			label_panel = _row_panel(tr(it.label), tr(it.desc))
+		sub = sub + "  —  " + (tr("надето") if equipped_id == eq_id else tr("в сумке"))
+	elif locked:
+		sub = sub + "  ·  " + tr("нужен уровень %d") % req
 	else:
-		label_panel = _row_panel(tr(it.label), tr("%s (%d м.)") % [tr(it.desc), price])
+		sub = sub + "  ·  %d" % price + " " + tr("монет")
+	var label_panel: VBoxContainer = _row_panel(str(it.get("name", it.get("label", ""))), sub)
+	var title_label: Label = label_panel.get_child(0) as Label
+	if title_label != null:
+		title_label.add_theme_color_override("font_color", it.get("color", Color(1, 1, 1)))
 	var ip := "res://assets/images/equipment/%s.png" % eq_id
 	if not ResourceLoader.exists(ip) and it.slot == "shield":
 		ip = "res://assets/images/shields/%s.png" % eq_id
