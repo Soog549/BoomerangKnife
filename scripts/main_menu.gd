@@ -57,6 +57,7 @@ func _ready() -> void:
 	_apply_pack_bg()
 	_show_splash()
 	_build_profile_panel()
+	_add_bottom_nav()
 	AudioManager.play_music("menu")
 	Achievements.check_all()
 	GameState.apply_orientation()
@@ -284,3 +285,38 @@ func _continue_mode(mode: String) -> void:
 			GameState.survival_arena = mode == "survival"
 			GameState.last_mode_scene = "res://scenes/mob_arena.tscn"
 			_go("res://scenes/mob_arena.tscn")
+
+
+func _add_bottom_nav() -> void:
+	var vp: Vector2 = get_viewport_rect().size
+	var bar := HBoxContainer.new()
+	bar.name = "BottomNav"
+	bar.add_theme_constant_override("separation", 6)
+	bar.position = Vector2(16, vp.y - 92)
+	bar.size = Vector2(vp.x - 32, 76)
+	add_child(bar)
+
+	var items := [
+		["ИГРАТЬ", "res://scenes/empire.tscn"],
+		["ГЕРОЙ", "res://scenes/profile.tscn"],
+		["МАГАЗИН", "res://scenes/shop.tscn"],
+		["ЕЩЁ", "res://scenes/settings.tscn"],
+	]
+	for it in items:
+		var b := Button.new()
+		b.text = tr(str(it[0]))
+		b.custom_minimum_size = Vector2(0, 72)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", 14)
+		var path: String = str(it[1])
+		b.pressed.connect(func() -> void:
+			AudioManager.play("click")
+			get_tree().change_scene_to_file(path))
+		bar.add_child(b)
+		if str(it[0]) == "МАГАЗИН" and GameState.daily_ready_count() > 0:
+			var dot := Label.new()
+			dot.text = "●"
+			dot.add_theme_font_size_override("font_size", 18)
+			dot.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
+			dot.position = Vector2(b.position.x + b.size.x - 18.0, b.position.y - 6.0)
+			bar.add_child(dot)
