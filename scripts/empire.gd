@@ -2,15 +2,15 @@ extends Control
 ## КАРТА ИМПЕРИИ — интерактивное меню: иконки-переходы по «территории».
 
 const NODES := [
-	{"t": "КАМПАНИЯ", "s": "res://scenes/game.tscn", "x": 0.18, "y": 0.13},
-	{"t": "АРЕНА", "s": "res://scenes/mob_arena.tscn", "x": 0.52, "y": 0.11},
-	{"t": "ОБОРОНА", "s": "res://scenes/td.tscn", "x": 0.82, "y": 0.17},
-	{"t": "ДУЭЛЬ", "s": "res://scenes/duel.tscn", "x": 0.20, "y": 0.28},
-	{"t": "МИРЫ", "s": "res://scenes/worlds.tscn", "x": 0.76, "y": 0.30},
-	{"t": "МАГАЗИН", "s": "res://scenes/shop.tscn", "x": 0.18, "y": 0.42},
-	{"t": "КОЛЛЕКЦИЯ", "s": "res://scenes/collection.tscn", "x": 0.52, "y": 0.44},
-	{"t": "ПЕРСОНАЖ", "s": "res://scenes/profile.tscn", "x": 0.82, "y": 0.40},
-	{"t": "НАСТРОЙКИ", "s": "res://scenes/settings.tscn", "x": 0.50, "y": 0.86},
+	{"t": "◆ КАМПАНИЯ", "s": "res://scenes/game.tscn", "x": 0.18, "y": 0.13},
+	{"t": "◆ АРЕНА", "s": "res://scenes/mob_arena.tscn", "x": 0.52, "y": 0.11},
+	{"t": "◆ ОБОРОНА", "s": "res://scenes/td.tscn", "x": 0.82, "y": 0.17},
+	{"t": "◆ ДУЭЛЬ", "s": "res://scenes/duel.tscn", "x": 0.20, "y": 0.28},
+	{"t": "◆ МИРЫ", "s": "res://scenes/worlds.tscn", "x": 0.76, "y": 0.30},
+	{"t": "◆ МАГАЗИН", "s": "res://scenes/shop.tscn", "x": 0.18, "y": 0.42},
+	{"t": "◆ КОЛЛЕКЦИЯ", "s": "res://scenes/collection.tscn", "x": 0.52, "y": 0.44},
+	{"t": "◆ ПЕРСОНАЖ", "s": "res://scenes/profile.tscn", "x": 0.82, "y": 0.40},
+	{"t": "◆ НАСТРОЙКИ", "s": "res://scenes/settings.tscn", "x": 0.50, "y": 0.86},
 ]
 
 
@@ -137,11 +137,11 @@ func _add_special() -> void:
 	add_child(g)
 
 	var zones := [
-		{"t": "ОКРАИНА", "d": "easy", "x": 0.50, "y": 0.56},
-		{"t": "ПУСТОШЬ", "d": "normal", "x": 0.84, "y": 0.56},
-		{"t": "РУБЕЖ", "d": "hard", "x": 0.20, "y": 0.68},
-		{"t": "БОСС-РАШ", "d": "normal", "x": 0.52, "y": 0.68, "m": "rush"},
-		{"t": "ВЫЖИВАНИЕ", "d": "hard", "x": 0.82, "y": 0.68, "m": "surv"},
+		{"t": "◆ ОКРАИНА", "d": "easy", "x": 0.50, "y": 0.56},
+		{"t": "◆ ПУСТОШЬ", "d": "normal", "x": 0.84, "y": 0.56},
+		{"t": "◆ РУБЕЖ", "d": "hard", "x": 0.20, "y": 0.68},
+		{"t": "◆ БОСС-РАШ", "d": "normal", "x": 0.52, "y": 0.68, "m": "rush"},
+		{"t": "◆ ВЫЖИВАНИЕ", "d": "hard", "x": 0.82, "y": 0.68, "m": "surv"},
 	]
 	for z in zones:
 		var b := Button.new()

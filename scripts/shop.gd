@@ -39,7 +39,7 @@ func _fix_layout() -> void:
 		sc.offset_top = 248.0
 		sc.offset_left = 80.0
 		sc.offset_right = -80.0
-		sc.offset_bottom = -104.0
+		sc.offset_bottom = -120.0
 	# НАЗАД — к реальному низу экрана (а не к 1280 на высоких устройствах)
 	var vp: Vector2 = get_viewport_rect().size
 	var back := get_node_or_null("Scroll/BackButton")
