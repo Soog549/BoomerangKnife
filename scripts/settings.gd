@@ -86,6 +86,7 @@ const AVATAR_PATHS := [
 func _ready() -> void:
 	_normalize_layout()
 	_add_personal_rows()
+	_add_reset_row()
 	_add_footer()
 	# Убираем дубль выбора класса (старая пара Label+OptionButton) — оставлен один ряд «КЛАСС».
 	for n in ["AvatarLabel", "AvatarRow"]:
@@ -467,3 +468,32 @@ func _wrap_in_scroll() -> void:
 	sc.add_child(vb)
 	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	center.visible = false
+
+
+func _add_reset_row() -> void:
+	var vb := get_node_or_null("Center/VBox")
+	if vb == null:
+		return
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var b := Button.new()
+	b.text = tr("СБРОСИТЬ ПРОГРЕСС")
+	b.custom_minimum_size = Vector2(0, 48)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.add_theme_color_override("font_color", Color(1.0, 0.6, 0.55))
+	row.add_child(b)
+	vb.add_child(row)
+
+	var dlg := ConfirmationDialog.new()
+	dlg.title = tr("Сброс прогресса")
+	dlg.dialog_text = tr("Удалить весь прогресс: монеты, уровни, снаряжение, сейвы режимов? Отменить будет нельзя.")
+	dlg.ok_button_text = tr("СБРОСИТЬ")
+	dlg.cancel_button_text = tr("Отмена")
+	add_child(dlg)
+	dlg.confirmed.connect(func() -> void:
+		GameState.reset_all()
+		AudioManager.play("click")
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+	b.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		dlg.popup_centered())

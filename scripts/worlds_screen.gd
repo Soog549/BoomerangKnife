@@ -29,12 +29,23 @@ func _build()-> void:
 	var cur := Worlds.current_index()
 	for i in range(Worlds.LIST.size()):
 		var w: Dictionary = Worlds.LIST[i]
-		var b := Button.new()
-		b.custom_minimum_size = Vector2(0, 54)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		var thumb := TextureRect.new()
+		thumb.custom_minimum_size = Vector2(64, 64)
+		thumb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		var art_path := "res://assets/images/worlds/%s.png" % str(w.get("art", ""))
 		if ResourceLoader.exists(art_path):
-			b.icon = load(art_path)
-			b.expand_icon = true
+			thumb.texture = load(art_path)
+		else:
+			var pbg := "res://assets/images/packs/%s/bg.jpg" % Worlds.style_for(i)
+			if ResourceLoader.exists(pbg):
+				thumb.texture = load(pbg)
+		row.add_child(thumb)
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(0, 64)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if Worlds.is_unlocked(i):
 			var mark := "" if i == cur else ("" if i < cur else "")
 			b.text = "Глава %d · %s %s" % [i + 1, str(w["name"]), mark]
@@ -42,7 +53,8 @@ func _build()-> void:
 		else:
 			b.text = " %s — ур. %d" % [str(w["name"]), int(w["unlock"])]
 			b.disabled = true
-		vbox.add_child(b)
+		row.add_child(b)
+		vbox.add_child(row)
 
 	var ni := Worlds.next_index()
 	if ni >= 0:

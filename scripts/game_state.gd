@@ -1547,3 +1547,40 @@ func modes_with_saves() -> Array:
 		if mode_has(str(m)):
 			out.append(str(m))
 	return out
+
+
+func reset_all() -> void:
+	mode_progress.clear()
+	continue_mode = ""
+	coins = 0
+	crystals = 0
+	shards = 0
+	player_level = 1
+	player_xp = 0
+	high_score = 0
+	login_streak = 0
+	last_login_unix = 0
+	fortune_day = ""
+	daily_streak = 0
+	arena_ach.clear()
+	owned_equipment.clear()
+	equipped.clear()
+	selected_modes.clear()
+	relics_total = 0
+	avatar = 0
+	selected_skin = 0
+	style_pack = "imperial"
+	chapter_quest = ""
+	campaign_intro_seen = false
+	tutorial_done = false
+	save_settings()
+	Telemetry.event("progress_reset", {})
+
+
+func ad_reset_in_text() -> String:
+	var now := Time.get_datetime_dict_from_system()
+	var secs: int = int(now["hour"]) * 3600 + int(now["minute"]) * 60 + int(now["second"])
+	var left: int = 86400 - secs
+	var h: int = left / 3600
+	var m: int = (left % 3600) / 60
+	return "%02d:%02d" % [h, m]

@@ -15,6 +15,7 @@ func _ready() -> void:
 	UIKit.normalize(self)
 	AudioManager.play("click")
 	_build_nav()
+	_add_progress()
 	_rebuild()
 	GameState.stats_changed.connect(_rebuild)
 	GameState.economy_changed.connect(_rebuild)
@@ -53,6 +54,29 @@ func _change_page(d: int) -> void:
 
 func _on_coins(total: int) -> void:
 	wallet_label.text = tr("Монеты: %d") % total
+
+
+func _add_progress() -> void:
+	var all_goals: Array = Objectives.all()
+	var total: int = all_goals.size()
+	if total <= 0:
+		return
+	var done := 0
+	for obj in all_goals:
+		if Objectives.is_done(obj):
+			done += 1
+	var bar := ProgressBar.new()
+	bar.max_value = float(total)
+	bar.value = float(done)
+	bar.custom_minimum_size = Vector2(640, 16)
+	bar.show_percentage = false
+	bar.position = Vector2(40, 96)
+	add_child(bar)
+	var lab := Label.new()
+	lab.text = tr("Выполнено: %d / %d") % [done, total]
+	lab.add_theme_font_size_override("font_size", 14)
+	lab.position = Vector2(40, 116)
+	add_child(lab)
 
 
 func _rebuild() -> void:

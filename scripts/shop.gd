@@ -114,13 +114,13 @@ func _rebuild() -> void:
 	if left > 0:
 		earn_btn.text = tr("Смотреть рекламу (+%d монет) — осталось %d") % [Economy.AD_REWARD_COINS, left]
 	else:
-		earn_btn.text = tr("Реклама исчерпана (завтра)")
+		earn_btn.text = tr("Реклама исчерпана · сброс через %s") % GameState.ad_reset_in_text()
 		earn_btn.disabled = true
 	var cleft := GameState.crystal_ads_left()
 	if cleft > 0:
 		crystal_earn_btn.text = tr("Реклама за кристаллы (+%d) — осталось %d") % [Economy.CRYSTALS_PER_AD, cleft]
 	else:
-		crystal_earn_btn.text = tr("Кристаллы: лимит на сегодня")
+		crystal_earn_btn.text = tr("Кристаллы: лимит · сброс через %s") % GameState.ad_reset_in_text()
 		crystal_earn_btn.disabled = true
 	_build_page_tabs()
 	_build_pager()
