@@ -401,6 +401,23 @@ func _build_equipment() -> void:
 	var auto_b := Button.new()
 	auto_b.text = tr("АВТО-ЭКИП (лучшее)")
 	auto_b.custom_minimum_size = Vector2(0, 44)
+	var buyall := Button.new()
+	buyall.text = tr("КУПИТЬ ДОСТУПНОЕ (до 6)")
+	buyall.custom_minimum_size = Vector2(0, 44)
+	buyall.pressed.connect(func() -> void:
+		var dlg := ConfirmationDialog.new()
+		dlg.title = tr("Массовая покупка")
+		dlg.dialog_text = tr("Купить до 6 доступных предметов по уровню и монетам?")
+		dlg.ok_button_text = tr("КУПИТЬ")
+		dlg.cancel_button_text = tr("Отмена")
+		add_child(dlg)
+		dlg.confirmed.connect(func() -> void:
+			var b := GameState.buy_all_affordable(6)
+			AudioManager.play("level")
+			Toast.show(tr("Куплено: %d") % b)
+			_rebuild())
+		dlg.popup_centered())
+	items_box.add_child(buyall)
 	auto_b.pressed.connect(func() -> void:
 		var ch := GameState.auto_equip_best()
 		AudioManager.play("level")

@@ -1,61 +1,64 @@
 extends Control
 
-## Экран ачивок: AI-медальоны, статус, награда.
+## Экран достижений: список с прогрессом и статусом.
 
-@onready var info_label: Label = $InfoLabel
-@onready var items_box: VBoxContainer = $Scroll/Items
 
 func _ready() -> void:
-	UIKit.normalize(self)
-	AudioManager.play("click")
-	_rebuild()
+	var bg := ColorRect.new()
+	bg.color = GameState.ui_bg_color()
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(bg)
 
-func _rebuild() -> void:
-	for child in items_box.get_children():
-		child.queue_free()
-	var unlocked_count := 0
-	for a in Achievements.LIST:
-		if Achievements.is_unlocked(a):
-			unlocked_count += 1
-	info_label.text = tr("Открыто: %d из %d") % [unlocked_count, Achievements.LIST.size()]
-	for i in Achievements.LIST.size():
-		items_box.add_child(_make_row(Achievements.LIST[i], i))
+	var vp: Vector2 = get_viewport_rect().size
+	var sc := ScrollContainer.new()
+	sc.position = Vector2(28, 26)
+	sc.size = Vector2(vp.x - 56, vp.y - 140)
+	add_child(sc)
 
-func _make_row(a: Dictionary, idx: int) -> HBoxContainer:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
-	var unlocked := Achievements.is_unlocked(a)
+	var vb := VBoxContainer.new()
+	vb.custom_minimum_size = Vector2(vp.x - 56, 0)
+	vb.add_theme_constant_override("separation", 10)
+	sc.add_child(vb)
 
-	var tex := TextureRect.new()
-	tex.custom_minimum_size = Vector2(72, 72)
-	tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	var p := "res://assets/images/fanclub/achievements/ach-%02d.png" % (idx + 1)
-	if ResourceLoader.exists(p):
-		tex.texture = load(p)
-	tex.modulate = Color(1, 1, 1, 1) if unlocked else Color(0.35, 0.35, 0.42, 1)
-	row.add_child(tex)
+	var title := Label.new()
+	title.text = tr("ДОСТИЖЕНИЯ")
+	title.add_theme_font_size_override("font_size", 24)
+	title.add_theme_color_override("font_color", GameState.accent())
+	vb.add_child(title)
 
-	var label := Label.new()
-	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	if unlocked:
-		var reward_text := tr("+%d монет") % a.reward
-		if a.has("crystals") and a.crystals > 0:
-			reward_text += tr(", +%d крист.") % a.crystals
-		label.text = "%s — %s (%s)" % [tr(a.label), tr(a.desc), reward_text]
-	else:
-		label.text = "%s — ???" % tr(a.label)
-	row.add_child(label)
+	var ach: Array = load("res://scripts/collection.gd").ACH
+	var opened := 0
+	for a in ach:
+		if GameState.arena_ach.has(str(a[2])):
+			opened += 1
+	var info := Label.new()
+	info.text = tr("Открыто %d / %d") % [opened, ach.size()]
+	info.add_theme_font_size_override("font_size", 15)
+	info.add_theme_color_override("font_color", Color(1.0, 0.86, 0.45))
+	vb.add_child(info)
 
-	var status := Label.new()
-	status.custom_minimum_size = Vector2(48, 0)
-	status.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	status.text = "✓" if unlocked else "🔒"
-	status.add_theme_color_override("font_color", Color(0.4, 0.9, 0.6) if unlocked else Color(0.5, 0.5, 0.6))
-	row.add_child(status)
-	return row
+	var bar := ProgressBar.new()
+	bar.max_value = float(ach.size())
+	bar.value = float(opened)
+	bar.custom_minimum_size = Vector2(0, 16)
+	bar.show_percentage = false
+	vb.add_child(bar)
 
-func _on_back_pressed() -> void:
-	AudioManager.play("click")
-	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	for a in ach:
+		var got: bool = GameState.arena_ach.has(str(a[2]))
+		var row := Label.new()
+		row.text = "%s  %s  (%s)" % ["✔" if got else "–", str(a[0]), str(a[1])]
+		row.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		row.add_theme_font_size_override("font_size", 15)
+		row.add_theme_color_override("font_color",
+			Color(0.6, 0.95, 0.7) if got else Color(0.75, 0.8, 0.88))
+		vb.add_child(row)
+
+	var back := Button.new()
+	back.text = tr("НАЗАД")
+	back.custom_minimum_size = Vector2(200, 52)
+	back.position = Vector2(28, vp.y - 96)
+	back.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		get_tree().change_scene_to_file("res://scenes/profile.tscn"))
+	add_child(back)

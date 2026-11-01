@@ -823,8 +823,15 @@ func _process(dt: float) -> void:
 		hp = 0.0
 		if not over:
 			AudioManager.play("defeat")
+			if GameState.training_mode:
+				hp = max_hp * 0.5
+				shield = max_shield
+				wave = maxi(1, wave - 1)
+			elif wave > 2:
+				GameState.track_class_win()
 			GameState.save_settings()
-		over = true
+		if not GameState.training_mode:
+			over = true
 	else:
 		regen_t += dt
 		if regen_t > 2.0 and shield < max_shield:

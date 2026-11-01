@@ -319,10 +319,16 @@ func _add_runs() -> void:
 		if not (r is Dictionary):
 			continue
 		var line := Label.new()
-		line.text = "%s · %s %d · %s %d" % [
+		var ts: int = int(r.get("ts", 0))
+		var dt := Time.get_datetime_dict_from_unix_time(ts) if ts > 0 else {}
+		var when := ""
+		if not dt.is_empty():
+			when = "%02d.%02d %02d:%02d" % [int(dt["day"]), int(dt["month"]), int(dt["hour"]), int(dt["minute"])]
+		line.text = "%s · %s %d · %s %d%s" % [
 			GameState.mode_label(str(r.get("mode", ""))),
 			tr("волна"), int(r.get("wave", 0)),
-			tr("счёт"), int(r.get("score", 0))]
+			tr("счёт"), int(r.get("score", 0)),
+			("  ·  " + when) if when != "" else ""]
 		line.add_theme_font_size_override("font_size", 13)
 		line.add_theme_color_override("font_color", Color(0.8, 0.86, 0.95))
 		stats_box.add_child(line)
@@ -351,6 +357,13 @@ func _add_clans_button() -> void:
 		AudioManager.play("click")
 		get_tree().change_scene_to_file("res://scenes/progress.tscn"))
 	stats_box.add_child(pr)
+	var ach_btn := Button.new()
+	ach_btn.text = tr("ДОСТИЖЕНИЯ")
+	ach_btn.custom_minimum_size = Vector2(0, 46)
+	ach_btn.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		get_tree().change_scene_to_file("res://scenes/achievements_screen.tscn"))
+	stats_box.add_child(ach_btn)
 
 
 func _title_for_level() -> String:
@@ -462,3 +475,8 @@ func _add_identity() -> void:
 	cb.add_theme_font_size_override("font_size", 13)
 	cb.add_theme_color_override("font_color", Color(0.8, 0.9, 1.0))
 	stats_box.add_child(cb)
+	var cw := Label.new()
+	cw.text = tr("Побед за класс: %d") % int(GameState.class_wins.get(str(GameState.avatar), 0))
+	cw.add_theme_font_size_override("font_size", 13)
+	cw.add_theme_color_override("font_color", Color(0.7, 0.95, 0.8))
+	stats_box.add_child(cw)

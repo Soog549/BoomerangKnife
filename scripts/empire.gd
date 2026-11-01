@@ -72,6 +72,15 @@ func _ready() -> void:
 	sl.add_theme_color_override("font_color", Color(1.0, 0.86, 0.5))
 	sl.position = Vector2(24, 142.0)
 	add_child(sl)
+	var train := Button.new()
+	train.text = tr("ТРЕНИРОВКА")
+	train.position = Vector2(250, 120.0)
+	train.size = Vector2(140, 56)
+	train.pressed.connect(func() -> void:
+		GameState.training_mode = true
+		AudioManager.play("click")
+		get_tree().change_scene_to_file("res://scenes/mob_arena.tscn"))
+	add_child(train)
 	if GameState.chest_available():
 		var chest := Button.new()
 		chest.text = tr("🎁 СУНДУК")

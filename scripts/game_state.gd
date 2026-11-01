@@ -1130,6 +1130,12 @@ func load_settings() -> void:
 	swipe_sens = int(cfg.get_value("settings", "swipe_sens", 1))
 	damage_numbers = bool(cfg.get_value("settings", "damage_numbers", true))
 	chest_day = str(cfg.get_value("settings", "chest_day", ""))
+	theme_light = bool(cfg.get_value("settings", "theme_light", false))
+	var _cw = cfg.get_value("settings", "class_wins", "{}")
+	if _cw is String and _cw != "":
+		var _cwp = JSON.parse_string(_cw)
+		if _cwp is Dictionary:
+			class_wins = _cwp
 	var _cb = cfg.get_value("settings", "class_battles", "{}")
 	if _cb is String and _cb != "":
 		var _cbp = JSON.parse_string(_cb)
@@ -1230,6 +1236,8 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "damage_numbers", damage_numbers)
 	cfg.set_value("settings", "chest_day", chest_day)
 	cfg.set_value("settings", "class_battles", JSON.stringify(class_battles))
+	cfg.set_value("settings", "class_wins", JSON.stringify(class_wins))
+	cfg.set_value("settings", "theme_light", theme_light)
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
@@ -1576,6 +1584,9 @@ var swipe_sens := 1
 var damage_numbers := true
 var chest_day := ""
 var class_battles: Dictionary = {}
+var class_wins: Dictionary = {}
+var training_mode := false
+var theme_light := false
 
 
 func mode_save(mode: String, data: Dictionary) -> void:
@@ -2071,3 +2082,40 @@ func track_class_battle() -> void:
 	var k := str(avatar)
 	class_battles[k] = int(class_battles.get(k, 0)) + 1
 	save_settings()
+
+
+func track_class_win() -> void:
+	var k := str(avatar)
+	class_wins[k] = int(class_wins.get(k, 0)) + 1
+	save_settings()
+
+
+func buy_all_affordable(limit: int = 6) -> int:
+	var bought := 0
+	for slot in EQUIPMENT_SLOTS:
+		if bought >= limit:
+			break
+		for it in ItemsDB.build_slot(str(slot)):
+			if bought >= limit:
+				break
+			var eid := str(it["id"])
+			if is_equipment_owned(eid):
+				continue
+			if player_level < int(it.get("req_level", 1)):
+				continue
+			var price: int = int(it.get("price", 0))
+			if coins < price:
+				continue
+			if spend_coins(price):
+				purchase_equipment(eid)
+				bought += 1
+	save_settings()
+	return bought
+
+
+func ui_bg_color() -> Color:
+	return Color(0.90, 0.92, 0.96, 1.0) if theme_light else Color(0.06, 0.07, 0.12, 1.0)
+
+
+func ui_fg_color() -> Color:
+	return Color(0.10, 0.12, 0.18, 1.0) if theme_light else Color(0.92, 0.94, 1.0, 1.0)
