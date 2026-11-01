@@ -6,9 +6,6 @@ extends Control
 const MENU_VIEWS := {
 	"root": [
 		["sub", "empire", "◆ ИМПЕРИЯ"],
-		["go", "res://scenes/shop.tscn", "◆ МАГАЗИН"],
-		["go", "res://scenes/collection.tscn", "◆ КОЛЛЕКЦИЯ"],
-		["go", "res://scenes/settings.tscn", "◆ НАСТРОЙКИ"],
 		["quit", "", "ВЫХОД"],
 	],
 	"empire": [
@@ -168,6 +165,8 @@ func _build_view(view: String) -> void:
 	_view = view
 	for child in menu_list.get_children():
 		child.queue_free()
+	# DEDUPE_NAV — эти разделы уже есть в нижней панели
+	var bottom_nav_labels := ["ИМПЕРИЯ", "МАГАЗИН", "КОЛЛЕКЦИЯ", "НАСТРОЙКИ"]
 	var items: Array = MENU_VIEWS.get(view, [])
 	if items.is_empty():
 		return

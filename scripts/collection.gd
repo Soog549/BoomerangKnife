@@ -107,6 +107,10 @@ func _cell(row: Array, path: String, idx: int, by_ach: bool) -> Control:
 	v.custom_minimum_size = Vector2(310, 300)
 	var tex := TextureRect.new()
 	var use_path := path
+	if not by_ach:
+		var warts2: Array = ["world_forest", "world_steppe", "world_ruin", "world_abyss",
+			"world_neon", "world_ice", "world_electro", "world_cosmos"]
+		use_path = "res://assets/images/worlds/%s.png" % str(warts2[idx % warts2.size()])
 	if not by_ach and not ResourceLoader.exists(use_path):
 		var warts: Array = ["world_forest", "world_steppe", "world_ruin", "world_abyss",
 			"world_neon", "world_ice", "world_electro", "world_cosmos"]

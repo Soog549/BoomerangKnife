@@ -1981,9 +1981,8 @@ func season_init() -> void:
 
 
 func season_days_left() -> int:
-	season_init()
-	var passed: int = int((int(Time.get_unix_time_from_system()) - season_start_unix) / 86400)
-	return maxi(0, 30 - passed)
+	var day_index: int = int(int(Time.get_unix_time_from_system()) / 86400)
+	return 30 - (day_index % 30)
 
 
 func tip_shown(mode: String) -> bool:

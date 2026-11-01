@@ -74,7 +74,7 @@ func _ready() -> void:
 	add_child(sl)
 	var train := Button.new()
 	train.text = tr("ТРЕНИРОВКА")
-	train.position = Vector2(250, 206.0)
+	train.position = Vector2(150, 640.0)
 	train.size = Vector2(140, 56)
 	train.pressed.connect(func() -> void:
 		GameState.training_mode = true
@@ -84,7 +84,7 @@ func _ready() -> void:
 	if GameState.chest_available():
 		var chest := Button.new()
 		chest.text = tr("🎁 СУНДУК")
-		chest.position = Vector2(410, 206.0)
+		chest.position = Vector2(330, 640.0)
 		chest.size = Vector2(150, 56)
 		chest.pressed.connect(func() -> void:
 			AudioManager.play("level")
