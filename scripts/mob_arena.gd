@@ -170,6 +170,7 @@ func _ready() -> void:
 	_spawn_mob()
 	field_bottom = float(H) - 110.0
 	max_hp *= GameState.class_bonus("hp")
+	max_hp *= GameState.equipment_mult("hp")
 	hp = max_hp
 	const CF := ["warrior", "rogue", "mage", "archer", "knight", "berserker", "assassin", "paladin",
 		"druid", "monk", "pirate", "samurai", "ninja", "viking", "gunslinger", "alchemist",
@@ -566,6 +567,8 @@ func _process(dt: float) -> void:
 			flash = 0.65
 			shake = 3.5
 			AudioManager.play("hit")
+			if GameState.haptics_ms() > 0:
+				Input.vibrate_handheld(GameState.haptics_ms())
 			if shield > 0.0:
 				rig_play("block")
 				shield -= dmg
@@ -1190,7 +1193,8 @@ func _melee() -> void:
 	for m in mobs:
 		var d: float = Vector2(float(m["x"]) - px, float(m["y"]) - py).length()
 		if d <= reach + float(m["r"]):
-			m["hp"] = float(m["hp"]) - 25.0
+			var hit_dmg: float = 25.0 * GameState.equipment_mult("dmg")
+			m["hp"] = float(m["hp"]) - hit_dmg
 			m["flash"] = 0.2
 			dmg_pop.append({"x": float(m["x"]), "y": float(m["y"]) - float(m["r"]), "txt": "25", "t": 0.0})
 			rings.append({"x": m["x"], "y": m["y"], "t": 0.35, "rad": float(m["r"])})

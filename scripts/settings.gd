@@ -127,6 +127,7 @@ func _add_personal_rows() -> void:
 	vb.add_child(_prow(tr("ВЫЖИВАНИЕ"), tr("ВКЛ") if GameState.survival_mode else tr("ВЫКЛ"), _cycle_surv))
 	vb.add_child(_prow(tr("КНОПКИ"), tr("СПРАВА") if GameState.btn_side == "right" else tr("СЛЕВА"), _cycle_btn_side))
 	vb.add_child(_prow(tr("СКИН"), str(GameState.current_skin().get("label", "—")), _cycle_skin))
+	vb.add_child(_prow(tr("ВИБРАЦИЯ"), tr(_haptics_name()), _cycle_haptics))
 	vb.add_child(_profile_row())
 
 
@@ -497,3 +498,21 @@ func _add_reset_row() -> void:
 	b.pressed.connect(func() -> void:
 		AudioManager.play("click")
 		dlg.popup_centered())
+
+
+func _haptics_name() -> String:
+	match GameState.haptics_level:
+		0:
+			return "ВЫКЛ"
+		1:
+			return "СЛАБАЯ"
+		2:
+			return "СРЕДНЯЯ"
+	return "СИЛЬНАЯ"
+
+
+func _cycle_haptics(_d: int) -> void:
+	GameState.haptics_level = (GameState.haptics_level + 1) % 4
+	GameState.save_settings()
+	AudioManager.play("click")
+	_rebuild_settings()

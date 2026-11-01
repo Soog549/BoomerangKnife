@@ -168,6 +168,15 @@ func _open_detail(nm: String, rar: String, path: String, unlocked: bool) -> void
 	r.size = Vector2(720, 30)
 	r.add_theme_font_size_override("font_size", 20)
 	box.add_child(r)
+	var dl := Label.new()
+	dl.text = _lore_text(nm, rar, unlocked)
+	dl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dl.position = Vector2(60, 980)
+	dl.size = Vector2(600, 120)
+	dl.add_theme_font_size_override("font_size", 16)
+	dl.add_theme_color_override("font_color", Color(0.86, 0.9, 1.0, 0.95))
+	box.add_child(dl)
 	var close := Button.new()
 	close.text = tr("ЗАКРЫТЬ")
 	close.position = Vector2(60, 990)
@@ -246,3 +255,26 @@ func _render(col: VBoxContainer) -> void:
 	for i in page_data.size():
 		g.add_child(_cell(page_data[i], pattern % (from_i + i + 1), from_i + i, _coll_tab == 1))
 	col.add_child(g)
+
+
+const LORE_TEXT := {
+	"Империя ZWS": "Государство, которое торгует памятью. Здесь память — валюта, а забвение — роскошь.",
+	"Бумеранг-нож": "Оружие Оператора. Возвращается к хозяину, пока тот помнит, кто он.",
+	"Скит": "Кибер-ящер, спутник с характером. Ворчит, но прикрывает спину.",
+	"Принцесса Аврора": "Наследница, ставшая Оператором. Её удары — приказ, а не просьба.",
+	"Аркт Первый": "Первый Оператор. Его имя — единственное, что не смогли стереть.",
+	"Кузня имплантов": "Здесь платят памятью за силу. Кузнецы не спрашивают, что ты забудешь.",
+	"Рубиновые шахты": "Красные жилы под городом. Каждый кристалл — чей-то украденный день.",
+	"Цикл памяти": "Колесо, что крутит империю. Пока оно вертится, никто не умирает окончательно.",
+	"Окраина": "Начало пути. Здесь ещё помнят старые песни и старые обиды.",
+	"Пустошь": "Земля, где память выгорела. Живое держится на упрямстве.",
+	"Рубеж": "Граница, за которой память не возвращается. Отсюда не пишут писем.",
+	"Космический оазис": "Последнее место, где память хранят добровольно. И самое опасное.",
+}
+
+
+func _lore_text(nm: String, rar: String, unlocked: bool) -> String:
+	var base: String = str(LORE_TEXT.get(nm, "Реликвия империи. Открывается по мере прохождения."))
+	if not unlocked:
+		return "Закрыто. " + base
+	return base

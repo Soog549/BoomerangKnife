@@ -1096,6 +1096,12 @@ func load_settings() -> void:
 	endless_best_wave = cfg.get_value("settings", "endless_best_wave", 0)
 	best_rush_waves = cfg.get_value("settings", "best_rush_waves", 0)
 	best_survival_waves = cfg.get_value("settings", "best_survival_waves", 0)
+	haptics_level = int(cfg.get_value("settings", "haptics_level", 2))
+	var _rr = cfg.get_value("settings", "recent_runs", "[]")
+	if _rr is String and _rr != "":
+		var _rp = JSON.parse_string(_rr)
+		if _rp is Array:
+			recent_runs = _rp
 	var _mp = cfg.get_value("settings", "mode_progress", "{}")
 	if _mp is String and _mp != "":
 		var _parsed = JSON.parse_string(_mp)
@@ -1160,6 +1166,8 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "high_score", high_score)
 	cfg.set_value("settings", "best_rush_waves", best_rush_waves)
 	cfg.set_value("settings", "best_survival_waves", best_survival_waves)
+	cfg.set_value("settings", "haptics_level", haptics_level)
+	cfg.set_value("settings", "recent_runs", JSON.stringify(recent_runs))
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
@@ -1485,6 +1493,8 @@ func record_mode_wave(rush: bool, waves: int) -> bool:
 # ================= ПРОГРЕСС ПО РЕЖИМАМ (чекпоинты) =================
 var mode_progress: Dictionary = {}
 var continue_mode := ""
+var haptics_level := 2
+var recent_runs: Array = []
 
 
 func mode_save(mode: String, data: Dictionary) -> void:
@@ -1584,3 +1594,56 @@ func ad_reset_in_text() -> String:
 	var h: int = left / 3600
 	var m: int = (left % 3600) / 60
 	return "%02d:%02d" % [h, m]
+
+
+func equipment_bonus(key: String) -> float:
+	var total := 0.0
+	for slot in EQUIPMENT_SLOTS:
+		var eid: String = equipped_in(slot)
+		if eid == "":
+			continue
+		var it: Dictionary = ItemsDB.find_item(slot, eid)
+		if it.is_empty():
+			continue
+		var stats: Dictionary = it.get("stats", {})
+		total += float(stats.get(key, 0.0))
+	return total
+
+
+func equipment_mult(key: String) -> float:
+	var add := equipment_bonus(key)
+	match key:
+		"hp":
+			return 1.0 + add / 100.0
+		"dmg":
+			return 1.0 + add / 50.0
+		"speed":
+			return 1.0 + add
+		"throw":
+			return 1.0 + add
+		"crit", "dodge", "luck":
+			return 1.0 + add
+		"block":
+			return 1.0 + add / 100.0
+	return 1.0
+
+
+func haptics_ms() -> int:
+	match haptics_level:
+		0:
+			return 0
+		1:
+			return 18
+		2:
+			return 35
+	return 60
+
+
+func add_run(mode: String, wave: int, score: int) -> void:
+	recent_runs.push_front({
+		"mode": mode, "wave": wave, "score": score,
+		"ts": int(Time.get_unix_time_from_system()),
+	})
+	while recent_runs.size() > 5:
+		recent_runs.pop_back()
+	save_settings()
