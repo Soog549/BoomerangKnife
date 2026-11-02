@@ -58,6 +58,14 @@ func _ready() -> void:
 			names.append(str(p["name"]))
 		list.text = "Игроки (%d): %s" % [arr.size(), ", ".join(PackedStringArray(names))])
 
+	var hosts := Label.new()
+	hosts.add_theme_font_size_override("font_size", 14)
+	hosts.text = "Найденные хосты: —"
+	vb.add_child(hosts)
+	NetManager.hosts_changed.connect(func(arr: Array) -> void:
+		hosts.text = "Найденные хосты: " + (", ".join(PackedStringArray(arr)) if not arr.is_empty() else "—"))
+	NetManager.start_discovery()
+
 	var leave_b := Button.new()
 	leave_b.text = "ОТКЛЮЧИТЬСЯ"
 	leave_b.custom_minimum_size = Vector2(0, 48)
@@ -70,5 +78,6 @@ func _ready() -> void:
 	back.position = Vector2(32, vp.y - 92)
 	back.pressed.connect(func() -> void:
 		NetManager.leave()
+		NetManager.stop_discovery()
 		get_tree().change_scene_to_file("res://scenes/settings.tscn"))
 	add_child(back)

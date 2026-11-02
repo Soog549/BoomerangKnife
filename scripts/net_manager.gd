@@ -6,8 +6,14 @@ const MAX_PLAYERS := 22
 
 signal players_changed(players: Array)
 signal connection_state(text: String)
+signal hosts_changed(hosts: Array)
+const BEACON_PORT := 7778
 
 var players: Dictionary = {}
+var found_hosts: Dictionary = {}
+var _beacon: PacketPeerUDP = null
+var _listen: PacketPeerUDP = null
+var _beacon_t := 0.0
 
 
 func _ready() -> void:
@@ -19,6 +25,49 @@ func _ready() -> void:
 	players[1] = {"name": "ХОСТ"}
 
 
+func _process(dt: float) -> void:
+	_beacon_t += dt
+	if _beacon != null and _beacon_t >= 2.0:
+		_beacon_t = 0.0
+		_beacon.set_dest_address("255.255.255.255", BEACON_PORT)
+		_beacon.put_packet(("BK_HOST:%d" % PORT).to_utf8_buffer())
+	if _listen != null:
+		while _listen.get_available_packet_count() > 0:
+			var pkt := _listen.get_packet()
+			var ip := _listen.get_packet_ip()
+			var txt := pkt.get_string_from_utf8()
+			if txt.begins_with("BK_HOST:"):
+				found_hosts[ip] = Time.get_unix_time_from_system()
+				hosts_changed.emit(known_hosts())
+
+
+func hosts_changed_signal() -> void:
+	hosts_changed.emit(known_hosts())
+
+
+func known_hosts() -> Array:
+	var now := Time.get_unix_time_from_system()
+	var out: Array = []
+	for ip in found_hosts.keys():
+		if now - float(found_hosts[ip]) < 8.0:
+			out.append(str(ip))
+	return out
+
+
+func start_discovery() -> void:
+	if _listen == null:
+		_listen = PacketPeerUDP.new()
+		_listen.bind(BEACON_PORT, "0.0.0.0")
+		_listen.set_broadcast_enabled(true)
+
+
+func stop_discovery() -> void:
+	if _listen != null:
+		_listen.close()
+		_listen = null
+	found_hosts.clear()
+
+
 func host() -> void:
 	var peer := ENetMultiplayerPeer.new()
 	var err := peer.create_server(PORT, MAX_PLAYERS)
@@ -26,6 +75,9 @@ func host() -> void:
 		connection_state.emit("Не удалось поднять сервер (порт %d)" % PORT)
 		return
 	multiplayer.multiplayer_peer = peer
+	if _beacon == null:
+		_beacon = PacketPeerUDP.new()
+		_beacon.set_broadcast_enabled(true)
 	players = {1: {"name": "ХОСТ"}}
 	connection_state.emit("Хост: порт %d, игроков: 1" % PORT)
 	players_changed.emit(_list())
@@ -42,6 +94,9 @@ func join(ip: String) -> void:
 
 
 func leave() -> void:
+	if _beacon != null:
+		_beacon.close()
+		_beacon = null
 	if multiplayer.multiplayer_peer != null:
 		multiplayer.multiplayer_peer.close()
 	multiplayer.multiplayer_peer = null
