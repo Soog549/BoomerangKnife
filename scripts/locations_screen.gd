@@ -51,7 +51,29 @@ func _ready() -> void:
 			b.text = "%d. %s — закрыто (пройди предыдущую)" % [i + 1, str(loc["name"])]
 			b.add_theme_font_size_override("font_size", 14)
 			b.disabled = true
-		vb.add_child(b)
+		# _loc_row — превью стиля + кнопка с цветной рамкой
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		var thumb := TextureRect.new()
+		thumb.custom_minimum_size = Vector2(64, 64)
+		thumb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		thumb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		thumb.clip_contents = true
+		var pbg := "res://assets/images/packs/%s/bg.jpg" % str(loc["style"])
+		if ResourceLoader.exists(pbg):
+			thumb.texture = load(pbg)
+		row.add_child(thumb)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.10, 0.12, 0.20, 0.92)
+		sb.set_corner_radius_all(12)
+		sb.border_color = GameState.ACCENTS[i % GameState.ACCENTS.size()]
+		sb.set_border_width_all(2)
+		sb.set_content_margin_all(6)
+		b.add_theme_stylebox_override("normal", sb)
+		row.add_child(b)
+		vb.add_child(row)
 
 		var d := Label.new()
 		d.text = "    " + str(loc["desc"])
