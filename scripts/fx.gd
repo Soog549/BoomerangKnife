@@ -56,3 +56,37 @@ func burst(pos: Vector2, color: Color, count := 20) -> void:
 
 func confetti(pos: Vector2, count := 40) -> void:
 	burst(pos, Color(1, 1, 1), count)
+
+
+func impact(kind: String = "hit") -> void:
+	match kind:
+		"boss_spawn":
+			shake(0.7, 4.5)
+			flash(0.18, Color(1.0, 0.85, 0.5, 0.55))
+		"boss_death":
+			shake(0.9, 6.0)
+			flash(0.22, Color(1.0, 0.95, 0.8, 0.65))
+		"crit":
+			shake(0.32, 2.2)
+			flash(0.08, Color(1, 1, 1, 0.28))
+		_:
+			shake(0.32, 2.4)
+
+
+func flash(duration: float = 0.12, col: Color = Color(1, 1, 1, 0.35)) -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 90
+	var r := ColorRect.new()
+	r.color = col
+	r.set_anchors_preset(Control.PRESET_FULL_RECT)
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(r)
+	var scene := get_tree().current_scene
+	if scene == null:
+		layer.queue_free()
+		return
+	scene.add_child(layer)
+	var tw := layer.create_tween()
+	tw.tween_property(r, "color:a", 0.0, maxf(0.05, duration))\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_callback(layer.queue_free)

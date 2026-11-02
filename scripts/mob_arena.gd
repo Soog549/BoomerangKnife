@@ -568,6 +568,8 @@ func _process(dt: float) -> void:
 		GameState.track("daily_arena")
 		if wave % 3 == 0:
 			GameState.track("boss_kills")
+		if wave % 3 == 0:
+			FX.impact("boss_spawn")
 		GameState.mode_save(_mode_key, {
 			"wave": wave, "score": score, "coins": coins,
 			"hp": hp, "max_hp": max_hp, "ammo": ammo,
