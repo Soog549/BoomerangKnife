@@ -751,3 +751,12 @@ func _apply_style_bg() -> void:
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(tr)
 	move_child(tr, 0)
+	hide_legacy_bg()
+
+
+func hide_legacy_bg() -> void:
+	for c in get_children():
+		if c is TextureRect and c != null:
+			var nm := str(c.name).to_lower()
+			if nm.contains("bg") or nm.contains("background"):
+				(c as TextureRect).visible = false

@@ -32,12 +32,19 @@ func _build()-> void:
 		var w: Dictionary = Worlds.LIST[i]
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
+		var thumb_box := Control.new()
+		thumb_box.custom_minimum_size = Vector2(72, 72)
+		thumb_box.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		thumb_box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		thumb_box.clip_contents = true
 		var thumb := TextureRect.new()
-		thumb.custom_minimum_size = Vector2(72, 72)
-		thumb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		thumb.clip_contents = false
+		thumb.set_anchors_preset(Control.PRESET_FULL_RECT)
+		thumb.offset_right = 72.0
+		thumb.offset_bottom = 72.0
 		thumb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		thumb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		thumb_box.add_child(thumb)
 		var art_path := "res://assets/images/worlds/%s.png" % str(w.get("art", ""))
 		if ResourceLoader.exists(art_path):
 			thumb.texture = load(art_path)
@@ -45,7 +52,7 @@ func _build()-> void:
 			var pbg := "res://assets/images/packs/%s/bg.jpg" % Worlds.style_for(i)
 			if ResourceLoader.exists(pbg):
 				thumb.texture = load(pbg)
-		row.add_child(thumb)
+		row.add_child(thumb_box)
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(0, 64)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -100,3 +107,12 @@ func _apply_style_bg() -> void:
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(tr)
 	move_child(tr, 0)
+	hide_legacy_bg()
+
+
+func hide_legacy_bg() -> void:
+	for c in get_children():
+		if c is TextureRect and c != null:
+			var nm := str(c.name).to_lower()
+			if nm.contains("bg") or nm.contains("background"):
+				(c as TextureRect).visible = false
