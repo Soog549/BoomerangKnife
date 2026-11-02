@@ -482,7 +482,7 @@ func _process(dt: float) -> void:
 		return
 	t_anim += dt
 	flash = max(0.0, flash - dt * 2.2)
-	shake = max(0.0, shake - dt * 45.0)
+	shake = max(0.0, shake - dt * 14.0)
 	if slowmo_t > 0.0:
 		slowmo_t -= dt
 		if slowmo_t <= 0.0:
@@ -510,7 +510,7 @@ func _process(dt: float) -> void:
 		if float(r["t"]) > 0.0:
 			keep_r.append(r)
 	rings = keep_r
-	position = Vector2(randf_range(-shake, shake), randf_range(-shake, shake)) if shake > 0.0 else Vector2.ZERO
+	position = Vector2(sin(_anim_t * 7.0) * shake, cos(_anim_t * 5.0) * shake * 0.7) if shake > 0.0 else Vector2.ZERO
 	# радиус стика зависит от сложности (волны)
 	stick_r = clamp(66.0 - float(wave) * 2.0, 44.0, 66.0) * GameState.joy_scale
 	var mv := Vector2.ZERO
@@ -627,7 +627,7 @@ func _process(dt: float) -> void:
 			var dmg: float = float(p["dmg"])
 			regen_t = 0.0
 			flash = 0.65
-			shake = 3.5
+			shake = 2.6
 			AudioManager.play("hit")
 			if GameState.haptics_ms() > 0:
 				Input.vibrate_handheld(GameState.haptics_ms())

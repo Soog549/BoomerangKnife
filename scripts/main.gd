@@ -255,7 +255,7 @@ func _on_knife_caught() -> void:
 func _on_knife_broke(at: Vector2) -> void:
 	AudioManager.play("break")
 	FX.burst(at, Color(1, 0.3, 0.3), 20)
-	FX.shake(0.3, 8)
+	FX.shake(0.5, 5.0)
 	if shield_active:
 		shield_active = false
 		AudioManager.play("return")
