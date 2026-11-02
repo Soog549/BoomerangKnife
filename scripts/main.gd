@@ -286,6 +286,7 @@ func _on_target_cleared() -> void:
 	levels_completed += 1
 	GameState.track("campaign_levels")
 	GameState.advance_location_level()
+	GameState.evo_add(60)
 	_maybe_location_ending()
 	GameState.track("daily_campaign")
 	_campaign_checkpoint()

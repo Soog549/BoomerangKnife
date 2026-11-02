@@ -1605,6 +1605,8 @@ var class_wins: Dictionary = {}
 var training_mode := false
 var current_location := 0
 var last_hero_scene := ""
+var evo_stage := 0
+var evo_points := 0
 var location_progress: Dictionary = {}
 var loc_endings: Dictionary = {}
 var onboarding_done := false
@@ -2229,3 +2231,46 @@ func ending_summary() -> String:
 	if power > mercy:
 		return "Империя помнит: Сила (%d) против Милосердия (%d)" % [power, mercy]
 	return "Империя на грани: Милосердие и Сила равны (%d:%d)" % [mercy, power]
+
+
+const EVO := [
+	{"name": "ИСКРА", "need": 0, "desc": "Рождение: первые броски и первые враги."},
+	{"name": "ОРУЖИЕ", "need": 300, "desc": "Крафт и экипировка: собери свой стиль боя."},
+	{"name": "ОТРЯД", "need": 900, "desc": "Гильдия и союзники: сражайся не один."},
+	{"name": "ДЕРЖАВА", "need": 2000, "desc": "Локации и оборона: держи рубежи Империи."},
+	{"name": "ИМПЕРИЯ", "need": 4000, "desc": "Сезоны, рейтинг и память поколений."},
+]
+
+
+func evo_add(points: int) -> void:
+	evo_points += maxi(1, points)
+	save_settings()
+
+
+func evo_unlocked(idx: int) -> bool:
+	if idx < 0 or idx >= EVO.size():
+		return false
+	return evo_stage >= idx
+
+
+func evo_can_open(idx: int) -> bool:
+	if idx < 0 or idx >= EVO.size():
+		return false
+	return idx == evo_stage + 1 and evo_points >= int(EVO[idx]["need"])
+
+
+func evo_open(idx: int) -> bool:
+	if not evo_can_open(idx):
+		return false
+	evo_stage = idx
+	save_settings()
+	return true
+
+
+func evo_progress(idx: int) -> float:
+	if idx <= evo_stage:
+		return 1.0
+	var need: int = int(EVO[idx]["need"])
+	if need <= 0:
+		return 1.0
+	return clampf(float(evo_points) / float(need), 0.0, 1.0)

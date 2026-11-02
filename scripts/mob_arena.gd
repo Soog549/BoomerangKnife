@@ -564,6 +564,7 @@ func _process(dt: float) -> void:
 		rig_play("win")
 		AudioManager.play("level")
 		GameState.track("arena_waves")
+		GameState.evo_add(20)
 		GameState.track("daily_arena")
 		if wave % 3 == 0:
 			GameState.track("boss_kills")
