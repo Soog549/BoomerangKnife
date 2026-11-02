@@ -59,3 +59,10 @@ func normalize(root: Node, top: float = 96.0) -> void:
 	if bb is Button:
 		(bb as Button).position = Vector2(M, H - M - BTN_H)
 		(bb as Button).size = Vector2(200.0, BTN_H)
+
+
+static func main_font() -> Font:
+	var path := "res://assets/fonts/IMPERIUM.ttf"
+	if ResourceLoader.exists(path):
+		return load(path)
+	return null
