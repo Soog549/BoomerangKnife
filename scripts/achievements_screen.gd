@@ -28,6 +28,22 @@ func _ready() -> void:
 
 	var ach: Array = load("res://scripts/collection.gd").ACH
 	var opened := 0
+	if opened >= ach.size():
+		var btn := Button.new()
+		btn.text = tr("ЗАБРАТЬ НАГРАДУ ЗА 100% (10 💎)")
+		btn.custom_minimum_size = Vector2(0, 52)
+		btn.disabled = GameState.ach_reward_claimed
+		if GameState.ach_reward_claimed:
+			btn.text = tr("НАГРАДА ПОЛУЧЕНА")
+		btn.pressed.connect(func() -> void:
+			GameState.crystals += 10
+			GameState.ach_reward_claimed = true
+			GameState.save_settings()
+			AudioManager.play("level")
+			Toast.show(tr("+10 кристаллов за все достижения"))
+			get_tree().reload_current_scene())
+		vb.add_child(btn)
+
 	for a in ach:
 		if GameState.arena_ach.has(str(a[2])):
 			opened += 1

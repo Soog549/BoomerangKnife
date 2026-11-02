@@ -1607,6 +1607,7 @@ var current_location := 0
 var last_hero_scene := ""
 var evo_stage := 0
 var companion_id := 0
+var ach_reward_claimed := false
 var evo_points := 0
 var location_progress: Dictionary = {}
 var loc_endings: Dictionary = {}
