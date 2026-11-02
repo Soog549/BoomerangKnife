@@ -148,6 +148,8 @@ func _on_failed() -> void:
 
 
 func _on_server_left() -> void:
-	connection_state.emit("Хост отключился")
+	connection_state.emit("Хост отключился — пробуем поднять свой")
 	players.clear()
 	players_changed.emit([])
+	# упрощённая миграция: становимся хостом, чтобы игра не оборвалась
+	host()
