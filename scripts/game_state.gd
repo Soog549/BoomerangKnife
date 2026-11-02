@@ -1134,6 +1134,11 @@ func load_settings() -> void:
 	theme_light = bool(cfg.get_value("settings", "theme_light", false))
 	onboarding_done = bool(cfg.get_value("settings", "onboarding_done", false))
 	current_location = int(cfg.get_value("settings", "current_location", 0))
+	var _le = cfg.get_value("settings", "loc_endings", "{}")
+	if _le is String and _le != "":
+		var _lep = JSON.parse_string(_le)
+		if _lep is Dictionary:
+			loc_endings = _lep
 	var _lp = cfg.get_value("settings", "location_progress", "{}")
 	if _lp is String and _lp != "":
 		var _lpp = JSON.parse_string(_lp)
@@ -1249,6 +1254,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "onboarding_done", onboarding_done)
 	cfg.set_value("settings", "current_location", current_location)
 	cfg.set_value("settings", "location_progress", JSON.stringify(location_progress))
+	cfg.set_value("settings", "loc_endings", JSON.stringify(location_endings))
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
@@ -1599,6 +1605,7 @@ var class_wins: Dictionary = {}
 var training_mode := false
 var current_location := 0
 var location_progress: Dictionary = {}
+var loc_endings: Dictionary = {}
 var onboarding_done := false
 var theme_light := false
 
@@ -2191,3 +2198,33 @@ func location_title(idx: int) -> String:
 func location_endings() -> Array:
 	# две концовки на локацию: милосердие/сила — зависят от выбора
 	return ["Милосердие", "Сила"]
+
+
+func set_ending(idx: int, kind: String) -> void:
+	loc_endings[str(idx)] = kind
+	if kind == "mercy":
+		crystals += 3
+	else:
+		add_coins(250)
+	save_settings()
+
+
+func ending_for(idx: int) -> String:
+	return str(loc_endings.get(str(idx), ""))
+
+
+func ending_summary() -> String:
+	var mercy := 0
+	var power := 0
+	for v in loc_endings.values():
+		if str(v) == "mercy":
+			mercy += 1
+		else:
+			power += 1
+	if mercy == 0 and power == 0:
+		return ""
+	if mercy > power:
+		return "Империя помнит: Милосердие (%d) против Силы (%d)" % [mercy, power]
+	if power > mercy:
+		return "Империя помнит: Сила (%d) против Милосердия (%d)" % [power, mercy]
+	return "Империя на грани: Милосердие и Сила равны (%d:%d)" % [mercy, power]

@@ -286,6 +286,7 @@ func _on_target_cleared() -> void:
 	levels_completed += 1
 	GameState.track("campaign_levels")
 	GameState.advance_location_level()
+	_maybe_location_ending()
 	GameState.track("daily_campaign")
 	_campaign_checkpoint()
 	if levels_completed == 3 or levels_completed == 4:
@@ -449,3 +450,57 @@ func _show_campaign_intro() -> void:
 		GameState.save_settings()
 		get_tree().reload_current_scene())
 	vb.add_child(b)
+
+
+func _maybe_location_ending() -> void:
+	var idx: int = GameState.current_location
+	if not GameState.location_completed(idx):
+		return
+	if GameState.ending_for(idx) != "":
+		return
+	var layer := CanvasLayer.new()
+	layer.layer = 30
+	add_child(layer)
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.88)
+	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(dim)
+	var vp: Vector2 = get_viewport_rect().size
+	var vb := VBoxContainer.new()
+	vb.position = Vector2(40, vp.y * 0.25)
+	vb.size = Vector2(vp.x - 80, vp.y * 0.5)
+	vb.add_theme_constant_override("separation", 16)
+	layer.add_child(vb)
+
+	var t1 := Label.new()
+	t1.text = tr("ЛОКАЦИЯ ПРОЙДЕНА: %s") % GameState.location_title(idx)
+	t1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	t1.add_theme_font_size_override("font_size", 22)
+	t1.add_theme_color_override("font_color", GameState.accent())
+	vb.add_child(t1)
+
+	var t2 := Label.new()
+	t2.text = tr("Выбери, какой след ты оставишь в Империи")
+	t2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	t2.add_theme_font_size_override("font_size", 15)
+	vb.add_child(t2)
+
+	var mercy := Button.new()
+	mercy.text = tr("МИЛОСЕРДИЕ (+3 кристалла)")
+	mercy.custom_minimum_size = Vector2(0, 62)
+	mercy.pressed.connect(func() -> void:
+		GameState.set_ending(idx, "mercy")
+		AudioManager.play("level")
+		Toast.show(GameState.ending_summary())
+		get_tree().change_scene_to_file("res://scenes/locations.tscn"))
+	vb.add_child(mercy)
+
+	var power := Button.new()
+	power.text = tr("СИЛА (+250 монет)")
+	power.custom_minimum_size = Vector2(0, 62)
+	power.pressed.connect(func() -> void:
+		GameState.set_ending(idx, "power")
+		AudioManager.play("level")
+		Toast.show(GameState.ending_summary())
+		get_tree().change_scene_to_file("res://scenes/locations.tscn"))
+	vb.add_child(power)

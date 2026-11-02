@@ -76,7 +76,13 @@ func _ready() -> void:
 		vb.add_child(row)
 
 		var d := Label.new()
-		d.text = "    " + str(loc["desc"])
+		var end_kind: String = GameState.ending_for(i)
+		var end_txt := ""
+		if end_kind == "mercy":
+			end_txt = "   ·   Милосердие"
+		elif end_kind == "power":
+			end_txt = "   ·   Сила"
+		d.text = "    " + str(loc["desc"]) + end_txt
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		d.add_theme_font_size_override("font_size", 12)
 		d.add_theme_color_override("font_color", Color(0.75, 0.82, 0.95, 0.9))
