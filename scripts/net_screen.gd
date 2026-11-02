@@ -66,6 +66,15 @@ func _ready() -> void:
 		hosts.text = "Найденные хосты: " + (", ".join(PackedStringArray(arr)) if not arr.is_empty() else "—"))
 	NetManager.start_discovery()
 
+	var duel_b := Button.new()
+	duel_b.text = "НАЧАТЬ ДУЭЛЬ (1v1)"
+	duel_b.custom_minimum_size = Vector2(0, 56)
+	duel_b.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		NetManager.stop_discovery()
+		get_tree().change_scene_to_file("res://scenes/net_duel.tscn"))
+	vb.add_child(duel_b)
+
 	var leave_b := Button.new()
 	leave_b.text = "ОТКЛЮЧИТЬСЯ"
 	leave_b.custom_minimum_size = Vector2(0, 48)
