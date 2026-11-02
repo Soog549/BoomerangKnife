@@ -42,7 +42,7 @@ func _build()-> void:
 		thumb.offset_right = 72.0
 		thumb.offset_bottom = 72.0
 		thumb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		thumb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		thumb_box.add_child(thumb)
 		var art_path := "res://assets/images/worlds/%s.png" % str(w.get("art", ""))
