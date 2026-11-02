@@ -85,7 +85,10 @@ func _process(dt: float) -> void:
 	for m in mobs:
 		if m["alive"]:
 			m["t"] += dt
-			m["pos"] += Vector2(cos(m["t"]), sin(m["t"] * 1.3)) * 22.0 * dt
+			var slow_field: float = 1.0
+			if GameState.companion_id == 3 and comp_pos.distance_to(m["pos"]) < 220.0:
+				slow_field = 0.45
+			m["pos"] += Vector2(cos(m["t"]), sin(m["t"] * 1.3)) * 22.0 * slow_field * dt
 			if player.distance_to(m["pos"]) < 70.0:
 				m["alive"] = false
 				if quest_state == 1:

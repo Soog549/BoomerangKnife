@@ -286,7 +286,7 @@ func _spawn_mob() -> void:
 		mobs.append({
 			"kind": _practice_kind, "x": randf_range(90.0, W - 90.0), "y": -40.0,
 			"hp": ph, "max": ph, "cd": (float(pt["cd"]) + 0.8) * _diff_cd_mult(), "t": 0.0, "r": float(pt["r"]),
-			"col": pt["col"], "speed": float(pt["speed"]) * 0.7 * (1.0 + 0.03 * float(wave)), "proj": str(pt["proj"]), "var": randi() % 2, "id": mob_seq,
+			"col": pt["col"], "speed": float(pt["speed"]) * 0.7 * (1.0 + 0.03 * float(wave)) * (0.9 if GameState.companion_id == 3 else 1.0), "proj": str(pt["proj"]), "var": randi() % 2, "id": mob_seq,
 		})
 		return
 	if wave % 3 == 0 and not _boss_alive():
