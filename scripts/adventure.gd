@@ -21,6 +21,7 @@ var bubble := ""
 var bubble_t := 0.0
 var cam: Camera2D
 var _comp_t := 0.0
+var remote: Dictionary = {}
 var comp_pos := Vector2(1240, 1240)
 
 
@@ -48,6 +49,8 @@ func _process(dt: float) -> void:
 	cam.position = cam.position.lerp(player, 1.0 - pow(0.001, dt))
 	bubble_t = maxf(0.0, bubble_t - dt)
 	_comp_t += dt
+	if multiplayer.multiplayer_peer != null:
+		rpc("sync_pos", player.x, player.y)
 	if GameState.companion_id > 0:
 		var follow := player + Vector2(-56, 34)
 		comp_pos = comp_pos.lerp(follow, 1.0 - pow(0.002, dt))
@@ -138,6 +141,7 @@ func _draw() -> void:
 		var ccol := Color(0.25, 0.9, 0.8) if GameState.companion_id == 1 else Color(1.0, 0.75, 0.35)
 		draw_circle(comp_pos, 20.0, ccol)
 		draw_circle(comp_pos + Vector2(-6, -5), 4.0, Color(1, 1, 1, 0.9))
+	_draw_remote()
 	# игрок
 	draw_circle(player, 28.0, GameState.accent())
 	draw_circle(player + Vector2(0, -6), 10.0, Color(1, 1, 1, 0.85))
@@ -159,3 +163,19 @@ func _quest_text() -> String:
 		3:
 			return "Выполнено"
 	return "Поговори с кузнецом"
+
+
+@rpc("any_peer", "call_remote", "unreliable_ordered")
+func sync_pos(rx: float, ry: float) -> void:
+	var id := multiplayer.get_remote_sender_id()
+	if not remote.has(id):
+		remote[id] = Vector2(rx, ry)
+	else:
+		remote[id] = (remote[id] as Vector2).lerp(Vector2(rx, ry), 0.5)
+
+
+func _draw_remote() -> void:
+	for id in remote.keys():
+		var p: Vector2 = remote[id]
+		draw_circle(p, 26.0, Color(1.0, 0.55, 0.45))
+		draw_string(ThemeDB.fallback_font, p + Vector2(-24, -38), "Игрок", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.9, 0.9))
