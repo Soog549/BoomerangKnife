@@ -12,6 +12,8 @@ var units: Array = []
 var over := false
 var atk_lvl := 0
 var hp_lvl := 0
+var has_barrack := false
+var has_forge := false
 var win := false
 var _ai_t := 0.0
 var _gold_t := 0.0
@@ -81,7 +83,7 @@ func _spawn(side: int, kind: String) -> void:
 	elif kind == "hero":
 		stats = {"hp": 220.0, "dmg": 18.0, "rate": 0.8, "spd": 110.0, "rng": 230.0}
 	var hp_mult: float = 1.0 + 0.2 * float(hp_lvl) if side == 1 else 1.0
-	var dmg_mult: float = 1.0 + 0.2 * float(atk_lvl) if side == 1 else 1.0
+	var dmg_mult: float = (1.0 + 0.2 * float(atk_lvl)) * (1.15 if has_forge else 1.0) if side == 1 else 1.0
 	units.append({
 		"side": side, "kind": kind, "x": float(base["x"]), "y": float(base["y"]),
 		"hp": float(stats["hp"]) * hp_mult, "max": float(stats["hp"]) * hp_mult,
@@ -99,11 +101,15 @@ func _unhandled_input(e: InputEvent) -> void:
 			_sel = "base"
 			return
 		if p.y > H - 80.0 and p.y < H - 12.0:
-			var slot: int = int((p.x - 20) / 230)
+			var slot: int = int((p.x - 12) / 176)
 			if slot == 0:
 				_upgrade("atk")
 			elif slot == 1:
 				_upgrade("hp")
+			elif slot == 2:
+				_build_structure("barrack")
+			elif slot == 3:
+				_build_structure("forge")
 			return
 		if _sel == "base":
 			_build("warrior")
@@ -117,6 +123,8 @@ func _build(kind: String) -> void:
 		cost = 80.0
 	elif kind == "hero":
 		cost = 120.0
+	if has_barrack:
+		cost *= 0.8
 	if gold < cost:
 		Toast.show("Не хватает монет")
 		return
@@ -155,12 +163,13 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, Vector2(24, by - 16), "База выбрана: коснись поля, чтобы построить юнита", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.9, 1))
 	# апгрейды
 	var uy: float = H - 72.0
-	var ups := [["АТАКА +20%% (%d)" % (60 + 40 * atk_lvl), 0], ["HP +20%% (%d)" % (60 + 40 * hp_lvl), 1]]
+	var ups := [["АТАКА (%d)" % (60 + 40 * atk_lvl), 0], ["HP (%d)" % (60 + 40 * hp_lvl), 1],
+		["КАЗАРМА" if not has_barrack else "КАЗАРМА ✓", 2], ["КУЗНЯ" if not has_forge else "КУЗНЯ ✓", 3]]
 	for i in ups.size():
-		var ur := Rect2(20 + i * 230, uy, 210, 52)
+		var ur := Rect2(12 + i * 176, uy, 168, 52)
 		draw_rect(ur, Color(0.16, 0.12, 0.20, 0.95))
 		draw_rect(ur, Color(0.85, 0.7, 0.35, 0.8), false, 2.0)
-		draw_string(ThemeDB.fallback_font, ur.position + Vector2(10, 32), str(ups[i][0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 0.95, 0.8))
+		draw_string(ThemeDB.fallback_font, ur.position + Vector2(8, 32), str(ups[i][0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.95, 0.8))
 	if over:
 		draw_string(ThemeDB.fallback_font, Vector2(W * 0.5 - 140, H * 0.45), "ПОБЕДА" if win else "ПОРАЖЕНИЕ", HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color(1, 0.9, 0.6))
 
@@ -182,4 +191,26 @@ func _upgrade(kind: String) -> void:
 		atk_lvl += 1
 	else:
 		hp_lvl += 1
+	AudioManager.play("level")
+
+
+func _build_structure(kind: String) -> void:
+	if kind == "barrack":
+		if has_barrack:
+			return
+		if gold < 150.0:
+			Toast.show("Нужно 150 золота")
+			return
+		gold -= 150.0
+		has_barrack = true
+		Toast.show("Казарма: юниты дешевле на 20%")
+	else:
+		if has_forge:
+			return
+		if gold < 200.0:
+			Toast.show("Нужно 200 золота")
+			return
+		gold -= 200.0
+		has_forge = true
+		Toast.show("Кузня: урон +15%")
 	AudioManager.play("level")
