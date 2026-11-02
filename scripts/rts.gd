@@ -42,7 +42,7 @@ func _process(dt: float) -> void:
 					target = o
 					break
 		var d := Vector2(target["x"] - u["x"], target["y"] - u["y"])
-		if d.length() > 62.0:
+		if d.length() > float(u.get("rng", 62.0)):
 			var step := d.normalized() * float(u["spd"]) * dt
 			u["x"] += step.x
 			u["y"] += step.y
@@ -73,18 +73,20 @@ func _sync_hp() -> void:
 
 func _spawn(side: int, kind: String) -> void:
 	var base: Dictionary = my_base if side == 1 else enemy_base
-	var stats := {"hp": 60.0, "dmg": 8.0, "rate": 0.9, "spd": 90.0}
+	var stats := {"hp": 60.0, "dmg": 8.0, "rate": 0.9, "spd": 90.0, "rng": 62.0}
 	if kind == "archer":
-		stats = {"hp": 40.0, "dmg": 11.0, "rate": 1.2, "spd": 80.0}
+		stats = {"hp": 40.0, "dmg": 11.0, "rate": 1.2, "spd": 80.0, "rng": 62.0}
 	elif kind == "tank":
-		stats = {"hp": 130.0, "dmg": 7.0, "rate": 1.1, "spd": 60.0}
+		stats = {"hp": 130.0, "dmg": 7.0, "rate": 1.1, "spd": 60.0, "rng": 62.0}
+	elif kind == "hero":
+		stats = {"hp": 220.0, "dmg": 18.0, "rate": 0.8, "spd": 110.0, "rng": 230.0}
 	var hp_mult: float = 1.0 + 0.2 * float(hp_lvl) if side == 1 else 1.0
 	var dmg_mult: float = 1.0 + 0.2 * float(atk_lvl) if side == 1 else 1.0
 	units.append({
 		"side": side, "kind": kind, "x": float(base["x"]), "y": float(base["y"]),
 		"hp": float(stats["hp"]) * hp_mult, "max": float(stats["hp"]) * hp_mult,
 		"dmg": float(stats["dmg"]) * dmg_mult,
-		"rate": stats["rate"], "spd": stats["spd"], "cd": 0.0, "t": 0.0,
+		"rate": stats["rate"], "spd": stats["spd"], "rng": stats["rng"], "cd": 0.0, "t": 0.0,
 	})
 
 
@@ -113,6 +115,8 @@ func _build(kind: String) -> void:
 		cost = 55.0
 	elif kind == "tank":
 		cost = 80.0
+	elif kind == "hero":
+		cost = 120.0
 	if gold < cost:
 		Toast.show("Не хватает монет")
 		return
@@ -132,18 +136,21 @@ func _draw() -> void:
 	_draw_base(enemy_base, Color(0.9, 0.35, 0.35))
 	for u in units:
 		var col := Color(0.4, 0.9, 0.8) if int(u["side"]) == 1 else Color(1.0, 0.45, 0.4)
-		draw_circle(Vector2(u["x"], u["y"]), 16.0, col)
+		var rr2: float = 26.0 if str(u["kind"]) == "hero" else 16.0
+		if str(u["kind"]) == "hero":
+			col = Color(1.0, 0.82, 0.35)
+		draw_circle(Vector2(u["x"], u["y"]), rr2, col)
 		draw_rect(Rect2(u["x"] - 18, u["y"] - 28, 36, 5), Color(0, 0, 0, 0.5))
 		draw_rect(Rect2(u["x"] - 18, u["y"] - 28, 36.0 * float(u["hp"]) / float(u["max"]), 5), Color(0.9, 0.9, 0.4))
 	# HUD
 	draw_string(ThemeDB.fallback_font, Vector2(24, 44), "ЗОЛОТО: %d" % int(gold), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(1, 0.86, 0.45))
 	var by := H - 150.0
-	var defs := [["ВОИН 40", "warrior"], ["ЛУЧНИК 55", "archer"], ["ТАНК 80", "tank"]]
+	var defs := [["ВОИН 40", "warrior"], ["ЛУЧНИК 55", "archer"], ["ТАНК 80", "tank"], ["ГЕРОЙ 120", "hero"]]
 	for i in defs.size():
-		var r := Rect2(20 + i * 230, by, 210, 62)
+		var r := Rect2(12 + i * 176, by, 168, 62)
 		draw_rect(r, Color(0.12, 0.15, 0.22, 0.95))
 		draw_rect(r, Color(0.45, 0.8, 0.75, 0.7), false, 2.0)
-		draw_string(ThemeDB.fallback_font, r.position + Vector2(12, 38), defs[i][0], HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(1, 1, 1))
+		draw_string(ThemeDB.fallback_font, r.position + Vector2(10, 38), defs[i][0], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 1, 1))
 	if _sel == "base":
 		draw_string(ThemeDB.fallback_font, Vector2(24, by - 16), "База выбрана: коснись поля, чтобы построить юнита", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.9, 1))
 	# апгрейды
