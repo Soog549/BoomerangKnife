@@ -285,7 +285,7 @@ func _spawn_mob() -> void:
 		var ph: float = float(pt["hp"]) + float(wave) * 4.0
 		mobs.append({
 			"kind": _practice_kind, "x": randf_range(90.0, W - 90.0), "y": -40.0,
-			"hp": ph, "max": ph, "cd": (float(pt["cd"]) + 0.8) * _diff_cd_mult(), "t": 0.0, "r": float(pt["r"]),
+			"hp": ph * wave_hp_factor(), "max": ph * wave_hp_factor(), "cd": (float(pt["cd"]) + 0.8) * _diff_cd_mult(), "t": 0.0, "r": float(pt["r"]),
 			"col": pt["col"], "speed": float(pt["speed"]) * 0.7 * (1.0 + 0.03 * float(wave)) * (0.9 if GameState.companion_id == 3 else 1.0), "proj": str(pt["proj"]), "var": randi() % 2, "id": mob_seq,
 		})
 		return
@@ -1485,3 +1485,8 @@ func _draw_companion() -> void:
 	draw_circle(Vector2(cx, cy + bob), 22.0, Color(0.20, 0.85, 0.78, 0.95))
 	draw_circle(Vector2(cx - 7, cy + bob - 6), 4.0, Color(1, 1, 1, 0.9))
 	draw_circle(Vector2(cx + 7, cy + bob - 6), 4.0, Color(1, 1, 1, 0.9))
+
+
+func wave_hp_factor() -> float:
+	# плавная кривая: +12% за волну, потолок x4.2
+	return minf(4.2, 1.0 + 0.12 * float(maxi(0, wave - 1)))
