@@ -22,6 +22,8 @@ var bubble_t := 0.0
 var cam: Camera2D
 var _comp_t := 0.0
 var remote: Dictionary = {}
+var net_mobs: Dictionary = {}
+var _net_t := 0.0
 var comp_pos := Vector2(1240, 1240)
 
 
@@ -49,6 +51,15 @@ func _process(dt: float) -> void:
 	cam.position = cam.position.lerp(player, 1.0 - pow(0.001, dt))
 	bubble_t = maxf(0.0, bubble_t - dt)
 	_comp_t += dt
+	_net_t += dt
+	if multiplayer.multiplayer_peer != null and _net_t >= 0.4:
+		_net_t = 0.0
+		if multiplayer.is_server():
+			var arr: Array = []
+			for i in range(mobs.size()):
+				var m: Dictionary = mobs[i]
+				arr.append({"i": i, "x": float(m["pos"].x), "y": float(m["pos"].y), "a": bool(m["alive"])})
+			rpc("sync_mobs", arr)
 	if multiplayer.multiplayer_peer != null:
 		rpc("sync_pos", player.x, player.y)
 	if GameState.companion_id > 0:
@@ -145,6 +156,7 @@ func _draw() -> void:
 			ccol = Color(0.65, 0.45, 1.0)
 		draw_circle(comp_pos, 20.0, ccol)
 		draw_circle(comp_pos + Vector2(-6, -5), 4.0, Color(1, 1, 1, 0.9))
+	_draw_net_mobs()
 	_draw_remote()
 	# игрок
 	draw_circle(player, 28.0, GameState.accent())
@@ -183,3 +195,41 @@ func _draw_remote() -> void:
 		var p: Vector2 = remote[id]
 		draw_circle(p, 26.0, Color(1.0, 0.55, 0.45))
 		draw_string(ThemeDB.fallback_font, p + Vector2(-24, -38), "Игрок", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.9, 0.9))
+
+
+@rpc("authority", "call_remote", "unreliable_ordered")
+func sync_mobs(arr: Array) -> void:
+	net_mobs.clear()
+	for e in arr:
+		net_mobs[int(e["i"])] = {"pos": Vector2(float(e["x"]), float(e["y"])), "alive": bool(e["a"])}
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func req_hit(idx: int) -> void:
+	if not multiplayer.is_server():
+		return
+	if idx < 0 or idx >= mobs.size():
+		return
+	var m: Dictionary = mobs[idx]
+	if not m["alive"]:
+		return
+	var near := player.distance_to(m["pos"]) < 130.0
+	for pid in remote.keys():
+		if (remote[pid] as Vector2).distance_to(m["pos"]) < 130.0:
+			near = true
+	if near:
+		m["alive"] = false
+		if quest_state == 1:
+			quest_killed += 1
+			if quest_killed >= 3:
+				quest_state = 2
+
+
+func _draw_net_mobs() -> void:
+	if multiplayer.multiplayer_peer == null or multiplayer.is_server():
+		return
+	for k in net_mobs.keys():
+		var e: Dictionary = net_mobs[k]
+		if not bool(e["alive"]):
+			continue
+		draw_circle(e["pos"], 22.0, Color(0.9, 0.3, 0.35))
