@@ -1606,6 +1606,7 @@ var training_mode := false
 var current_location := 0
 var last_hero_scene := ""
 var evo_stage := 0
+var companion_id := 0
 var evo_points := 0
 var location_progress: Dictionary = {}
 var loc_endings: Dictionary = {}
@@ -2235,6 +2236,9 @@ func ending_reward(kind: String) -> Dictionary:
 
 func set_ending(idx: int, kind: String) -> void:
 	loc_endings[str(idx)] = kind
+	if idx == 0 and companion_id == 0:
+		companion_id = 1
+		Toast.show("Компаньон получен: СКИТ")
 	var r: Dictionary = ending_reward(kind)
 	add_coins(int(r["coins"]))
 	crystals += int(r["crystals"])

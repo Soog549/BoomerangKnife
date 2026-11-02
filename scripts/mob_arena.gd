@@ -102,6 +102,7 @@ var _ground_mode := false
 var _rush_mode := false
 var _survival_arena := false
 var _anim_t := 0.0
+var _comp_t := 0.0
 var _mode_key := ""
 var _rig_state := "idle"
 var _rig_t := 0.0
@@ -465,6 +466,8 @@ func _throw_auto() -> void:
 
 func _process(dt: float) -> void:
 	_anim_t += dt
+	_comp_t += dt
+	_companion_tick()
 	if replay_btn != null:
 		replay_btn.visible = over
 		if is_instance_valid(shop_btn_over):
@@ -955,6 +958,7 @@ func _draw() -> void:
 		else:
 			draw_circle(Vector2(kx, ky), 10.0, Color(0.95, 0.8, 0.3))
 	# игрок (масштаб 1.45 — корабль не должен проигрывать мобам)
+	_draw_companion()
 	if _ground_mode and (rig_torso != null or avatar_tex != null):
 		_draw_rig(px, py, 196.0, 196.0 * 0.72, avatar_tex.get_size())
 	if _ground_mode:
@@ -1447,3 +1451,37 @@ func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
 	draw_texture_rect_region(avatar_tex, Rect2(-gw * 0.5, -gh * 0.18 + s_head.y, gw, gh * 0.28),
 		Rect2(ts.x * 0.10, ts.y * 0.00, ts.x * 0.80, ts.y * 0.26))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+func _companion_tick() -> void:
+	if GameState.companion_id <= 0 or mobs.is_empty():
+		return
+	if _comp_t < 1.6:
+		return
+	_comp_t = 0.0
+	var best: Dictionary = {}
+	var best_d := 1e9
+	for m in mobs:
+		var d: float = Vector2(float(m["x"]) - px, float(m["y"]) - py).length()
+		if d < best_d:
+			best_d = d
+			best = m
+	if best.is_empty() or best_d > 620.0:
+		return
+	best["hp"] = float(best["hp"]) - 15.0
+	best["flash"] = 0.18
+	dmg_pop.append({"x": float(best["x"]), "y": float(best["y"]) - float(best["r"]), "txt": "15", "t": 0.0})
+	if float(best["hp"]) <= 0.0:
+		score += 6 + wave
+		mobs.erase(best)
+
+
+func _draw_companion() -> void:
+	if GameState.companion_id <= 0:
+		return
+	var cx: float = clampf(px + 64.0, 40.0, W - 40.0)
+	var cy: float = clampf(py + 26.0, 60.0, H - 60.0)
+	var bob: float = sin(_anim_t * 5.0) * 3.0
+	draw_circle(Vector2(cx, cy + bob), 22.0, Color(0.20, 0.85, 0.78, 0.95))
+	draw_circle(Vector2(cx - 7, cy + bob - 6), 4.0, Color(1, 1, 1, 0.9))
+	draw_circle(Vector2(cx + 7, cy + bob - 6), 4.0, Color(1, 1, 1, 0.9))
