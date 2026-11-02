@@ -73,7 +73,7 @@ var _eq_sort := 0
 
 const SHOP_PAGES := [
 	["ПЕРСОНАЖ", ["_build_class_weapons", "_build_class_gallery"]],
-	["ОБРАЗЫ", ["_build_skins", "_build_sets", "_build_avatars"]],
+	["ОБРАЗЫ", ["_build_skins", "_build_sets", "_build_avatars", "_build_companions"]],
 	["РЕЖИМЫ", ["_build_modes", "_build_boosters", "_build_consumables"]],
 	["СНАРЯЖЕНИЕ", ["_build_equipment"]],
 	["ПРОЧЕЕ", ["_build_glyphs", "_build_iap", "_build_crystal_ad_packs", "_build_donations"]],
@@ -1007,3 +1007,30 @@ func _sale_label(base_price: int) -> String:
 	if not Economy.sale_active():
 		return "%d ₽" % base_price
 	return "%d ₽  (-40%%)" % Economy.price_with_sale(base_price)
+
+
+func _build_companions() -> void:
+	var head := Label.new()
+	head.text = tr("КОМПАНЬОНЫ")
+	head.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	head.add_theme_font_size_override("font_size", 18)
+	items_box.add_child(head)
+	var owned: bool = GameState.companion_id >= 3
+	var row := _row_panel("Тень (компаньон)", 
+		(tr("уже с тобой") if owned else tr("25 💎 · атакует врагов рядом")))
+	var btn := Button.new()
+	btn.text = tr("КУПЛЕНО") if owned else tr("КУПИТЬ 25 💎")
+	btn.custom_minimum_size = Vector2(200, 48)
+	btn.disabled = owned
+	btn.pressed.connect(func() -> void:
+		if GameState.crystals < 25:
+			Toast.show(tr("Нужно 25 кристаллов"))
+			return
+		GameState.crystals -= 25
+		GameState.companion_id = 3
+		GameState.save_settings()
+		AudioManager.play("level")
+		Toast.show(tr("Компаньон получен: ТЕНЬ"))
+		_rebuild())
+	items_box.add_child(row)
+	items_box.add_child(btn)

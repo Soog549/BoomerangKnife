@@ -138,7 +138,11 @@ func _draw() -> void:
 		if m["alive"]:
 			draw_circle(m["pos"], 22.0, Color(0.9, 0.3, 0.35))
 	if GameState.companion_id > 0:
-		var ccol := Color(0.25, 0.9, 0.8) if GameState.companion_id == 1 else Color(1.0, 0.75, 0.35)
+		var ccol := Color(0.25, 0.9, 0.8)
+		if GameState.companion_id == 2:
+			ccol = Color(1.0, 0.75, 0.35)
+		elif GameState.companion_id == 3:
+			ccol = Color(0.65, 0.45, 1.0)
 		draw_circle(comp_pos, 20.0, ccol)
 		draw_circle(comp_pos + Vector2(-6, -5), 4.0, Color(1, 1, 1, 0.9))
 	_draw_remote()
