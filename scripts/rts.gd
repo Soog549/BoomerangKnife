@@ -115,7 +115,18 @@ func _spawn(side: int, kind: String) -> void:
 
 
 func _unhandled_input(e: InputEvent) -> void:
-	if over or is_client:
+	if over:
+		return
+	if is_client:
+		if e is InputEventScreenTouch and e.pressed:
+			var cp: Vector2 = e.position
+			if cp.y > H - 210.0 and cp.y < H - 130.0:
+				var uslot: int = int((cp.x - 12) / 176)
+				rpc_id(1, "cmd_upgrade", uslot)
+			elif cp.y > H - 90.0 and cp.y < H - 10.0:
+				var bslot: int = int((cp.x - 12) / 176)
+				rpc_id(1, "cmd_upgrade", 100 + bslot)
+			return
 		return
 	if e is InputEventScreenTouch and e.pressed:
 		var p: Vector2 = e.position
@@ -207,6 +218,31 @@ func _draw_base(b: Dictionary, col: Color) -> void:
 	draw_rect(Rect2(b["x"] - 50, b["y"] - 34, 100, 68), col, false, 3.0)
 	draw_rect(Rect2(b["x"] - 50, b["y"] - 50, 100, 10), Color(0, 0, 0, 0.5))
 	draw_rect(Rect2(b["x"] - 50, b["y"] - 50, 100.0 * float(b["hp"]) / float(b["max"]), 10), col)
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func cmd_upgrade(code: int) -> void:
+	if not multiplayer.is_server():
+		return
+	if code >= 100:
+		var bs: int = code - 100
+		if bs == 0:
+			_build("warrior")
+		elif bs == 1:
+			_build("archer")
+		elif bs == 2:
+			_build("tank")
+		elif bs == 3:
+			_build("hero")
+		return
+	if code == 0:
+		_upgrade("atk")
+	elif code == 1:
+		_upgrade("hp")
+	elif code == 2:
+		_build_structure("barrack")
+	elif code == 3:
+		_build_structure("forge")
 
 
 func _upgrade(kind: String) -> void:
