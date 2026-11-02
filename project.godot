@@ -30,7 +30,7 @@ PauseUI="*res://scripts/pause_ui.gd"
 
 [application]
 
-config/version="1.0.243"
+config/version="1.0.244"
 config/name="BoomerangKnife"
 config/description="Hypercasual boomerang knife arcade: arena, tower defense, duels, endless."
 run/main_scene="res://scenes/main_menu.tscn"

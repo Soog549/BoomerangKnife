@@ -103,6 +103,7 @@ func _rebuild() -> void:
 	_add_stat(tr("Предметы"), ", ".join(PackedStringArray(con_parts)) if not con_parts.is_empty() else "—")
 	_add_equipment_strip()
 	_add_runs()
+	_add_companions()
 	_add_upgrade_hint()
 	_add_identity()
 	_add_nav_tabs()
@@ -588,3 +589,26 @@ func _add_nav_tabs() -> void:
 		else:
 			b.disabled = true
 		bar.add_child(b)
+
+
+func _add_companions() -> void:
+	var head := Label.new()
+	head.text = tr("КОМПАНЬОНЫ")
+	head.add_theme_font_size_override("font_size", 15)
+	head.add_theme_color_override("font_color", Color(1.0, 0.86, 0.45))
+	stats_box.add_child(head)
+	var defs := [
+		[1, "Скит", "за прохождение 1-й локации"],
+		[2, "Аврора", "за цепочку заданий кузнеца"],
+		[3, "Тень", "покупка за 25 кристаллов"],
+	]
+	for d in defs:
+		var id: int = int(d[0])
+		var have: bool = GameState.companion_id >= id
+		var l := Label.new()
+		l.text = "%s %s — %s" % ["✔" if have else "–", str(d[1]), str(d[2])]
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.add_theme_font_size_override("font_size", 13)
+		l.add_theme_color_override("font_color",
+			Color(0.6, 0.95, 0.7) if have else Color(0.72, 0.78, 0.88))
+		stats_box.add_child(l)
