@@ -485,7 +485,7 @@ func _process(dt: float) -> void:
 		return
 	t_anim += dt
 	flash = max(0.0, flash - dt * 2.2)
-	shake = max(0.0, shake - dt * 14.0)
+	shake = max(0.0, shake - dt * 9.0)
 	if slowmo_t > 0.0:
 		slowmo_t -= dt
 		if slowmo_t <= 0.0:
@@ -632,7 +632,7 @@ func _process(dt: float) -> void:
 			var dmg: float = float(p["dmg"])
 			regen_t = 0.0
 			flash = 0.65
-			shake = 2.6
+			shake = 2.0
 			AudioManager.play("hit")
 			if GameState.haptics_ms() > 0:
 				Input.vibrate_handheld(GameState.haptics_ms())

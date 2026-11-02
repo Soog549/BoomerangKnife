@@ -14,13 +14,13 @@ func shake(duration: float = 0.45, strength: float = 5.0) -> void:
 	var cam: Camera2D = scene.get_node("Camera2D")
 	var base := cam.position
 	tween = cam.create_tween()
-	var dur: float = maxf(0.25, duration * 1.4)
+	var dur: float = maxf(0.3, duration * 1.9)
 	var steps: int = 14
 	var phase: float = randf() * TAU
 	for k in steps:
 		var tt: float = float(k) / float(steps)
 		var damp: float = pow(1.0 - tt, 1.8)
-		var off := Vector2(cos(phase + tt * 5.2), sin(phase + tt * 4.4)) * strength * damp * 0.6
+		var off := Vector2(cos(phase + tt * 5.2), sin(phase + tt * 4.4)) * strength * damp * 0.42
 		tween.tween_property(cam, "position", base + off, dur / float(steps))\
 			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(cam, "position", base, dur / float(steps))\
