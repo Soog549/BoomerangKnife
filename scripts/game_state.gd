@@ -2204,20 +2204,41 @@ func location_endings() -> Array:
 
 
 const ENDINGS := {
-	"mercy":   {"name": "Милосердие", "coins": 150, "crystals": 3, "shards": 1},
-	"power":   {"name": "Сила", "coins": 250, "crystals": 0, "shards": 2},
-	"neutral": {"name": "Нейтрал", "coins": 180, "crystals": 1, "shards": 2},
-	"omnivore":{"name": "Всеядный", "coins": 200, "crystals": 0, "shards": 3},
-	"diplomat":{"name": "Дипломат", "coins": 120, "crystals": 5, "shards": 2},
+	"mercy":   {"name": "Милосердие", "coins": 150, "crystals": 3, "shards": 2},
+	"power":   {"name": "Сила", "coins": 250, "crystals": 1, "shards": 3},
+	"neutral": {"name": "Нейтрал", "coins": 180, "crystals": 2, "shards": 2},
+	"omnivore":{"name": "Всеядный", "coins": 200, "crystals": 1, "shards": 4},
+	"diplomat":{"name": "Дипломат", "coins": 120, "crystals": 5, "shards": 1},
 }
+
+
+func difficulty_mult() -> float:
+	match difficulty:
+		"easy":
+			return 1.0
+		"hard":
+			return 1.5
+		"survival":
+			return 1.35
+	return 1.25
+
+
+func ending_reward(kind: String) -> Dictionary:
+	var e: Dictionary = ENDINGS.get(kind, {})
+	var m := difficulty_mult()
+	return {
+		"coins": int(round(float(e.get("coins", 0)) * m)),
+		"crystals": maxi(1, int(round(float(e.get("crystals", 0)) * m))),
+		"shards": maxi(1, int(round(float(e.get("shards", 0)) * m))),
+	}
 
 
 func set_ending(idx: int, kind: String) -> void:
 	loc_endings[str(idx)] = kind
-	var e: Dictionary = ENDINGS.get(kind, {})
-	add_coins(int(e.get("coins", 0)))
-	crystals += int(e.get("crystals", 0))
-	shards += int(e.get("shards", 0))
+	var r: Dictionary = ending_reward(kind)
+	add_coins(int(r["coins"]))
+	crystals += int(r["crystals"])
+	shards += int(r["shards"])
 	save_settings()
 
 

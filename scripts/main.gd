@@ -489,9 +489,10 @@ func _maybe_location_ending() -> void:
 	var order: Array = ["mercy", "power", "neutral", "omnivore", "diplomat"]
 	for kind in order:
 		var e: Dictionary = GameState.ENDINGS[kind]
+		var rr: Dictionary = GameState.ending_reward(kind)
 		var b := Button.new()
 		b.text = "%s  (+%d монет, +%d 💎, +%d осколков)" % [
-			str(e["name"]), int(e["coins"]), int(e["crystals"]), int(e["shards"])]
+			str(e["name"]), int(rr["coins"]), int(rr["crystals"]), int(rr["shards"])]
 		b.custom_minimum_size = Vector2(0, 54)
 		b.add_theme_font_size_override("font_size", 13)
 		var kk: String = str(kind)
