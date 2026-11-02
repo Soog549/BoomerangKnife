@@ -17,17 +17,32 @@ var has_barrack := false
 var has_forge := false
 var win := false
 var _ai_t := 0.0
+var _net_t := 0.0
+var is_client := false
 var _gold_t := 0.0
 var _sel := ""
 
 
 func _ready() -> void:
+	is_client = multiplayer.multiplayer_peer != null and not multiplayer.is_server()
 	set_process(true)
 
 
 func _process(dt: float) -> void:
 	if over:
 		return
+	if is_client:
+		_net_t += dt
+		queue_redraw()
+		return
+	_net_t += dt
+	if multiplayer.multiplayer_peer != null and _net_t >= 0.4:
+		_net_t = 0.0
+		var arr: Array = []
+		for u in units:
+			arr.append({"s": int(u["side"]), "k": str(u["kind"]), "x": float(u["x"]), "y": float(u["y"]),
+				"h": float(u["hp"]), "m": float(u["max"])})
+		rpc("sync_rts", gold, arr, my_base["hp"], enemy_base["hp"], over, win)
 	_gold_t += dt
 	_ai_t += dt
 	if _gold_t >= 1.0:
@@ -100,7 +115,7 @@ func _spawn(side: int, kind: String) -> void:
 
 
 func _unhandled_input(e: InputEvent) -> void:
-	if over:
+	if over or is_client:
 		return
 	if e is InputEventScreenTouch and e.pressed:
 		var p: Vector2 = e.position
@@ -227,3 +242,17 @@ func _build_structure(kind: String) -> void:
 		has_forge = true
 		Toast.show("Кузня: урон +15%")
 	AudioManager.play("level")
+
+
+@rpc("authority", "call_remote", "unreliable_ordered")
+func sync_rts(g: float, arr: Array, my_hp: float, en_hp: float, is_over: bool, is_win: bool) -> void:
+	gold = g
+	my_base["hp"] = my_hp
+	enemy_base["hp"] = en_hp
+	over = is_over
+	win = is_win
+	units.clear()
+	for u in arr:
+		units.append({"side": int(u["s"]), "kind": str(u["k"]), "x": float(u["x"]), "y": float(u["y"]),
+			"hp": float(u["h"]), "max": float(u["m"]), "dmg": 0.0, "rate": 1.0, "spd": 0.0,
+			"rng": 62.0, "cd": 0.0, "t": 0.0})
