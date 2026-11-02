@@ -105,6 +105,7 @@ func _rebuild() -> void:
 	_add_runs()
 	_add_upgrade_hint()
 	_add_identity()
+	_add_nav_tabs()
 	_add_title_and_frame()
 	_add_clans_button()
 
@@ -413,20 +414,6 @@ func _add_clans_button() -> void:
 		AudioManager.play("click")
 		get_tree().change_scene_to_file("res://scenes/progress.tscn"))
 	stats_box.add_child(pr)
-	var ach_btn := Button.new()
-	ach_btn.text = tr("ДОСТИЖЕНИЯ")
-	ach_btn.custom_minimum_size = Vector2(0, 46)
-	ach_btn.pressed.connect(func() -> void:
-		AudioManager.play("click")
-		get_tree().change_scene_to_file("res://scenes/achievements_screen.tscn"))
-	stats_box.add_child(ach_btn)
-	var cs := Button.new()
-	cs.text = tr("СТАТИСТИКА КЛАССОВ")
-	cs.custom_minimum_size = Vector2(0, 46)
-	cs.pressed.connect(func() -> void:
-		AudioManager.play("click")
-		get_tree().change_scene_to_file("res://scenes/class_stats.tscn"))
-	stats_box.add_child(cs)
 
 
 func _title_for_level() -> String:
@@ -570,3 +557,34 @@ func _add_upgrade_hint() -> void:
 	l.add_theme_font_size_override("font_size", 13)
 	l.add_theme_color_override("font_color", Color(0.95, 0.85, 0.45))
 	stats_box.add_child(l)
+
+
+func _add_nav_tabs() -> void:
+	var vp: Vector2 = get_viewport_rect().size
+	var bar := HBoxContainer.new()
+	bar.name = "HeroTabs"
+	bar.add_theme_constant_override("separation", 4)
+	bar.position = Vector2(16, 92)
+	bar.size = Vector2(vp.x - 32, 52)
+	add_child(bar)
+	var tabs := [
+		["ЭКИПИРОВКА", "res://scenes/inventory.tscn"],
+		["ГЛИФЫ", "res://scenes/glyphs.tscn"],
+		["ДОСТИЖЕНИЯ", "res://scenes/achievements_screen.tscn"],
+		["СТАТЫ", "res://scenes/class_stats.tscn"],
+	]
+	for it in tabs:
+		var b := Button.new()
+		b.text = tr(str(it[0]))
+		b.custom_minimum_size = Vector2(0, 48)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", 11)
+		var path: String = str(it[1])
+		if ResourceLoader.exists(path):
+			b.pressed.connect(func() -> void:
+				AudioManager.play("click")
+				GameState.last_hero_scene = path
+				get_tree().change_scene_to_file(path))
+		else:
+			b.disabled = true
+		bar.add_child(b)

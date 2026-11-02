@@ -1604,6 +1604,7 @@ var class_battles: Dictionary = {}
 var class_wins: Dictionary = {}
 var training_mode := false
 var current_location := 0
+var last_hero_scene := ""
 var location_progress: Dictionary = {}
 var loc_endings: Dictionary = {}
 var onboarding_done := false
