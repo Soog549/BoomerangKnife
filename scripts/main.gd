@@ -285,6 +285,7 @@ func _on_target_cleared() -> void:
 	ScoreManager.next_level()
 	levels_completed += 1
 	GameState.track("campaign_levels")
+	GameState.advance_location_level()
 	GameState.track("daily_campaign")
 	_campaign_checkpoint()
 	if levels_completed == 3 or levels_completed == 4:

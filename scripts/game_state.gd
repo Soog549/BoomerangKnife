@@ -1133,6 +1133,12 @@ func load_settings() -> void:
 	chest_day = str(cfg.get_value("settings", "chest_day", ""))
 	theme_light = bool(cfg.get_value("settings", "theme_light", false))
 	onboarding_done = bool(cfg.get_value("settings", "onboarding_done", false))
+	current_location = int(cfg.get_value("settings", "current_location", 0))
+	var _lp = cfg.get_value("settings", "location_progress", "{}")
+	if _lp is String and _lp != "":
+		var _lpp = JSON.parse_string(_lp)
+		if _lpp is Dictionary:
+			location_progress = _lpp
 	var _cw = cfg.get_value("settings", "class_wins", "{}")
 	if _cw is String and _cw != "":
 		var _cwp = JSON.parse_string(_cw)
@@ -1241,6 +1247,8 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "class_wins", JSON.stringify(class_wins))
 	cfg.set_value("settings", "theme_light", theme_light)
 	cfg.set_value("settings", "onboarding_done", onboarding_done)
+	cfg.set_value("settings", "current_location", current_location)
+	cfg.set_value("settings", "location_progress", JSON.stringify(location_progress))
 	cfg.set_value("settings", "mode_progress", JSON.stringify(mode_progress))
 	cfg.set_value("settings", "difficulty", difficulty)
 	cfg.set_value("settings", "selected_skin", selected_skin)
@@ -1589,6 +1597,8 @@ var chest_day := ""
 var class_battles: Dictionary = {}
 var class_wins: Dictionary = {}
 var training_mode := false
+var current_location := 0
+var location_progress: Dictionary = {}
 var onboarding_done := false
 var theme_light := false
 
@@ -2122,3 +2132,62 @@ func ui_bg_color() -> Color:
 
 func ui_fg_color() -> Color:
 	return Color(0.10, 0.12, 0.18, 1.0) if theme_light else Color(0.92, 0.94, 1.0, 1.0)
+
+
+const LOCATIONS := [
+	{"name": "Лесная Опушка", "style": "base", "levels": 5, "desc": "Начало пути, старые песни и обиды."},
+	{"name": "Неоновый Тракт", "style": "cyber", "levels": 6, "desc": "Город торгует памятью на каждом углу."},
+	{"name": "Ледяное Ущелье", "style": "norse", "levels": 7, "desc": "Орден хранит память вмёрзшей."},
+	{"name": "Рубиновая Кузня", "style": "imperial", "levels": 8, "desc": "За силу здесь платят памятью."},
+	{"name": "Тенистая Чаща", "style": "wuxia", "levels": 9, "desc": "Тишина, в которой слышно чужие мысли."},
+	{"name": "Грозовой Пик", "style": "epic", "levels": 10, "desc": "Небо здесь ближе, чем империя."},
+	{"name": "Токсичные Топи", "style": "biomech", "levels": 11, "desc": "Здесь машина говорит голосом предка."},
+	{"name": "Космический Предел", "style": "space", "levels": 12, "desc": "Финал. Разорвать Цикл — или стать им."},
+]
+
+
+func location_levels_done(idx: int) -> int:
+	return int(location_progress.get(str(idx), 0))
+
+
+func location_total(idx: int) -> int:
+	if idx < 0 or idx >= LOCATIONS.size():
+		return 0
+	return int(LOCATIONS[idx]["levels"])
+
+
+func location_unlocked(idx: int) -> bool:
+	if idx <= 0:
+		return true
+	var prev := idx - 1
+	return location_levels_done(prev) >= location_total(prev)
+
+
+func location_completed(idx: int) -> bool:
+	return location_levels_done(idx) >= location_total(idx)
+
+
+func set_location(idx: int) -> void:
+	if not location_unlocked(idx):
+		return
+	current_location = idx
+	style_pack = str(LOCATIONS[idx]["style"])
+	save_settings()
+
+
+func advance_location_level() -> void:
+	var idx := current_location
+	var done := location_levels_done(idx) + 1
+	location_progress[str(idx)] = done
+	save_settings()
+
+
+func location_title(idx: int) -> String:
+	if idx < 0 or idx >= LOCATIONS.size():
+		return ""
+	return str(LOCATIONS[idx]["name"])
+
+
+func location_endings() -> Array:
+	# две концовки на локацию: милосердие/сила — зависят от выбора
+	return ["Милосердие", "Сила"]

@@ -2,7 +2,7 @@ extends Control
 ## КАРТА ИМПЕРИИ — интерактивное меню: иконки-переходы по «территории».
 
 const NODES := [
-	{"t": "◆ КАМПАНИЯ", "s": "res://scenes/game.tscn", "x": 0.18, "y": 0.13},
+	{"t": "◆ КАМПАНИЯ", "s": "res://scenes/locations.tscn", "x": 0.18, "y": 0.13},
 	{"t": "◆ АРЕНА", "s": "res://scenes/mob_arena.tscn", "x": 0.52, "y": 0.11},
 	{"t": "◆ ОБОРОНА", "s": "res://scenes/td.tscn", "x": 0.82, "y": 0.17},
 	{"t": "◆ ДУЭЛЬ", "s": "res://scenes/duel.tscn", "x": 0.20, "y": 0.28},

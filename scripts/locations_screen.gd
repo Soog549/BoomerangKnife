@@ -1,0 +1,70 @@
+extends Control
+
+## Карта кампании: 8 локаций, открытие по прохождению предыдущей.
+
+
+func _ready() -> void:
+	var bg := TextureRect.new()
+	var p := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
+	if ResourceLoader.exists(p):
+		bg.texture = load(p)
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(bg)
+
+	var vp: Vector2 = get_viewport_rect().size
+	var sc := ScrollContainer.new()
+	sc.position = Vector2(24, 24)
+	sc.size = Vector2(vp.x - 48, vp.y - 130)
+	add_child(sc)
+
+	var vb := VBoxContainer.new()
+	vb.custom_minimum_size = Vector2(vp.x - 48, 0)
+	vb.add_theme_constant_override("separation", 10)
+	sc.add_child(vb)
+
+	var title := Label.new()
+	title.text = tr("КАМПАНИЯ · ЛОКАЦИИ")
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 22)
+	title.add_theme_color_override("font_color", GameState.accent())
+	vb.add_child(title)
+
+	for i in GameState.LOCATIONS.size():
+		var loc: Dictionary = GameState.LOCATIONS[i]
+		var unlocked: bool = GameState.location_unlocked(i)
+		var done: int = GameState.location_levels_done(i)
+		var total: int = GameState.location_total(i)
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(0, 84)
+		if unlocked:
+			b.text = "%d. %s   (%d/%d)" % [i + 1, str(loc["name"]), mini(done, total), total]
+			b.add_theme_font_size_override("font_size", 17)
+			var idx: int = i
+			b.pressed.connect(func() -> void:
+				AudioManager.play("click")
+				GameState.set_location(idx)
+				get_tree().change_scene_to_file("res://scenes/game.tscn"))
+		else:
+			b.text = "%d. %s — закрыто (пройди предыдущую)" % [i + 1, str(loc["name"])]
+			b.add_theme_font_size_override("font_size", 14)
+			b.disabled = true
+		vb.add_child(b)
+
+		var d := Label.new()
+		d.text = "    " + str(loc["desc"])
+		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		d.add_theme_font_size_override("font_size", 12)
+		d.add_theme_color_override("font_color", Color(0.75, 0.82, 0.95, 0.9))
+		vb.add_child(d)
+
+	var back := Button.new()
+	back.text = tr("НАЗАД")
+	back.custom_minimum_size = Vector2(200, 52)
+	back.position = Vector2(24, vp.y - 92)
+	back.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		get_tree().change_scene_to_file("res://scenes/empire.tscn"))
+	add_child(back)
