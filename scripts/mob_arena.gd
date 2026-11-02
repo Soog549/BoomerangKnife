@@ -99,6 +99,7 @@ var aim_idx := -1
 var field_bottom := 1180.0
 var damaged := false
 var _ground_mode := false
+var _hud_font: Font = null
 var _rush_mode := false
 var _survival_arena := false
 var _anim_t := 0.0
@@ -118,6 +119,9 @@ var rig_prop_l: Texture2D = null
 var stick_r := 62.0
 
 func _ready() -> void:
+	_hud_font = UIKit.main_font()
+	if _hud_font == null:
+		_hud_font = ThemeDB.fallback_font
 	var dcfg: Dictionary = GameState.duel_config
 	if str(dcfg.get("variant", "")) == "train":
 		var lvl: int = clampi(int(dcfg.get("mob_level", 1)), 1, 3)
@@ -866,7 +870,7 @@ func _draw() -> void:
 	draw_rect(Rect2(bx, by, bw, 18), Color(0.18, 0.10, 0.10, 0.95))
 	var hpr: float = clampf(hp / maxf(1.0, max_hp), 0.0, 1.0)
 	draw_rect(Rect2(bx, by, bw * hpr, 18), GameState.accent())
-	draw_string(ThemeDB.fallback_font, Vector2(bx + 8, by + 14), "%d / %d" % [int(maxf(hp, 0.0)), int(max_hp)],
+	draw_string(_hud_font, Vector2(bx + 8, by + 14), "%d / %d" % [int(maxf(hp, 0.0)), int(max_hp)],
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 1, 1, 0.95))
 	if max_shield > 0.0 and shield > 0.0:
 		var sr: float = clampf(shield / maxf(1.0, max_shield), 0.0, 1.0)
@@ -874,7 +878,7 @@ func _draw() -> void:
 		draw_rect(Rect2(bx - 2, sy - 2, bw + 4, 16), Color(0, 0, 0, 0.5))
 		draw_rect(Rect2(bx, sy, bw, 12), Color(0.10, 0.16, 0.28, 0.95))
 		draw_rect(Rect2(bx, sy, bw * sr, 12), Color(0.35, 0.65, 1.0))
-		draw_string(ThemeDB.fallback_font, Vector2(bx + 8, sy + 11), "%d" % int(shield),
+		draw_string(_hud_font, Vector2(bx + 8, sy + 11), "%d" % int(shield),
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1, 1, 1, 0.9))
 
 	if arena_bg:
@@ -1018,11 +1022,11 @@ func _draw() -> void:
 	draw_rect(Rect2(42, 77, (W - 84) * (shield / max_shield), 6), glow_c)
 	draw_rect(Rect2(40, 56, W - 80, 16), glow_c.darkened(0.4), false, 2.0)
 	draw_rect(Rect2(40, 76, W - 80, 8), glow_c.darkened(0.4), false, 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(44, 44), tr("HP %d/%d   ЩИТ %d") % [int(hp), int(max_hp), int(shield)], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
+	draw_string(_hud_font, Vector2(44, 44), tr("HP %d/%d   ЩИТ %d") % [int(hp), int(max_hp), int(shield)], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
 	if combo > 1:
-		draw_string(ThemeDB.fallback_font, Vector2(0, 240), tr("КОМБО x%d") % combo, HORIZONTAL_ALIGNMENT_CENTER, W, 34, Color(1.0, 0.85, 0.3, minf(1.0, combo_t)))
+		draw_string(_hud_font, Vector2(0, 240), tr("КОМБО x%d") % combo, HORIZONTAL_ALIGNMENT_CENTER, W, 34, Color(1.0, 0.85, 0.3, minf(1.0, combo_t)))
 	if toast_t > 0.0:
-		draw_string(ThemeDB.fallback_font, Vector2(0, 300), toast_text, HORIZONTAL_ALIGNMENT_CENTER, W, 30, Color(toast_col.r, toast_col.g, toast_col.b, minf(1.0, toast_t)))
+		draw_string(_hud_font, Vector2(0, 300), toast_text, HORIZONTAL_ALIGNMENT_CENTER, W, 30, Color(toast_col.r, toast_col.g, toast_col.b, minf(1.0, toast_t)))
 	for r in rings:
 		draw_arc(Vector2(float(r["x"]), float(r["y"])), float(r["rad"]), 0.0, TAU, 28, Color(1, 0.9, 0.5, maxf(0.0, float(r["t"]) / 0.35)), 4.0)
 	var hint := "Тяни в поле - движение · Тап - нож · WASD/Пробел"
@@ -1033,29 +1037,29 @@ func _draw() -> void:
 			hint = tr("WASD/стрелки - движение · ПКМ/пробел - бросок · нажимай и тяни - цель")
 	elif GameState.control_mode == "touch":
 		hint = tr("Тяни в поле - движение · Тап - бросок ножа")
-	draw_string(ThemeDB.fallback_font, Vector2(44, 190), hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.9, 0.8))
-	draw_string(ThemeDB.fallback_font, Vector2(44, 150), tr("СЧЁТ %d · МОНЕТЫ %d · ВОЛНА %d · НОЖИ %d") % [score, coins, wave, ammo], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
+	draw_string(_hud_font, Vector2(44, 190), hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.7, 0.9, 0.8))
+	draw_string(_hud_font, Vector2(44, 150), tr("СЧЁТ %d · МОНЕТЫ %d · ВОЛНА %d · НОЖИ %d") % [score, coins, wave, ammo], HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1, 1, 1))
 	draw_set_transform(Vector2.ZERO)
 	if flash > 0.0:
 		draw_rect(Rect2(0, 0, W, H), Color(1.0, 0.15, 0.2, 0.35 * flash))
 	for dp in dmg_pop:
 		var da: float = 1.0 - float(dp["t"]) / 0.8
-		draw_string(ThemeDB.fallback_font, Vector2(float(dp["x"]) - 12.0, float(dp["y"])), str(dp["txt"]), HORIZONTAL_ALIGNMENT_CENTER, -1, 24, Color(1.0, 0.95, 0.5, da))
+		draw_string(_hud_font, Vector2(float(dp["x"]) - 12.0, float(dp["y"])), str(dp["txt"]), HORIZONTAL_ALIGNMENT_CENTER, -1, 24, Color(1.0, 0.95, 0.5, da))
 	if banner_t > 0.0:
 		var a: float = minf(1.0, banner_t)
 		draw_rect(Rect2(0, H * 0.72, W, 70), Color(0.05, 0.08, 0.12, 0.65 * a))
-		draw_string(ThemeDB.fallback_font, Vector2(0, H * 0.72 + 50), tr("ВОЛНА %d") % banner_n, HORIZONTAL_ALIGNMENT_CENTER, W, 38, Color(0.55, 0.95, 0.75, a))
+		draw_string(_hud_font, Vector2(0, H * 0.72 + 50), tr("ВОЛНА %d") % banner_n, HORIZONTAL_ALIGNMENT_CENTER, W, 38, Color(0.55, 0.95, 0.75, a))
 	if not GameState.arena_tutorial_done:
 		draw_rect(Rect2(0, 0, W, H), Color(0, 0, 0, 0.62))
-		draw_string(ThemeDB.fallback_font, Vector2(0, 420), tr("ЗАЩИТА РУБЕЖА") if GameState.frontier_mode else tr("АРЕНА РАЗЛОМА"), HORIZONTAL_ALIGNMENT_CENTER, W, 40, Color(0.6, 0.95, 0.8))
-		draw_string(ThemeDB.fallback_font, Vector2(0, 500), tr("Тяни по полю — движение"), HORIZONTAL_ALIGNMENT_CENTER, W, 26, Color(1, 1, 1))
-		draw_string(ThemeDB.fallback_font, Vector2(0, 545), tr("Тап — бросок ножа"), HORIZONTAL_ALIGNMENT_CENTER, W, 26, Color(1, 1, 1))
-		draw_string(ThemeDB.fallback_font, Vector2(0, 590), tr("II / ESC — пауза"), HORIZONTAL_ALIGNMENT_CENTER, W, 26, Color(1, 1, 1))
-		draw_string(ThemeDB.fallback_font, Vector2(0, 700), tr("НАЖМИ, ЧТОБЫ НАЧАТЬ"), HORIZONTAL_ALIGNMENT_CENTER, W, 24, Color(1.0, 0.85, 0.3))
+		draw_string(_hud_font, Vector2(0, 420), tr("ЗАЩИТА РУБЕЖА") if GameState.frontier_mode else tr("АРЕНА РАЗЛОМА"), HORIZONTAL_ALIGNMENT_CENTER, W, 40, Color(0.6, 0.95, 0.8))
+		draw_string(_hud_font, Vector2(0, 500), tr("Тяни по полю — движение"), HORIZONTAL_ALIGNMENT_CENTER, W, 26, Color(1, 1, 1))
+		draw_string(_hud_font, Vector2(0, 545), tr("Тап — бросок ножа"), HORIZONTAL_ALIGNMENT_CENTER, W, 26, Color(1, 1, 1))
+		draw_string(_hud_font, Vector2(0, 590), tr("II / ESC — пауза"), HORIZONTAL_ALIGNMENT_CENTER, W, 26, Color(1, 1, 1))
+		draw_string(_hud_font, Vector2(0, 700), tr("НАЖМИ, ЧТОБЫ НАЧАТЬ"), HORIZONTAL_ALIGNMENT_CENTER, W, 24, Color(1.0, 0.85, 0.3))
 	if over:
 		draw_rect(Rect2(0, H * 0.38, W, 180), Color(0, 0, 0, 0.75))
-		draw_string(ThemeDB.fallback_font, Vector2(0, H * 0.38 + 70), tr("ПОРАЖЕНИЕ"), HORIZONTAL_ALIGNMENT_CENTER, W, 46, Color(1, 0.35, 0.35))
-		draw_string(ThemeDB.fallback_font, Vector2(0, H * 0.38 + 120), "Счёт: %d - ЛКМ для рестарта" % score, HORIZONTAL_ALIGNMENT_CENTER, W, 24, Color(1, 1, 1))
+		draw_string(_hud_font, Vector2(0, H * 0.38 + 70), tr("ПОРАЖЕНИЕ"), HORIZONTAL_ALIGNMENT_CENTER, W, 46, Color(1, 0.35, 0.35))
+		draw_string(_hud_font, Vector2(0, H * 0.38 + 120), "Счёт: %d - ЛКМ для рестарта" % score, HORIZONTAL_ALIGNMENT_CENTER, W, 24, Color(1, 1, 1))
 
 func _roll_loot() -> int:
 	var total := 0

@@ -11,6 +11,7 @@ var enemy_base := {"x": W - 120.0, "y": 180.0, "hp": 300.0, "max": 300.0}
 var units: Array = []
 var shots: Array = []
 var over := false
+var _hud_font: Font = null
 var atk_lvl := 0
 var hp_lvl := 0
 var has_barrack := false
@@ -24,6 +25,9 @@ var _sel := ""
 
 
 func _ready() -> void:
+	_hud_font = UIKit.main_font()
+	if _hud_font == null:
+		_hud_font = ThemeDB.fallback_font
 	is_client = multiplayer.multiplayer_peer != null and not multiplayer.is_server()
 	set_process(true)
 
@@ -190,16 +194,16 @@ func _draw() -> void:
 		draw_circle(sp, 7.0, Color(1.0, 0.9, 0.5))
 		draw_line(Vector2(float(s["x"]), float(s["y"])), sp, Color(1.0, 0.85, 0.4, 0.35), 2.0)
 	# HUD
-	draw_string(ThemeDB.fallback_font, Vector2(24, 44), "ЗОЛОТО: %d" % int(gold), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(1, 0.86, 0.45))
+	draw_string(_hud_font, Vector2(24, 44), "ЗОЛОТО: %d" % int(gold), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(1, 0.86, 0.45))
 	var by := H - 150.0
 	var defs := [["ВОИН 40", "warrior"], ["ЛУЧНИК 55", "archer"], ["ТАНК 80", "tank"], ["ГЕРОЙ 120", "hero"]]
 	for i in defs.size():
 		var r := Rect2(12 + i * 176, by, 168, 62)
 		draw_rect(r, Color(0.12, 0.15, 0.22, 0.95))
 		draw_rect(r, Color(0.45, 0.8, 0.75, 0.7), false, 2.0)
-		draw_string(ThemeDB.fallback_font, r.position + Vector2(10, 38), defs[i][0], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 1, 1))
+		draw_string(_hud_font, r.position + Vector2(10, 38), defs[i][0], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 1, 1))
 	if _sel == "base":
-		draw_string(ThemeDB.fallback_font, Vector2(24, by - 16), "База выбрана: коснись поля, чтобы построить юнита", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.9, 1))
+		draw_string(_hud_font, Vector2(24, by - 16), "База выбрана: коснись поля, чтобы построить юнита", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.8, 0.9, 1))
 	# апгрейды
 	var uy: float = H - 72.0
 	var ups := [["АТАКА (%d)" % (60 + 40 * atk_lvl), 0], ["HP (%d)" % (60 + 40 * hp_lvl), 1],
@@ -208,9 +212,9 @@ func _draw() -> void:
 		var ur := Rect2(12 + i * 176, uy, 168, 52)
 		draw_rect(ur, Color(0.16, 0.12, 0.20, 0.95))
 		draw_rect(ur, Color(0.85, 0.7, 0.35, 0.8), false, 2.0)
-		draw_string(ThemeDB.fallback_font, ur.position + Vector2(8, 32), str(ups[i][0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.95, 0.8))
+		draw_string(_hud_font, ur.position + Vector2(8, 32), str(ups[i][0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.95, 0.8))
 	if over:
-		draw_string(ThemeDB.fallback_font, Vector2(W * 0.5 - 140, H * 0.45), "ПОБЕДА" if win else "ПОРАЖЕНИЕ", HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color(1, 0.9, 0.6))
+		draw_string(_hud_font, Vector2(W * 0.5 - 140, H * 0.45), "ПОБЕДА" if win else "ПОРАЖЕНИЕ", HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color(1, 0.9, 0.6))
 
 
 func _draw_base(b: Dictionary, col: Color) -> void:

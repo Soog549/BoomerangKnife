@@ -20,6 +20,7 @@ var quest_killed := 0
 var bubble := ""
 var bubble_t := 0.0
 var cam: Camera2D
+var _hud_font: Font = null
 var _comp_t := 0.0
 var remote: Dictionary = {}
 var net_mobs: Dictionary = {}
@@ -28,6 +29,9 @@ var comp_pos := Vector2(1240, 1240)
 
 
 func _ready() -> void:
+	_hud_font = UIKit.main_font()
+	if _hud_font == null:
+		_hud_font = ThemeDB.fallback_font
 	cam = Camera2D.new()
 	cam.position = player
 	add_child(cam)
@@ -144,7 +148,7 @@ func _draw() -> void:
 	for n in npcs:
 		var p: Vector2 = n["pos"]
 		draw_circle(p, 26.0, Color(0.95, 0.8, 0.4) if n["quest"] else Color(0.55, 0.7, 0.95))
-		draw_string(ThemeDB.fallback_font, p + Vector2(-40, -40), str(n["name"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(1, 1, 1))
+		draw_string(_hud_font, p + Vector2(-40, -40), str(n["name"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(1, 1, 1))
 		if bool(n["quest"]) and quest_state == 0:
 			draw_circle(p + Vector2(0, -58), 8.0, Color(1.0, 0.85, 0.3))
 	# мобы
@@ -167,10 +171,10 @@ func _draw() -> void:
 	# квест-трекер (экранный)
 	var vp: Vector2 = get_viewport_rect().size
 	var top_left: Vector2 = cam.position - vp * 0.5
-	draw_string(ThemeDB.fallback_font, top_left + Vector2(20, 40), "КВЕСТ: %s" % _quest_text(), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(1, 0.86, 0.45))
+	draw_string(_hud_font, top_left + Vector2(20, 40), "КВЕСТ: %s" % _quest_text(), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(1, 0.86, 0.45))
 	if bubble_t > 0.0:
 		draw_rect(Rect2(top_left + Vector2(20, vp.y - 160), Vector2(vp.x - 40, 70)), Color(0, 0, 0, 0.75))
-		draw_string(ThemeDB.fallback_font, top_left + Vector2(34, vp.y - 118), bubble, HORIZONTAL_ALIGNMENT_LEFT, vp.x - 70, 15, Color(1, 1, 1))
+		draw_string(_hud_font, top_left + Vector2(34, vp.y - 118), bubble, HORIZONTAL_ALIGNMENT_LEFT, vp.x - 70, 15, Color(1, 1, 1))
 
 
 func _quest_text() -> String:
@@ -197,7 +201,7 @@ func _draw_remote() -> void:
 	for id in remote.keys():
 		var p: Vector2 = remote[id]
 		draw_circle(p, 26.0, Color(1.0, 0.55, 0.45))
-		draw_string(ThemeDB.fallback_font, p + Vector2(-24, -38), "Игрок", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.9, 0.9))
+		draw_string(_hud_font, p + Vector2(-24, -38), "Игрок", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.9, 0.9))
 
 
 @rpc("authority", "call_remote", "unreliable_ordered")
