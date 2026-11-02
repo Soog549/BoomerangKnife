@@ -9,6 +9,7 @@ var gold := 120.0
 var my_base := {"x": 120.0, "y": H - 180.0, "hp": 300.0, "max": 300.0}
 var enemy_base := {"x": W - 120.0, "y": 180.0, "hp": 300.0, "max": 300.0}
 var units: Array = []
+var shots: Array = []
 var over := false
 var atk_lvl := 0
 var hp_lvl := 0
@@ -53,6 +54,12 @@ func _process(dt: float) -> void:
 			if float(u["cd"]) <= 0.0:
 				u["cd"] = float(u["rate"])
 				target["hp"] = float(target["hp"]) - float(u["dmg"])
+				if str(u["kind"]) == "hero":
+					shots.append({"x": float(u["x"]), "y": float(u["y"]),
+						"tx": float(target["x"]), "ty": float(target["y"]), "t": 0.0})
+	for s in shots:
+		s["t"] += dt
+	shots = shots.filter(func(s): return float(s["t"]) < 0.35)
 	units = units.filter(func(u): return float(u["hp"]) > 0.0)
 	if float(enemy_base["hp"]) <= 0.0:
 		over = true
@@ -150,6 +157,12 @@ func _draw() -> void:
 		draw_circle(Vector2(u["x"], u["y"]), rr2, col)
 		draw_rect(Rect2(u["x"] - 18, u["y"] - 28, 36, 5), Color(0, 0, 0, 0.5))
 		draw_rect(Rect2(u["x"] - 18, u["y"] - 28, 36.0 * float(u["hp"]) / float(u["max"]), 5), Color(0.9, 0.9, 0.4))
+	# снаряды героя
+	for s in shots:
+		var k: float = clampf(float(s["t"]) / 0.35, 0.0, 1.0)
+		var sp := Vector2(float(s["x"]), float(s["y"])).lerp(Vector2(float(s["tx"]), float(s["ty"])), k)
+		draw_circle(sp, 7.0, Color(1.0, 0.9, 0.5))
+		draw_line(Vector2(float(s["x"]), float(s["y"])), sp, Color(1.0, 0.85, 0.4, 0.35), 2.0)
 	# HUD
 	draw_string(ThemeDB.fallback_font, Vector2(24, 44), "ЗОЛОТО: %d" % int(gold), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(1, 0.86, 0.45))
 	var by := H - 150.0
