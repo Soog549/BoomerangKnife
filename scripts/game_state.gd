@@ -2203,12 +2203,21 @@ func location_endings() -> Array:
 	return ["Милосердие", "Сила"]
 
 
+const ENDINGS := {
+	"mercy":   {"name": "Милосердие", "coins": 150, "crystals": 3, "shards": 1},
+	"power":   {"name": "Сила", "coins": 250, "crystals": 0, "shards": 2},
+	"neutral": {"name": "Нейтрал", "coins": 180, "crystals": 1, "shards": 2},
+	"omnivore":{"name": "Всеядный", "coins": 200, "crystals": 0, "shards": 3},
+	"diplomat":{"name": "Дипломат", "coins": 120, "crystals": 5, "shards": 2},
+}
+
+
 func set_ending(idx: int, kind: String) -> void:
 	loc_endings[str(idx)] = kind
-	if kind == "mercy":
-		crystals += 3
-	else:
-		add_coins(250)
+	var e: Dictionary = ENDINGS.get(kind, {})
+	add_coins(int(e.get("coins", 0)))
+	crystals += int(e.get("crystals", 0))
+	shards += int(e.get("shards", 0))
 	save_settings()
 
 
@@ -2217,30 +2226,23 @@ func ending_for(idx: int) -> String:
 
 
 func ending_summary() -> String:
-	var mercy := 0
-	var power := 0
+	var counts: Dictionary = {}
 	for v in loc_endings.values():
-		if str(v) == "mercy":
-			mercy += 1
-		else:
-			power += 1
-	if mercy == 0 and power == 0:
+		var k := str(v)
+		counts[k] = int(counts.get(k, 0)) + 1
+	if counts.is_empty():
 		return ""
-	if mercy > power:
-		return "Империя помнит: Милосердие (%d) против Силы (%d)" % [mercy, power]
-	if power > mercy:
-		return "Империя помнит: Сила (%d) против Милосердия (%d)" % [power, mercy]
-	return "Империя на грани: Милосердие и Сила равны (%d:%d)" % [mercy, power]
-
-
-const EVO := [
-	{"name": "ИСКРА", "need": 0, "desc": "Рождение: первые броски и первые враги."},
-	{"name": "ОРУЖИЕ", "need": 300, "desc": "Крафт и экипировка: собери свой стиль боя."},
-	{"name": "ОТРЯД", "need": 900, "desc": "Гильдия и союзники: сражайся не один."},
-	{"name": "ДЕРЖАВА", "need": 2000, "desc": "Локации и оборона: держи рубежи Империи."},
-	{"name": "ИМПЕРИЯ", "need": 4000, "desc": "Сезоны, рейтинг и память поколений."},
-]
-
+	var names := {"mercy": "Милосердие", "power": "Сила", "neutral": "Нейтрал",
+		"omnivore": "Всеядный", "diplomat": "Дипломат"}
+	var parts: Array = []
+	var best := ""
+	var bestn := -1
+	for k in counts.keys():
+		parts.append("%s %d" % [str(names.get(k, k)), int(counts[k])])
+		if int(counts[k]) > bestn:
+			bestn = int(counts[k])
+			best = str(names.get(k, k))
+	return "Империя помнит: " + ", ".join(PackedStringArray(parts)) + " → путь «%s»" % best
 
 func evo_add(points: int) -> void:
 	evo_points += maxi(1, points)
@@ -2274,3 +2276,12 @@ func evo_progress(idx: int) -> float:
 	if need <= 0:
 		return 1.0
 	return clampf(float(evo_points) / float(need), 0.0, 1.0)
+
+
+const EVO := [
+	{"name": "ИСКРА", "need": 0, "desc": "Рождение: первые броски и первые враги."},
+	{"name": "ОРУЖИЕ", "need": 300, "desc": "Крафт и экипировка: собери свой стиль боя."},
+	{"name": "ОТРЯД", "need": 900, "desc": "Гильдия и союзники: сражайся не один."},
+	{"name": "ДЕРЖАВА", "need": 2000, "desc": "Локации и оборона: держи рубежи Империи."},
+	{"name": "ИМПЕРИЯ", "need": 4000, "desc": "Сезоны, рейтинг и память поколений."},
+]

@@ -486,22 +486,18 @@ func _maybe_location_ending() -> void:
 	t2.add_theme_font_size_override("font_size", 15)
 	vb.add_child(t2)
 
-	var mercy := Button.new()
-	mercy.text = tr("МИЛОСЕРДИЕ (+3 кристалла)")
-	mercy.custom_minimum_size = Vector2(0, 62)
-	mercy.pressed.connect(func() -> void:
-		GameState.set_ending(idx, "mercy")
-		AudioManager.play("level")
-		Toast.show(GameState.ending_summary())
-		get_tree().change_scene_to_file("res://scenes/locations.tscn"))
-	vb.add_child(mercy)
-
-	var power := Button.new()
-	power.text = tr("СИЛА (+250 монет)")
-	power.custom_minimum_size = Vector2(0, 62)
-	power.pressed.connect(func() -> void:
-		GameState.set_ending(idx, "power")
-		AudioManager.play("level")
-		Toast.show(GameState.ending_summary())
-		get_tree().change_scene_to_file("res://scenes/locations.tscn"))
-	vb.add_child(power)
+	var order: Array = ["mercy", "power", "neutral", "omnivore", "diplomat"]
+	for kind in order:
+		var e: Dictionary = GameState.ENDINGS[kind]
+		var b := Button.new()
+		b.text = "%s  (+%d монет, +%d 💎, +%d осколков)" % [
+			str(e["name"]), int(e["coins"]), int(e["crystals"]), int(e["shards"])]
+		b.custom_minimum_size = Vector2(0, 54)
+		b.add_theme_font_size_override("font_size", 13)
+		var kk: String = str(kind)
+		b.pressed.connect(func() -> void:
+			GameState.set_ending(idx, kk)
+			AudioManager.play("level")
+			Toast.show(GameState.ending_summary())
+			get_tree().change_scene_to_file("res://scenes/locations.tscn"))
+		vb.add_child(b)
