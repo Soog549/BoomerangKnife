@@ -20,6 +20,8 @@ var quest_killed := 0
 var bubble := ""
 var bubble_t := 0.0
 var cam: Camera2D
+var _comp_t := 0.0
+var comp_pos := Vector2(1240, 1240)
 
 
 func _ready() -> void:
@@ -45,6 +47,27 @@ func _process(dt: float) -> void:
 			has_target = false
 	cam.position = cam.position.lerp(player, 1.0 - pow(0.001, dt))
 	bubble_t = maxf(0.0, bubble_t - dt)
+	_comp_t += dt
+	if GameState.companion_id > 0:
+		var follow := player + Vector2(-56, 34)
+		comp_pos = comp_pos.lerp(follow, 1.0 - pow(0.002, dt))
+		if _comp_t >= 1.2:
+			_comp_t = 0.0
+			var nearest: Dictionary = {}
+			var nd := 1e9
+			for m in mobs:
+				if m["alive"] and comp_pos.distance_to(m["pos"]) < 220.0:
+					var dd: float = comp_pos.distance_to(m["pos"])
+					if dd < nd:
+						nd = dd
+						nearest = m
+			if not nearest.is_empty():
+				nearest["alive"] = false
+				if quest_state == 1:
+					quest_killed += 1
+					if quest_killed >= 3:
+						quest_state = 2
+						_say("Кузнец", "Вернись к кузнецу — он ждёт.")
 	for m in mobs:
 		if m["alive"]:
 			m["t"] += dt
@@ -78,6 +101,10 @@ func _unhandled_input(e: InputEvent) -> void:
 					GameState.evo_add(50)
 					GameState.save_settings()
 					quest_state = 3
+					if GameState.companion_id < 2:
+						GameState.companion_id = 2
+						GameState.save_settings()
+						_say("АВРОРА", "Теперь я пойду с тобой. Не спорь.")
 				return
 		target = wp
 		has_target = true
@@ -107,6 +134,10 @@ func _draw() -> void:
 	for m in mobs:
 		if m["alive"]:
 			draw_circle(m["pos"], 22.0, Color(0.9, 0.3, 0.35))
+	if GameState.companion_id > 0:
+		var ccol := Color(0.25, 0.9, 0.8) if GameState.companion_id == 1 else Color(1.0, 0.75, 0.35)
+		draw_circle(comp_pos, 20.0, ccol)
+		draw_circle(comp_pos + Vector2(-6, -5), 4.0, Color(1, 1, 1, 0.9))
 	# игрок
 	draw_circle(player, 28.0, GameState.accent())
 	draw_circle(player + Vector2(0, -6), 10.0, Color(1, 1, 1, 0.85))
