@@ -275,3 +275,18 @@ static func items(slot: String) -> Array:
 		out.append(it)
 	_items_cache[slot] = out
 	return out
+
+
+const SALE_UNTIL := "2027-01-07"
+const SALE_DISCOUNT := 0.40
+
+
+static func sale_active() -> bool:
+	var now := Time.get_datetime_string_from_system()
+	return now.substr(0, 10) <= SALE_UNTIL
+
+
+static func price_with_sale(base_price: int) -> int:
+	if not sale_active():
+		return base_price
+	return int(round(float(base_price) * (1.0 - SALE_DISCOUNT)))

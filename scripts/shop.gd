@@ -1002,3 +1002,8 @@ func _rarity_thumb(path: String, px: int, col: Color) -> PanelContainer:
 	tex.texture = load(path)
 	panel.add_child(tex)
 	return panel
+
+func _sale_label(base_price: int) -> String:
+	if not Economy.sale_active():
+		return "%d ₽" % base_price
+	return "%d ₽  (-40%%)" % Economy.price_with_sale(base_price)
