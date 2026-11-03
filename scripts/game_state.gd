@@ -1173,6 +1173,11 @@ func load_settings() -> void:
 		var _up = JSON.parse_string(_un)
 		if _up is Dictionary:
 			units = _up
+	var _cd = cfg.get_value("settings", "campaign_done", "[]")
+	if _cd is String and _cd != "":
+		var _cp = JSON.parse_string(_cd)
+		if _cp is Array:
+			campaign_done = _cp
 	var _rr = cfg.get_value("settings", "recent_runs", "[]")
 	if _rr is String and _rr != "":
 		var _rp = JSON.parse_string(_rr)
@@ -1246,6 +1251,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "recent_runs", JSON.stringify(recent_runs))
 	cfg.set_value("settings", "item_levels", JSON.stringify(item_levels))
 	cfg.set_value("settings", "units", JSON.stringify(units))
+	cfg.set_value("settings", "campaign_done", JSON.stringify(campaign_done))
 	cfg.set_value("settings", "accent_index", accent_index)
 	cfg.set_value("settings", "btn_scale_index", btn_scale_index)
 	cfg.set_value("settings", "ui_alpha", ui_alpha)
@@ -1849,6 +1855,53 @@ func hire_unit(uid: String) -> bool:
 	units[uid] = unit_level(uid) + 1
 	save_settings()
 	return true
+
+
+# --- Кампания-РПГ: эпизоды S1 → режимы-встречи ---
+const CAMPAIGN := [
+	{"ep": "E1", "title": "Возвращение", "scene": "res://scenes/mob_arena.tscn", "flag": ""},
+	{"ep": "E2", "title": "Долг", "scene": "res://scenes/mob_arena.tscn", "flag": "training"},
+	{"ep": "E3", "title": "Рынок", "scene": "res://scenes/quiz.tscn", "flag": ""},
+	{"ep": "E4", "title": "Совет", "scene": "res://scenes/td.tscn", "flag": ""},
+	{"ep": "E5", "title": "Предательство", "scene": "res://scenes/mob_arena.tscn", "flag": "arena"},
+	{"ep": "E6", "title": "Потеря", "scene": "res://scenes/survival.tscn", "flag": ""},
+	{"ep": "E7", "title": "Союз", "scene": "res://scenes/rts.tscn", "flag": ""},
+	{"ep": "E8", "title": "Разлом", "scene": "res://scenes/adventure.tscn", "flag": ""},
+	{"ep": "E9", "title": "Цена", "scene": "res://scenes/mob_arena.tscn", "flag": "arena"},
+	{"ep": "E10", "title": "Выбор", "scene": "res://scenes/locations.tscn", "flag": ""},
+	{"ep": "E11", "title": "Битва", "scene": "res://scenes/rts.tscn", "flag": ""},
+	{"ep": "E12", "title": "Память", "scene": "res://scenes/main_menu.tscn", "flag": ""},
+]
+var campaign_done: Array = []
+
+
+func campaign_done_count() -> int:
+	return campaign_done.size()
+
+
+func campaign_unlocked(idx: int) -> bool:
+	return idx == 0 or (idx - 1) in campaign_done
+
+
+func campaign_complete(idx: int) -> void:
+	if idx not in campaign_done:
+		campaign_done.append(idx)
+		save_settings()
+
+
+func campaign_launch(idx: int) -> void:
+	var e: Dictionary = CAMPAIGN[idx]
+	var flag: String = str(e.get("flag", ""))
+	match flag:
+		"training":
+			training_mode = true
+			last_mode_scene = "res://scenes/mob_arena.tscn"
+		"arena":
+			last_mode_scene = "res://scenes/mob_arena.tscn"
+		_:
+			pass
+	save_settings()
+	get_tree().change_scene_to_file(str(e["scene"]))
 
 
 const ACCENTS := [

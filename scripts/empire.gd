@@ -79,7 +79,8 @@ func _ready() -> void:
 	camp_b.pressed.connect(func() -> void:
 		AudioManager.play("click")
 		_open_mode_sheet("КАМПАНИЯ", [
-			["ЛОКАЦИИ · сюжет S1", "res://scenes/locations.tscn"],
+			["КАМПАНИЯ · эпизоды S1", "res://scenes/campaign.tscn"],
+			["ЛОКАЦИИ · карта", "res://scenes/locations.tscn"],
 			["ПРИКЛЮЧЕНИЕ · компаньоны", "res://scenes/adventure.tscn"],
 		]))
 	add_child(camp_b)
