@@ -48,8 +48,9 @@ func _ready() -> void:
 				GameState.set_location(idx)
 				get_tree().change_scene_to_file("res://scenes/game.tscn"))
 		else:
-			b.text = "%d. %s — закрыто (пройди предыдущую)" % [i + 1, str(loc["name"])]
-			b.add_theme_font_size_override("font_size", 14)
+			var prev_name: String = str(GameState.LOCATIONS[i - 1]["name"]) if i > 0 else "—"
+			b.text = "%d. %s — закрыто\n   нужно пройти: %s (5+ уровней)" % [i + 1, str(loc["name"]), prev_name]
+			b.add_theme_font_size_override("font_size", 13)
 			b.disabled = true
 		# _loc_row — превью стиля + кнопка с цветной рамкой
 		var row := HBoxContainer.new()

@@ -112,6 +112,41 @@ func _ready() -> void:
 		AudioManager.play("click")
 		get_tree().change_scene_to_file("res://scenes/evo.tscn"))
 	add_child(evo_b)
+	var camp_b := Button.new()
+	camp_b.text = tr("КАМПАНИЯ")
+	camp_b.position = Vector2(110, 925.0)
+	camp_b.size = Vector2(160, 52)
+	camp_b.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		_open_mode_sheet("КАМПАНИЯ", [
+			["ЛОКАЦИИ", "res://scenes/locations.tscn"],
+			["ПРИКЛЮЧЕНИЕ", "res://scenes/adventure.tscn"],
+		]))
+	add_child(camp_b)
+	var front_b := Button.new()
+	front_b.text = tr("РУБЕЖ")
+	front_b.position = Vector2(290, 925.0)
+	front_b.size = Vector2(150, 52)
+	front_b.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		_open_mode_sheet("РУБЕЖ", [
+			["АРЕНА · ОБОРОНА · РАШ", "arena"],
+			["ВЫЖИВАНИЕ · СТРАТЕГИЯ", "survival"],
+			["ВИКТОРИНА", "res://scenes/quiz.tscn"],
+		]))
+	add_child(front_b)
+	var world_b := Button.new()
+	world_b.text = tr("МИР")
+	world_b.position = Vector2(460, 925.0)
+	world_b.size = Vector2(110, 52)
+	world_b.pressed.connect(func() -> void:
+		AudioManager.play("click")
+		_open_mode_sheet("МИР", [
+			["ВЫЖИВАНИЕ-МИР", "res://scenes/survival.tscn"],
+			["СЕТЬ · КООП", "res://scenes/network.tscn"],
+			["ЭВОЛЮЦИЯ", "res://scenes/evo.tscn"],
+		]))
+	add_child(world_b)
 	var train := Button.new()
 	train.text = tr("ТРЕНИРОВКА")
 	train.position = Vector2(110, 985.0)
@@ -224,3 +259,37 @@ func _guild_pressed() -> void:
 		Toast.show(tr("ЗАДАНИЕ: зачисти 3 зоны карты (Окраина → Пустошь → Рубеж)"))
 	else:
 		Toast.show(tr("Сейчас заданий нет. Пройди тренировку 5 мишеней в Кампании."))
+
+
+func _open_mode_sheet(title: String, items: Array) -> void:
+	var dlg := AcceptDialog.new()
+	dlg.title = title
+	dlg.ok_button_text = tr("ЗАКРЫТЬ")
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 8)
+	for it in items:
+		var b := Button.new()
+		b.text = str(it[0])
+		b.custom_minimum_size = Vector2(360, 54)
+		var target: String = str(it[1])
+		b.pressed.connect(func() -> void:
+			dlg.hide()
+			_mode_open(target))
+		vb.add_child(b)
+	dlg.add_child(vb)
+	add_child(dlg)
+	dlg.popup_centered()
+
+
+func _mode_open(target: String) -> void:
+	AudioManager.play("click")
+	match target:
+		"arena":
+			GameState.last_mode_scene = "res://scenes/mob_arena.tscn"
+			get_tree().change_scene_to_file("res://scenes/mob_arena.tscn")
+		"survival":
+			GameState.survival_arena = true
+			GameState.last_mode_scene = "res://scenes/mob_arena.tscn"
+			get_tree().change_scene_to_file("res://scenes/mob_arena.tscn")
+		_:
+			get_tree().change_scene_to_file(target)

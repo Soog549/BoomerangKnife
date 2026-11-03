@@ -296,10 +296,11 @@ func _add_bottom_nav() -> void:
 	var vp: Vector2 = get_viewport_rect().size
 	var bar := HBoxContainer.new()
 	bar.name = "BottomNav"
-	bar.add_theme_constant_override("separation", 6)
-	bar.position = Vector2(16, vp.y - 92)
-	bar.size = Vector2(vp.x - 32, 76)
+	bar.add_theme_constant_override("separation", 4)
+	bar.position = Vector2(10, vp.y - 92)
+	bar.size = Vector2(vp.x - 20, 76)
 	add_child(bar)
+	var _bw: float = (vp.x - 20.0 - 12.0) / 4.0
 
 	var items := [
 		["ИГРАТЬ", "res://scenes/empire.tscn"],
@@ -310,9 +311,10 @@ func _add_bottom_nav() -> void:
 	for it in items:
 		var b := Button.new()
 		b.text = tr(str(it[0]))
-		b.custom_minimum_size = Vector2(0, 72)
-		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.add_theme_font_size_override("font_size", 14)
+		b.custom_minimum_size = Vector2(_bw, 72)
+		b.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		b.clip_text = true
+		b.add_theme_font_size_override("font_size", 13)
 		var path: String = str(it[1])
 		b.pressed.connect(func() -> void:
 			AudioManager.play("click")
