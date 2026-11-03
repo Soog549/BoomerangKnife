@@ -72,101 +72,48 @@ func _ready() -> void:
 	sl.add_theme_color_override("font_color", Color(1.0, 0.86, 0.5))
 	sl.position = Vector2(24, 132.0)
 	add_child(sl)
-	var adv_b := Button.new()
-	adv_b.text = tr("ПРИКЛЮЧЕНИЕ")
-	adv_b.position = Vector2(250, 985.0)
-	adv_b.size = Vector2(160, 56)
-	adv_b.pressed.connect(func() -> void:
-		AudioManager.play("click")
-		get_tree().change_scene_to_file("res://scenes/adventure.tscn"))
-	add_child(adv_b)
-	var surv_b := Button.new()
-	surv_b.text = tr("ВЫЖИВАНИЕ-МИР")
-	surv_b.position = Vector2(110, 1040.0)
-	surv_b.size = Vector2(160, 52)
-	surv_b.pressed.connect(func() -> void:
-		AudioManager.play("click")
-		get_tree().change_scene_to_file("res://scenes/survival.tscn"))
-	add_child(surv_b)
-	var quiz_b := Button.new()
-	quiz_b.text = tr("ВИКТОРИНА")
-	quiz_b.position = Vector2(430, 1040.0)
-	quiz_b.size = Vector2(140, 52)
-	quiz_b.pressed.connect(func() -> void:
-		AudioManager.play("click")
-		get_tree().change_scene_to_file("res://scenes/quiz.tscn"))
-	add_child(quiz_b)
-	var rts_b := Button.new()
-	rts_b.text = tr("СТРАТЕГИЯ")
-	rts_b.position = Vector2(560, 985.0)
-	rts_b.size = Vector2(140, 56)
-	rts_b.pressed.connect(func() -> void:
-		AudioManager.play("click")
-		get_tree().change_scene_to_file("res://scenes/rts.tscn"))
-	add_child(rts_b)
-	var evo_b := Button.new()
-	evo_b.text = tr("ЭВОЛЮЦИЯ")
-	evo_b.position = Vector2(430, 985.0)
-	evo_b.size = Vector2(140, 56)
-	evo_b.pressed.connect(func() -> void:
-		AudioManager.play("click")
-		get_tree().change_scene_to_file("res://scenes/evo.tscn"))
-	add_child(evo_b)
 	var camp_b := Button.new()
 	camp_b.text = tr("КАМПАНИЯ")
-	camp_b.position = Vector2(110, 925.0)
-	camp_b.size = Vector2(160, 52)
+	camp_b.position = Vector2(24, 985.0)
+	camp_b.size = Vector2(210, 56)
 	camp_b.pressed.connect(func() -> void:
 		AudioManager.play("click")
 		_open_mode_sheet("КАМПАНИЯ", [
-			["ЛОКАЦИИ", "res://scenes/locations.tscn"],
-			["ПРИКЛЮЧЕНИЕ", "res://scenes/adventure.tscn"],
+			["ЛОКАЦИИ · сюжет S1", "res://scenes/locations.tscn"],
+			["ПРИКЛЮЧЕНИЕ · компаньоны", "res://scenes/adventure.tscn"],
 		]))
 	add_child(camp_b)
 	var front_b := Button.new()
 	front_b.text = tr("РУБЕЖ")
-	front_b.position = Vector2(290, 925.0)
-	front_b.size = Vector2(150, 52)
+	front_b.position = Vector2(246, 985.0)
+	front_b.size = Vector2(210, 56)
 	front_b.pressed.connect(func() -> void:
 		AudioManager.play("click")
 		_open_mode_sheet("РУБЕЖ", [
-			["АРЕНА · ОБОРОНА · РАШ", "arena"],
-			["ВЫЖИВАНИЕ · СТРАТЕГИЯ", "survival"],
-			["ВИКТОРИНА", "res://scenes/quiz.tscn"],
+			["АРЕНА · волны", "arena"],
+			["ОБОРОНА · башня", "td"],
+			["РАШ · натиск", "rush"],
+			["ВЫЖИВАНИЕ · арена", "survival"],
+			["СТРАТЕГИЯ · RTS", "rts"],
+			["ТРЕНИРОВКА", "training"],
+			["ВИКТОРИНА", "quiz"],
 		]))
 	add_child(front_b)
 	var world_b := Button.new()
 	world_b.text = tr("МИР")
-	world_b.position = Vector2(460, 925.0)
-	world_b.size = Vector2(110, 52)
+	world_b.position = Vector2(468, 985.0)
+	world_b.size = Vector2(228, 56)
 	world_b.pressed.connect(func() -> void:
 		AudioManager.play("click")
-		_open_mode_sheet("МИР", [
-			["ВЫЖИВАНИЕ-МИР", "res://scenes/survival.tscn"],
-			["СЕТЬ · КООП", "res://scenes/network.tscn"],
-			["ЭВОЛЮЦИЯ", "res://scenes/evo.tscn"],
-		]))
+		var items := [
+			["ВЫЖИВАНИЕ-МИР · DS", "survival_world"],
+			["СЕТЬ · кооп/дуэль", "network"],
+			["ЭВОЛЮЦИЯ", "evo"],
+		]
+		if GameState.chest_available():
+			items.append(["СУНДУК", "chest"])
+		_open_mode_sheet("МИР", items))
 	add_child(world_b)
-	var train := Button.new()
-	train.text = tr("ТРЕНИРОВКА")
-	train.position = Vector2(110, 985.0)
-	train.size = Vector2(140, 56)
-	train.pressed.connect(func() -> void:
-		GameState.training_mode = true
-		AudioManager.play("click")
-		get_tree().change_scene_to_file("res://scenes/mob_arena.tscn"))
-	add_child(train)
-	if GameState.chest_available():
-		var chest := Button.new()
-		chest.text = tr("🎁 СУНДУК")
-		chest.position = Vector2(290, 985.0)
-		chest.size = Vector2(150, 56)
-		chest.pressed.connect(func() -> void:
-			AudioManager.play("level")
-			var rew: Dictionary = GameState.claim_chest()
-			Toast.show(tr("Сундук: %s") % str(rew.get("amount", 0)))
-			get_tree().reload_current_scene())
-		add_child(chest)
 	if GameState.can_claim_daily():
 		var gift := Button.new()
 		gift.text = tr("ПОДАРОК")
@@ -287,9 +234,33 @@ func _mode_open(target: String) -> void:
 		"arena":
 			GameState.last_mode_scene = "res://scenes/mob_arena.tscn"
 			get_tree().change_scene_to_file("res://scenes/mob_arena.tscn")
+		"rush":
+			GameState.rush_mode = true
+			GameState.last_mode_scene = "res://scenes/mob_arena.tscn"
+			get_tree().change_scene_to_file("res://scenes/mob_arena.tscn")
 		"survival":
 			GameState.survival_arena = true
 			GameState.last_mode_scene = "res://scenes/mob_arena.tscn"
 			get_tree().change_scene_to_file("res://scenes/mob_arena.tscn")
+		"training":
+			GameState.training_mode = true
+			GameState.last_mode_scene = "res://scenes/mob_arena.tscn"
+			get_tree().change_scene_to_file("res://scenes/mob_arena.tscn")
+		"td":
+			get_tree().change_scene_to_file("res://scenes/td.tscn")
+		"rts":
+			get_tree().change_scene_to_file("res://scenes/rts.tscn")
+		"quiz":
+			get_tree().change_scene_to_file("res://scenes/quiz.tscn")
+		"survival_world":
+			get_tree().change_scene_to_file("res://scenes/survival.tscn")
+		"network":
+			get_tree().change_scene_to_file("res://scenes/network.tscn")
+		"evo":
+			get_tree().change_scene_to_file("res://scenes/evo.tscn")
+		"chest":
+			var rew: Dictionary = GameState.claim_chest()
+			Toast.show(tr("Сундук: %s") % str(rew.get("amount", 0)))
+			get_tree().reload_current_scene()
 		_:
 			get_tree().change_scene_to_file(target)
