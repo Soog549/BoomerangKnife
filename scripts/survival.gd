@@ -219,19 +219,36 @@ func _draw() -> void:
 		var p: Vector2 = n["pos"]
 		match str(n["type"]):
 			"tree":
-				draw_rect(Rect2(p.x - 8, p.y - 40, 16, 40), Color(0.42, 0.28, 0.18))
-				draw_circle(p + Vector2(0, -46), 26.0, Color(0.20, 0.55, 0.30))
+				draw_circle(p + Vector2(6, 2), 22.0, Color(0, 0, 0, 0.18))
+				draw_rect(Rect2(p.x - 7, p.y - 44, 14, 46), Color(0.40, 0.26, 0.16))
+				draw_rect(Rect2(p.x - 7, p.y - 44, 6, 46), Color(0.30, 0.19, 0.11))
+				draw_circle(p + Vector2(0, -54), 26.0, Color(0.16, 0.48, 0.24))
+				draw_circle(p + Vector2(-14, -44), 18.0, Color(0.20, 0.56, 0.30))
+				draw_circle(p + Vector2(14, -44), 18.0, Color(0.20, 0.56, 0.30))
+				draw_circle(p + Vector2(0, -64), 16.0, Color(0.30, 0.68, 0.38))
 			"stone":
-				draw_circle(p, 20.0, Color(0.55, 0.58, 0.62))
+				draw_circle(p + Vector2(4, 5), 20.0, Color(0, 0, 0, 0.18))
+				var rock := PackedVector2Array([
+					p + Vector2(-18, 6), p + Vector2(-10, -14), p + Vector2(6, -18),
+					p + Vector2(18, -6), p + Vector2(16, 12), p + Vector2(0, 18),
+					p + Vector2(-14, 14)])
+				draw_colored_polygon(rock, Color(0.52, 0.56, 0.62))
+				draw_circle(p + Vector2(-6, -6), 6.0, Color(0.70, 0.74, 0.80))
 			"berry":
-				draw_circle(p, 14.0, Color(0.85, 0.25, 0.45))
+				draw_circle(p, 16.0, Color(0.24, 0.44, 0.28))
+				for bi in 5:
+					var ba: float = TAU * float(bi) / 5.0 + 0.4
+					draw_circle(p + Vector2(cos(ba), sin(ba)) * 8.0, 4.5, Color(0.90, 0.22, 0.42))
+				draw_circle(p, 4.0, Color(0.98, 0.42, 0.54))
 	# тени
 	for s in shadows:
 		draw_circle(s["pos"], 24.0, Color(0.15, 0.05, 0.25, 0.85))
 		draw_circle(s["pos"] + Vector2(-8, -4), 4.0, Color(0.9, 0.3, 0.9))
-	# игрок
-	draw_circle(player, 22.0, GameState.accent())
-	draw_circle(player + Vector2(0, -5), 8.0, Color(1, 1, 1, 0.9))
+	# игрок — человечек
+	draw_circle(player + Vector2(0, 14), 16.0, Color(0, 0, 0, 0.25))
+	draw_circle(player + Vector2(0, 4), 13.0, GameState.accent())
+	draw_circle(player + Vector2(0, -14), 9.0, Color(0.96, 0.85, 0.72))
+	draw_circle(player + Vector2(0, -16), 3.0, Color(0.15, 0.15, 0.2))
 	# HUD
 	var vp: Vector2 = get_viewport_rect().size
 	var tl: Vector2 = cam.position - vp * 0.5

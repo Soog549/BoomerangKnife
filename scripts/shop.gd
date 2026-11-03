@@ -28,17 +28,17 @@ func _fix_layout() -> void:
 	wallet_label.offset_bottom = 152.0
 	earn_btn.offset_top = 156.0
 	earn_btn.offset_bottom = 196.0
-	earn_btn.offset_left = 80.0
-	earn_btn.offset_right = -80.0
+	earn_btn.offset_left = 16.0
+	earn_btn.offset_right = -16.0
 	crystal_earn_btn.offset_top = 200.0
 	crystal_earn_btn.offset_bottom = 236.0
-	crystal_earn_btn.offset_left = 80.0
-	crystal_earn_btn.offset_right = -80.0
+	crystal_earn_btn.offset_left = 16.0
+	crystal_earn_btn.offset_right = -16.0
 	var sc := get_node_or_null("Scroll")
 	if sc:
 		sc.offset_top = 248.0
-		sc.offset_left = 80.0
-		sc.offset_right = -80.0
+		sc.offset_left = 16.0
+		sc.offset_right = -16.0
 		sc.offset_bottom = -120.0
 	# НАЗАД — к реальному низу экрана (а не к 1280 на высоких устройствах)
 	var vp: Vector2 = get_viewport_rect().size

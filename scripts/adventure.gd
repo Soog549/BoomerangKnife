@@ -147,27 +147,36 @@ func _draw() -> void:
 	# NPC
 	for n in npcs:
 		var p: Vector2 = n["pos"]
-		draw_circle(p, 26.0, Color(0.95, 0.8, 0.4) if n["quest"] else Color(0.55, 0.7, 0.95))
-		draw_string(_hud_font, p + Vector2(-40, -40), str(n["name"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(1, 1, 1))
+		var ncol: Color = Color(0.95, 0.8, 0.4) if n["quest"] else Color(0.55, 0.7, 0.95)
+		draw_circle(p + Vector2(0, 20), 20.0, Color(0, 0, 0, 0.22))
+		draw_circle(p + Vector2(0, 8), 18.0, ncol)
+		draw_circle(p + Vector2(0, -12), 11.0, Color(0.96, 0.85, 0.72))
+		draw_string(_hud_font, p + Vector2(-40, -34), str(n["name"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(1, 1, 1))
 		if bool(n["quest"]) and quest_state == 0:
-			draw_circle(p + Vector2(0, -58), 8.0, Color(1.0, 0.85, 0.3))
+			draw_circle(p + Vector2(0, -60), 8.0, Color(1.0, 0.85, 0.3))
 	# мобы
 	for m in mobs:
 		if m["alive"]:
-			draw_circle(m["pos"], 22.0, Color(0.9, 0.3, 0.35))
+			draw_circle(m["pos"] + Vector2(0, 14), 16.0, Color(0, 0, 0, 0.22))
+			draw_circle(m["pos"], 20.0, Color(0.8, 0.22, 0.28))
+			draw_circle(m["pos"] + Vector2(-7, -4), 4.0, Color(1, 0.9, 0.4))
+			draw_circle(m["pos"] + Vector2(7, -4), 4.0, Color(1, 0.9, 0.4))
 	if GameState.companion_id > 0:
 		var ccol := Color(0.25, 0.9, 0.8)
 		if GameState.companion_id == 2:
 			ccol = Color(1.0, 0.75, 0.35)
 		elif GameState.companion_id == 3:
 			ccol = Color(0.65, 0.45, 1.0)
-		draw_circle(comp_pos, 20.0, ccol)
-		draw_circle(comp_pos + Vector2(-6, -5), 4.0, Color(1, 1, 1, 0.9))
+		draw_circle(comp_pos + Vector2(0, 16), 16.0, Color(0, 0, 0, 0.22))
+		draw_circle(comp_pos + Vector2(0, 4), 14.0, ccol)
+		draw_circle(comp_pos + Vector2(0, -12), 9.0, Color(0.96, 0.85, 0.72))
 	_draw_net_mobs()
 	_draw_remote()
-	# игрок
-	draw_circle(player, 28.0, GameState.accent())
-	draw_circle(player + Vector2(0, -6), 10.0, Color(1, 1, 1, 0.85))
+	# игрок — человечек
+	draw_circle(player + Vector2(0, 20), 20.0, Color(0, 0, 0, 0.25))
+	draw_circle(player + Vector2(0, 6), 17.0, GameState.accent())
+	draw_circle(player + Vector2(0, -14), 11.0, Color(0.96, 0.85, 0.72))
+	draw_circle(player + Vector2(0, -16), 3.5, Color(0.15, 0.15, 0.2))
 	# квест-трекер (экранный)
 	var vp: Vector2 = get_viewport_rect().size
 	var top_left: Vector2 = cam.position - vp * 0.5
