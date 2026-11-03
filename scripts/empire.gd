@@ -110,9 +110,10 @@ func _ready() -> void:
 		AudioManager.play("click")
 		var items := [
 			["ВЫЖИВАНИЕ-МИР · DS", "survival_world"],
-			["СЕТЬ · кооп/дуэль", "network"],
 			["ЭВОЛЮЦИЯ", "evo"],
 		]
+		if OS.get_name() != "Web":
+			items.insert(1, ["СЕТЬ · кооп/дуэль", "network"])
 		if GameState.chest_available():
 			items.append(["СУНДУК", "chest"])
 		_open_mode_sheet("МИР", items))

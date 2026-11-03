@@ -172,6 +172,7 @@ func _draw() -> void:
 	var vp: Vector2 = get_viewport_rect().size
 	var top_left: Vector2 = cam.position - vp * 0.5
 	draw_string(_hud_font, top_left + Vector2(20, 40), "КВЕСТ: %s" % _quest_text(), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(1, 0.86, 0.45))
+	draw_string(_hud_font, top_left + Vector2(20, 64), tr("Тап по NPC — говорить · тап по земле — идти"), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.6, 0.8, 0.75, 0.9))
 	if bubble_t > 0.0:
 		draw_rect(Rect2(top_left + Vector2(20, vp.y - 160), Vector2(vp.x - 40, 70)), Color(0, 0, 0, 0.75))
 		draw_string(_hud_font, top_left + Vector2(34, vp.y - 118), bubble, HORIZONTAL_ALIGNMENT_LEFT, vp.x - 70, 15, Color(1, 1, 1))
