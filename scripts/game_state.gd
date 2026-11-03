@@ -1160,6 +1160,11 @@ func load_settings() -> void:
 		var _ip = JSON.parse_string(_il)
 		if _ip is Dictionary:
 			item_levels = _ip
+	var _un = cfg.get_value("settings", "units", "{}")
+	if _un is String and _un != "":
+		var _up = JSON.parse_string(_un)
+		if _up is Dictionary:
+			units = _up
 	var _rr = cfg.get_value("settings", "recent_runs", "[]")
 	if _rr is String and _rr != "":
 		var _rp = JSON.parse_string(_rr)
@@ -1232,6 +1237,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "haptics_level", haptics_level)
 	cfg.set_value("settings", "recent_runs", JSON.stringify(recent_runs))
 	cfg.set_value("settings", "item_levels", JSON.stringify(item_levels))
+	cfg.set_value("settings", "units", JSON.stringify(units))
 	cfg.set_value("settings", "accent_index", accent_index)
 	cfg.set_value("settings", "btn_scale_index", btn_scale_index)
 	cfg.set_value("settings", "ui_alpha", ui_alpha)
@@ -1585,6 +1591,7 @@ var continue_mode := ""
 var haptics_level := 2
 var recent_runs: Array = []
 var item_levels: Dictionary = {}
+var units: Dictionary = {}
 var accent_index := 0
 var btn_scale_index := 1
 var ui_alpha := 0.75
@@ -1796,6 +1803,42 @@ func upgrade_item(eq_id: String) -> bool:
 	if not spend_coins(cost):
 		return false
 	item_levels[eq_id] = item_level(eq_id) + 1
+	save_settings()
+	return true
+
+
+# --- Казарма: юниты (найм/прокачка) ---
+const UNIT_TYPES := [
+	{"id": "warrior", "name": "Воин", "cost": 120, "desc": "Ближний бой, крепкий"},
+	{"id": "archer", "name": "Лучник", "cost": 100, "desc": "Дальний бой, хрупкий"},
+	{"id": "tank", "name": "Танк", "cost": 180, "desc": "Щит, держит удар"},
+	{"id": "mage", "name": "Маг", "cost": 220, "desc": "Урон по площади"},
+]
+
+
+func unit_level(uid: String) -> int:
+	return int(units.get(uid, 0))
+
+
+func unit_hire_cost(uid: String) -> int:
+	var base: int = 120
+	for u in UNIT_TYPES:
+		if str(u["id"]) == uid:
+			base = int(u["cost"])
+			break
+	var lvl := unit_level(uid)
+	if lvl <= 0:
+		return base
+	return int(base * 0.6 * (1.0 + float(lvl)))
+
+
+func hire_unit(uid: String) -> bool:
+	var cost := unit_hire_cost(uid)
+	if coins < cost:
+		return false
+	if not spend_coins(cost):
+		return false
+	units[uid] = unit_level(uid) + 1
 	save_settings()
 	return true
 
