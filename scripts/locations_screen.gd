@@ -40,7 +40,8 @@ func _ready() -> void:
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(0, 84)
 		if unlocked:
-			b.text = "%d. %s   (%d/%d)" % [i + 1, str(loc["name"]), mini(done, total), total]
+			var ep: String = str(loc.get("ep", ""))
+			b.text = "%d. %s   (%d/%d)%s" % [i + 1, str(loc["name"]), mini(done, total), total, ("  ·  " + ep if ep != "" else "")]
 			b.add_theme_font_size_override("font_size", 17)
 			var idx: int = i
 			b.pressed.connect(func() -> void:
