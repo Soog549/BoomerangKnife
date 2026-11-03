@@ -14,6 +14,26 @@ html, body, #canvas {
 <script src="/sdk.js"></script>
 <script>
 /*
+ * Yandex.Metrika counter для BoomerangKnife.
+ * METRIKA_ID — вставь сюда ID счётчика из metrika.yandex.ru (напр. 98765432).
+ * Пока 0 — счётчик не грузится, события reachGoal игнорируются (без ошибок).
+ */
+window.__METRIKA_ID = 0;
+(function () {
+  if (!window.__METRIKA_ID) { return; }
+  (function (m, e, t, r, i, k, a) {
+    m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
+    m[i].l = 1 * new Date();
+    k = e.createElement(t); a = e.getElementsByTagName(t)[0];
+    k.async = 1; k.src = r; a.parentNode.insertBefore(k, a);
+  })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+  window.ym(window.__METRIKA_ID, "init", {
+    clickmap: false, trackLinks: false, accurateTrackBounce: false, webvisor: false
+  });
+})();
+</script>
+<script>
+/*
  * Yandex Games SDK bridge для BoomerangKnife (Godot 4.7 Web export).
  * Вставляется в <head> экспортируемого index.html (настройка html/head_include).
  *
@@ -72,6 +92,14 @@ html, body, #canvas {
         gb.ysdk.features.LoadingAPI.ready();
       }
     } catch (e) {}
+  };
+  /* Яндекс.Метрика: цель = игровое событие. Вызывается из GDScript (Telemetry). */
+  gb.reachGoal = function (goal, params) {
+    try {
+      if (window.__METRIKA_ID && window.ym) {
+        window.ym(window.__METRIKA_ID, 'reachGoal', goal, params || {});
+      }
+    } catch (e) { console.warn('[YSDK] reachGoal', e); }
   };
   gb.gameplayStart = function () {
     try {

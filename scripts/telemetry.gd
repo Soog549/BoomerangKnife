@@ -11,6 +11,7 @@ var _started := 0
 func _ready() -> void:
 	_started = int(Time.get_unix_time_from_system())
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	event("session_start", {"platform": OS.get_name()})
 
 
 func event(name: String, data: Dictionary = {}) -> void:
@@ -22,6 +23,17 @@ func event(name: String, data: Dictionary = {}) -> void:
 	})
 	if _events.size() > _max:
 		_events = _events.slice(_events.size() - _max)
+	_mirror_remote(name, data)
+
+
+## Зеркалит событие в Яндекс.Метрику (reachGoal) на web-платформе.
+## Вне web / без счётчика (__METRIKA_ID == 0) — бездействует.
+func _mirror_remote(name: String, data: Dictionary) -> void:
+	if OS.get_name() != "Web":
+		return
+	var params_json: String = JSON.stringify(data)
+	var call: String = 'window.__gb && window.__gb.reachGoal ? window.__gb.reachGoal("%s", %s) : null' % [name, params_json]
+	JavaScriptBridge.eval(call)
 
 
 func error(msg: String, ctx: Dictionary = {}) -> void:
