@@ -96,6 +96,7 @@ func _ready() -> void:
 			["ВЫЖИВАНИЕ · арена", "survival"],
 			["СТРАТЕГИЯ · RTS", "rts"],
 			["КАЗАРМА · юниты", "res://scenes/barracks.tscn"],
+			["КУЗНИЦА · улучшение", "res://scenes/forge.tscn"],
 			["ТРЕНИРОВКА", "training"],
 			["ВИКТОРИНА", "quiz"],
 		]))
