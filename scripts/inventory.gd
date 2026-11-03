@@ -19,11 +19,11 @@ func _fix_layout() -> void:
 	var sc := get_node_or_null("Scroll")
 	if sc != null:
 		sc.position = Vector2(UIKit.M, 112)
-		sc.size = Vector2(UIKit.W - UIKit.M * 2.0, 1030)
+		sc.size = Vector2(UIKit.W - UIKit.M * 2.0, 918)
 		sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	var hint := get_node_or_null("HintLabel")
 	if hint != null:
-		hint.position = Vector2(UIKit.M, 30)
+		hint.position = Vector2(UIKit.M, 1042)
 	var spots := {
 		"ShopButton": Vector2(UIKit.M, 1152),
 		"ClearButton": Vector2(UIKit.M + 216, 1152),
