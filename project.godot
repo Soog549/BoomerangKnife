@@ -31,7 +31,7 @@ PauseUI="*res://scripts/pause_ui.gd"
 
 [application]
 
-config/version="1.0.265"
+config/version="1.0.267"
 config/name="BoomerangKnife"
 config/description="Hypercasual boomerang knife arcade: arena, tower defense, duels, endless."
 run/main_scene="res://scenes/main_menu.tscn"
@@ -47,7 +47,8 @@ window/size/viewport_height=1280
 #window/size/window_height_override=640  # probe: native 720 for screenshots
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep"
-window/handheld/orientation=1
+window/size/resizable=true
+window/handheld/orientation=6
 
 [gui]
 
@@ -65,5 +66,5 @@ ui_cancel={
 
 renderer/rendering_method="mobile"
 renderer/rendering_method.mobile="mobile"
-environment/defaults/default_clear_color=Color(0.13, 0.13, 0.2, 1)
+environment/defaults/default_clear_color=Color(0.10, 0.11, 0.18, 1)
 textures/vram_compression/import_etc2_astc=true

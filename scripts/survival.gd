@@ -243,16 +243,42 @@ func _draw() -> void:
 	draw_string(hud, tl + Vector2(18, 108), "ДЕРЕВО %d · КАМЕНЬ %d · ЯГОДЫ %d" % [wood, stone, berries],
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.85, 0.9, 1.0))
 	# крафт-панель
-	var by: float = vp.y - 96.0
-	var names := ["КОСТЁР 10д", "НОЖ 5д+3к", "ЕДА", "СОН"]
+	var by: float = vp.y - 108.0
 	for i in 4:
-		var r := Rect2(tl.x + 10 + i * (vp.x / 4.0), tl.y + by, vp.x / 4.0 - 14, 78)
+		var r := Rect2(tl.x + 10 + i * (vp.x / 4.0), tl.y + by, vp.x / 4.0 - 14, 92)
+		var ci := _craft_info(i)
+		var ok: bool = bool(ci.get("ok", false))
 		draw_rect(r, Color(0.10, 0.12, 0.18, 0.94))
-		draw_rect(r, Color(0.4, 0.8, 0.75, 0.6), false, 2.0)
-		draw_string(hud, r.position + Vector2(8, 44), names[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1))
+		var bcol := Color(0.4, 0.8, 0.75, 0.8) if ok else Color(0.55, 0.3, 0.3, 0.8)
+		draw_rect(r, bcol, false, 2.0)
+		draw_string(hud, r.position + Vector2(8, 30), str(ci["name"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1))
+		var ccol := Color(0.85, 0.9, 1.0) if ok else Color(1.0, 0.5, 0.5)
+		draw_string(hud, r.position + Vector2(8, 58), str(ci["cost"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 11, ccol)
+		if not ok:
+			draw_string(hud, r.position + Vector2(8, 78), str(ci.get("need", "")), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.4, 0.4))
 	if dead:
 		draw_rect(Rect2(tl.x, tl.y, vp.x, vp.y), Color(0, 0, 0, 0.7))
 		draw_string(hud, tl + Vector2(vp.x * 0.5 - 150, vp.y * 0.45), "ДЕНЬ ПОТЕРЯН", HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color(1, 0.6, 0.5))
+
+
+func _craft_info(i: int) -> Dictionary:
+	match i:
+		0:
+			var ok: bool = (not has_camp) and wood >= 10
+			return {"name": "КОСТЁР", "cost": "10 ДЕРЕВА · есть %d" % wood, "ok": ok,
+				"need": ("ГОТОВО" if has_camp else "не хватает %d дерева" % maxi(0, 10 - wood))}
+		1:
+			var ok: bool = (not has_knife) and wood >= 5 and stone >= 3
+			return {"name": "НОЖ", "cost": "5Д + 3К · есть %d/%d" % [wood, stone], "ok": ok,
+				"need": ("ГОТОВО" if has_knife else "не хватает ресурсов")}
+		2:
+			var ok: bool = berries >= 1
+			return {"name": "ЕДА (+25)", "cost": "1 ЯГОДА · есть %d" % berries, "ok": ok,
+				"need": ("" if ok else "не хватает ягод")}
+		_:
+			var ok: bool = has_camp
+			return {"name": "СОН", "cost": "до утра", "ok": ok,
+				"need": ("нужен костёр" if not ok else "иди к костру")}
 
 
 func _bar(pos: Vector2, w: float, v: float, col: Color) -> void:
