@@ -110,8 +110,7 @@ func _normalize_layout() -> void:
 	var bb := get_node_or_null("Center/VBox/BackButton")
 	if bb is Button:
 		var b := bb as Button
-		b.get_parent().remove_child(b)
-		add_child(b)
+		b.reparent(self)
 		b.position = Vector2(UIKit.M, UIKit.H - UIKit.M - UIKit.BTN_H)
 		b.size = Vector2(200.0, UIKit.BTN_H)
 
@@ -464,8 +463,7 @@ func _wrap_in_scroll() -> void:
 	sc.offset_bottom = -100.0
 	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(sc)
-	vb.get_parent().remove_child(vb)
-	sc.add_child(vb)
+	vb.reparent(sc)
 	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	center.visible = false
 
