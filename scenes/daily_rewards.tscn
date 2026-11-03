@@ -34,7 +34,7 @@ columns = 7
 offset_left = 16.0
 offset_top = 120.0
 offset_right = 704.0
-offset_bottom = 400.0
+offset_bottom = 240.0
 
 [node name="ClaimButton" type="Button" parent="."]
 anchors_preset = 8
@@ -50,9 +50,9 @@ text = "ЗАБРАТЬ НАГРАДУ"
 
 [node name="Message" type="Label" parent="."]
 offset_left = 16.0
-offset_top = 420.0
+offset_top = 248.0
 offset_right = 700.0
-offset_bottom = 460.0
+offset_bottom = 288.0
 text = ""
 horizontal_alignment = 1
 
@@ -68,17 +68,17 @@ text = " НАЗАД"
 
 [node name="QuestTitle" type="Label" parent="."]
 offset_left = 16.0
-offset_top = 470.0
+offset_top = 298.0
 offset_right = 700.0
-offset_bottom = 500.0
+offset_bottom = 328.0
 text = "ЕЖЕДНЕВНЫЙ КВЕСТ"
 horizontal_alignment = 1
 
 [node name="QuestLabel" type="Label" parent="."]
 offset_left = 16.0
-offset_top = 500.0
+offset_top = 328.0
 offset_right = 700.0
-offset_bottom = 530.0
+offset_bottom = 358.0
 text = ""
 horizontal_alignment = 1
 

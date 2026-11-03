@@ -15,7 +15,7 @@ func _ready() -> void:
 	GameState.record_login()
 	var vp: Vector2 = get_viewport_rect().size
 	var wheel_w: float = 400.0
-	var wheel_y: float = vp.y - 470.0
+	var wheel_y: float = vp.y - 680.0
 	var wheel := FortuneWheel.new()
 	wheel.position = Vector2((vp.x - wheel_w) * 0.5, wheel_y)
 	wheel.size = Vector2(wheel_w, wheel_w)
