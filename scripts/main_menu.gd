@@ -294,39 +294,36 @@ func _continue_mode(mode: String) -> void:
 
 func _add_bottom_nav() -> void:
 	var vp: Vector2 = get_viewport_rect().size
-	var bar := HBoxContainer.new()
-	bar.name = "BottomNav"
-	bar.add_theme_constant_override("separation", 4)
-	bar.position = Vector2(10, vp.y - 92)
-	bar.size = Vector2(vp.x - 20, 76)
-	add_child(bar)
-	var _bw: float = (vp.x - 20.0 - 12.0) / 4.0
-
 	var items := [
 		["ИГРАТЬ", "res://scenes/empire.tscn"],
 		["ГЕРОЙ", "res://scenes/profile.tscn"],
 		["МАГАЗИН", "res://scenes/shop.tscn"],
 		["ЕЩЁ", "res://scenes/settings.tscn"],
 	]
-	for it in items:
+	var gap := 8.0
+	var left := 10.0
+	var bw: float = (vp.x - left * 2.0 - gap * 3.0) / 4.0
+	for i in items.size():
 		var b := Button.new()
-		b.text = tr(str(it[0]))
-		b.custom_minimum_size = Vector2(_bw, 72)
-		b.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		b.name = "Nav%s" % str(i)
+		b.text = tr(str(items[i][0]))
+		b.position = Vector2(left + i * (bw + gap), vp.y - 92.0)
+		b.size = Vector2(bw, 72.0)
 		b.clip_text = true
 		b.add_theme_font_size_override("font_size", 13)
-		var path: String = str(it[1])
+		var path: String = str(items[i][1])
 		b.pressed.connect(func() -> void:
 			AudioManager.play("click")
 			get_tree().change_scene_to_file(path))
-		bar.add_child(b)
-		if str(it[0]) == "МАГАЗИН" and GameState.daily_ready_count() > 0:
+		add_child(b)
+		if str(items[i][0]) == "МАГАЗИН" and GameState.daily_ready_count() > 0:
 			var dot := Label.new()
 			dot.text = "●"
 			dot.add_theme_font_size_override("font_size", 18)
 			dot.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
-			dot.position = Vector2(b.position.x + b.size.x - 18.0, b.position.y - 6.0)
-			bar.add_child(dot)
+			dot.position = b.position + Vector2(bw - 20.0, -6.0)
+			dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			add_child(dot)
 
 func _apply_style_bg() -> void:
 	var p := "res://assets/images/packs/%s/bg.jpg" % GameState.style_pack
