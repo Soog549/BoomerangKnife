@@ -900,8 +900,17 @@ func _draw() -> void:
 			draw_texture_rect(tx, Rect2(-msz * 0.5, -msz * 0.5, msz, msz), false)
 			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		else:
-			draw_circle(Vector2(mx, my), mr, m["col"])
-			draw_circle(Vector2(mx, my), mr * 0.55, Color(0.05, 0.05, 0.08, 0.8))
+			# нет спрайта — рисуем «существо»: шипы + глаз (а не голый круг)
+			var mc: Color = m["col"]
+			for si in 8:
+				var a: float = TAU * float(si) / 8.0 + _anim_t * 2.2
+				var inner := Vector2(mx + cos(a) * mr * 0.72, my + sin(a) * mr * 0.72)
+				var tip := Vector2(mx + cos(a) * mr * 1.28, my + sin(a) * mr * 1.28)
+				draw_line(inner, tip, mc.darkened(0.15), 3.0)
+			draw_circle(Vector2(mx, my), mr, mc.darkened(0.25))
+			draw_circle(Vector2(mx, my), mr * 0.62, Color(0.05, 0.06, 0.09, 0.94))
+			draw_circle(Vector2(mx - mr * 0.12, my - mr * 0.12), mr * 0.24, mc.lightened(0.5))
+			draw_circle(Vector2(mx - mr * 0.12, my - mr * 0.12), mr * 0.1, Color(1, 1, 1, 0.9))
 		var fl: float = float(m.get("flash", 0.0))
 		if fl > 0.0:
 			draw_circle(Vector2(mx, my), mr + 2.0, Color(1, 1, 1, minf(0.9, fl * 4.0)))
