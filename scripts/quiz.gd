@@ -27,12 +27,34 @@ func _ready() -> void:
 	vb.size = Vector2(vp.x - 64, vp.y - 160)
 	vb.add_theme_constant_override("separation", 12)
 	add_child(vb)
+	var dots := Label.new()
+	dots.name = "ProgressDots"
+	dots.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dots.position = Vector2(0, vp.y - 320)
+	dots.size = Vector2(vp.x, 40)
+	dots.add_theme_font_size_override("font_size", 26)
+	dots.add_theme_color_override("font_color", Color(0.45, 0.75, 0.9))
+	add_child(dots)
+	var hint := Label.new()
+	hint.text = tr("Выбери правильный ответ · награда за 4+ из 5")
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.position = Vector2(0, vp.y - 200)
+	hint.size = Vector2(vp.x, 30)
+	hint.add_theme_font_size_override("font_size", 15)
+	hint.add_theme_color_override("font_color", Color(0.6, 0.7, 0.85, 0.85))
+	add_child(hint)
 	_render()
 
 
 func _render() -> void:
 	for c in vb.get_children():
 		c.queue_free()
+	var pd := get_node_or_null("ProgressDots")
+	if pd is Label:
+		var s := ""
+		for i in QS.size():
+			s += ("●" if i < idx else ("◉" if i == idx else "○")) + "  "
+		(pd as Label).text = s
 	var vp: Vector2 = get_viewport_rect().size
 	var t := Label.new()
 	t.text = "ВИКТОРИНА · ВОПРОС %d/%d" % [mini(idx + 1, QS.size()), QS.size()]
