@@ -17,6 +17,7 @@ Fader="*res://scripts/fader.gd"
 DeviceFit="*res://scripts/device_fit.gd"
 BackGuard="*res://scripts/back_guard.gd"
 NetManager="*res://scripts/net_manager.gd"
+PostFX="*res://scripts/post_fx.gd"
 TestRunner="*res://scripts/test_runner.gd"
 Assets="*res://scripts/asset_manager.gd"
 OnlineService="*res://scripts/online_service.gd"
@@ -30,7 +31,7 @@ PauseUI="*res://scripts/pause_ui.gd"
 
 [application]
 
-config/version="1.0.262"
+config/version="1.0.263"
 config/name="BoomerangKnife"
 config/description="Hypercasual boomerang knife arcade: arena, tower defense, duels, endless."
 run/main_scene="res://scenes/main_menu.tscn"

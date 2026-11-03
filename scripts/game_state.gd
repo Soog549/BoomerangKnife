@@ -1132,6 +1132,7 @@ func load_settings() -> void:
 	damage_numbers = bool(cfg.get_value("settings", "damage_numbers", true))
 	chest_day = str(cfg.get_value("settings", "chest_day", ""))
 	theme_light = bool(cfg.get_value("settings", "theme_light", false))
+	postfx_enabled = bool(cfg.get_value("settings", "postfx_enabled", true))
 	onboarding_done = bool(cfg.get_value("settings", "onboarding_done", false))
 	current_location = int(cfg.get_value("settings", "current_location", 0))
 	var _le = cfg.get_value("settings", "loc_endings", "{}")
@@ -1251,6 +1252,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "class_battles", JSON.stringify(class_battles))
 	cfg.set_value("settings", "class_wins", JSON.stringify(class_wins))
 	cfg.set_value("settings", "theme_light", theme_light)
+	cfg.set_value("settings", "postfx_enabled", postfx_enabled)
 	cfg.set_value("settings", "onboarding_done", onboarding_done)
 	cfg.set_value("settings", "current_location", current_location)
 	cfg.set_value("settings", "location_progress", JSON.stringify(location_progress))
@@ -1613,6 +1615,7 @@ var location_progress: Dictionary = {}
 var loc_endings: Dictionary = {}
 var onboarding_done := false
 var theme_light := false
+var postfx_enabled := true
 
 
 func mode_save(mode: String, data: Dictionary) -> void:
@@ -2138,6 +2141,11 @@ func buy_all_affordable(limit: int = 6) -> int:
 				bought += 1
 	save_settings()
 	return bought
+
+
+func toggle_postfx() -> void:
+	postfx_enabled = not postfx_enabled
+	save_settings()
 
 
 func ui_bg_color() -> Color:

@@ -598,6 +598,7 @@ func _add_extra_rows() -> void:
 	vb.add_child(_prow(tr("РАЗМЕР КНОПОК"), _btn_scale_name(), _cycle_btn_scale))
 	vb.add_child(_prow(tr("ПРОЗРАЧНОСТЬ"), "%d%%" % int(round(GameState.ui_alpha * 100.0)), _cycle_alpha))
 	vb.add_child(_prow(tr("КРУПНЫЙ ТЕКСТ"), tr("ВКЛ") if GameState.big_text else tr("ВЫКЛ"), _toggle_big))
+	vb.add_child(_prow(tr("КИНО-ЭФФЕКТ"), tr("ВКЛ") if GameState.postfx_enabled else tr("ВЫКЛ"), _toggle_postfx))
 	vb.add_child(_prow(tr("КОНТРАСТ"), tr("ВКЛ") if GameState.high_contrast else tr("ВЫКЛ"), _toggle_contrast))
 
 	var how := Button.new()
@@ -765,3 +766,11 @@ func hide_legacy_bg() -> void:
 			var nm := str(c.name).to_lower()
 			if nm.contains("bg") or nm.contains("background"):
 				(c as TextureRect).visible = false
+
+
+func _toggle_postfx(_d: int) -> void:
+	GameState.toggle_postfx()
+	if has_node("/root/PostFX"):
+		get_node("/root/PostFX").call("_apply")
+	AudioManager.play("click")
+	_rebuild_settings()
