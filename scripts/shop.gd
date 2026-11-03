@@ -902,13 +902,14 @@ func _build_class_gallery() -> void:
 
 func _build_page_tabs() -> void:
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 6)
+	row.add_theme_constant_override("separation", 3)
 	for i in SHOP_PAGES.size():
 		var b := Button.new()
 		b.text = tr(str(SHOP_PAGES[i][0]))
-		b.custom_minimum_size = Vector2(0, 44)
+		b.custom_minimum_size = Vector2(0, 42)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.add_theme_font_size_override("font_size", 13)
+		b.clip_text = true
+		b.add_theme_font_size_override("font_size", 11)
 		b.disabled = i == _shop_page
 		var idx: int = i
 		b.pressed.connect(func() -> void:

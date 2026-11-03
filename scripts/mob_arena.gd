@@ -1008,7 +1008,8 @@ func _draw() -> void:
 		draw_circle(joy_origin, stick_r, Color(0.15, 0.18, 0.25, 0.55))
 		draw_arc(joy_origin, stick_r, 0.0, TAU, 32, Color(0.4, 0.8, 1.0, 0.6), 2.0)
 		draw_circle(joy_origin + joy_vec * stick_r, 22.0, Color(0.4, 0.8, 1.0, 0.85))
-	# HUD
+	# HUD — подложка, чтобы мобы не перекрывали текст
+	draw_rect(Rect2(0, 0, W, 232), Color(0.05, 0.06, 0.10, 0.5))
 	draw_set_transform(Vector2(0, 40))
 	draw_rect(Rect2(40, 56, W - 80, 16), Color(0.12, 0.12, 0.18))
 	var ratio: float = hp / max_hp
