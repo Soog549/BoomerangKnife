@@ -67,15 +67,13 @@ func _ready() -> void:
 		vb.add_child(l2)
 
 	for d in Economy.DONATIONS:
-		var b := Button.new()
-		b.text = "%s — %s" % [str(d.label), str(d.desc)]
-		b.custom_minimum_size = Vector2(0, 46)
-		b.add_theme_font_size_override("font_size", 13)
-		var url := str(d.url)
-		b.pressed.connect(func() -> void:
-			AudioManager.play("click")
-			OS.shell_open(url))
-		vb.add_child(b)
+		var l := Label.new()
+		l.text = "%s: %s" % [str(d.label), str(d.get("handle", ""))]
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.custom_minimum_size = Vector2(0, 40)
+		l.add_theme_font_size_override("font_size", 13)
+		l.add_theme_color_override("font_color", Color(0.6, 0.9, 0.75))
+		vb.add_child(l)
 
 	var back := Button.new()
 	back.text = tr("НАЗАД")

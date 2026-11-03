@@ -47,12 +47,12 @@ func _ready() -> void:
 		a.add_theme_color_override("font_color", Color(0.82, 0.88, 0.96))
 		vb.add_child(a)
 
-	var tg := Button.new()
-	tg.text = tr("НАПИСАТЬ В TELEGRAM")
+	var tg := Label.new()
+	tg.text = tr("Сообщество Яндекс Игр: Telegram @VGSnaPorohe")
+	tg.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	tg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	tg.custom_minimum_size = Vector2(0, 48)
-	tg.pressed.connect(func() -> void:
-		AudioManager.play("click")
-		OS.shell_open("https://t.me/VGSnaPorohe"))
+	tg.add_theme_color_override("font_color", Color(0.6, 0.9, 0.75))
 	vb.add_child(tg)
 
 	var back := Button.new()

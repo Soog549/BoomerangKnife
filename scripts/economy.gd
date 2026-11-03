@@ -182,11 +182,8 @@ const CRYSTAL_AD_PACKS := [
 # биллинг на функции GameState.purchase_iap().
 const DONATIONS_ONLY := true
 const DONATIONS := [
-	{"label": "Boosty", "url": "https://boosty.to/wsoorld", "desc": "Подписка и разовые донаты"},
-	{"label": "DonationAlerts", "url": "https://www.donationalerts.com/r/wsoorld", "desc": "Разовый донат"},
-	{"label": "Telegram", "url": "https://t.me/VGSnaPorohe", "desc": "Сборы и новости"},
-	{"label": "Серия / Канал", "url": "https://t.me/VGSnaPorohe", "desc": "Сериал и сторителлинг"},
-	{"label": "itch.io", "url": "https://soogtusk.itch.io", "desc": "Страница игры"},
+	{"label": "Telegram", "handle": "@VGSnaPorohe", "desc": "Сообщество Яндекс Игр: сборы и новости"},
+	{"label": "ВКонтакте", "handle": "yandexgames", "desc": "Сообщество Яндекс Игр"},
 ]
 const IAP_PACKS := [
 	{"id": "starter",   "label": "Стартовый набор",  "desc": "500 монет + 10 кристаллов",

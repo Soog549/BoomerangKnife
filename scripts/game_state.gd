@@ -1887,9 +1887,8 @@ const TRACKER_GROUPS := [
 	{
 		"name": "СООБЩЕСТВО",
 		"items": [
-			{"key": "link_tg", "label": "Подписка на Telegram", "target": 1},
-			{"key": "link_boosty", "label": "Поддержка на Boosty", "target": 1},
-			{"key": "link_itch", "label": "Страница itch.io", "target": 1},
+			{"key": "reviews_written", "label": "Отзывов оставлено", "target": 1},
+			{"key": "daily_arena", "label": "Сыграно в арене", "target": 3},
 		],
 	},
 	{

@@ -765,31 +765,20 @@ func _build_donations() -> void:
 	header.add_theme_font_size_override("font_size", 24)
 	items_box.add_child(header)
 	var note := Label.new()
-	note.text = tr("Покупки за рубли временно отключены. Поддержка — по ссылкам ниже.")
+	note.text = tr("Покупки за рубли — скоро. Найти нас:")
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	items_box.add_child(note)
 	for d: Dictionary in Economy.DONATIONS:
 		var row := HBoxContainer.new()
 		row.add_child(_row_panel(str(d.label), str(d.desc)))
-		var btn := Button.new()
-		btn.text = tr("Открыть")
-		btn.custom_minimum_size = Vector2(140, 48)
-		btn.pressed.connect(func() -> void:
-			AudioManager.play("level")
-			GameState.mark_supporter()
-			Telemetry.event("donate_click", {"channel": str(d.label)})
-			var url := str(d.url)
-			if url.contains("t.me"):
-				GameState.track("link_tg")
-			elif url.contains("boosty"):
-				GameState.track("link_boosty")
-			elif url.contains("itch.io"):
-				GameState.track("link_itch")
-			OS.shell_open(url)
-			_note("Спасибо за поддержку! Вы — Меценат Империи.")
-			_rebuild())
-		row.add_child(btn)
+		var lbl := Label.new()
+		lbl.text = "%s: %s" % [str(d.label), str(d.get("handle", ""))]
+		lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		lbl.custom_minimum_size = Vector2(170, 48)
+		lbl.add_theme_color_override("font_color", Color(0.6, 0.9, 0.75))
+		lbl.add_theme_font_size_override("font_size", 13)
+		row.add_child(lbl)
 		items_box.add_child(row)
 
 
