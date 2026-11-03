@@ -725,6 +725,14 @@ func add_shards(amount: int) -> void:
 	stats_changed.emit()
 	_schedule_save()
 
+func spend_shards(amount: int) -> bool:
+	if shards < amount:
+		return false
+	shards -= amount
+	stats_changed.emit()
+	_schedule_save()
+	return true
+
 ## Дневной кап осколков за дуэли.
 ## Daily cap for duel shards.
 const DUEL_SHARDS_DAILY_CAP := 10
