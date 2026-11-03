@@ -42,6 +42,7 @@ func _ready() -> void:
 	if hud == null:
 		hud = ThemeDB.fallback_font
 	_gen_world()
+	_load_world()
 	queue_redraw()
 
 
@@ -67,6 +68,7 @@ func _process(dt: float) -> void:
 	if phase >= 1.0:
 		phase -= 1.0
 		day += 1
+		_save_world()
 	is_night = phase >= (DAY_LEN / total)
 	# голод
 	hunger = maxf(0.0, hunger - dt * (100.0 / 480.0))
@@ -88,8 +90,8 @@ func _process(dt: float) -> void:
 	for s in shadows:
 		s["pos"] += (player - s["pos"]).normalized() * 46.0 * dt
 		if s["pos"].distance_to(player) < 40.0:
-			hp -= dt * 6.0
-			sanity = maxf(0.0, sanity - dt * 2.0)
+			hp -= dt * 4.0
+			sanity = maxf(0.0, sanity - dt * 1.4)
 	# движение
 	if has_target:
 		var d := target - player
@@ -144,6 +146,7 @@ func _unhandled_input(e: InputEvent) -> void:
 			for s in shadows:
 				if wp.distance_to(s["pos"]) < 110.0:
 					s["hp"] = float(s["hp"]) - 12.0
+					FX.impact("crit")
 			shadows = shadows.filter(func(x): return float(x["hp"]) > 0.0)
 		target = wp
 		has_target = true
@@ -191,6 +194,7 @@ func _craft(slot: int) -> void:
 			hp = minf(100.0, hp + 25.0)
 			sanity = minf(100.0, sanity + 30.0)
 			shadows.clear()
+			_save_world()
 			Toast.show("Ты отдохнул")
 
 
@@ -254,3 +258,30 @@ func _draw() -> void:
 func _bar(pos: Vector2, w: float, v: float, col: Color) -> void:
 	draw_rect(Rect2(pos, Vector2(w, 12)), Color(0, 0, 0, 0.55))
 	draw_rect(Rect2(pos, Vector2(w * clampf(v, 0.0, 1.0), 12)), col)
+
+
+func _save_world() -> void:
+	GameState.mode_save("survival_world", {
+		"day": day, "hp": hp, "hunger": hunger, "sanity": sanity,
+		"wood": wood, "stone": stone, "berries": berries,
+		"has_knife": has_knife, "has_camp": has_camp,
+		"camp_x": camp.x, "camp_y": camp.y,
+	})
+
+
+func _load_world() -> void:
+	if not GameState.mode_has("survival_world"):
+		return
+	var s: Dictionary = GameState.mode_load("survival_world")
+	day = int(s.get("day", 1))
+	hp = float(s.get("hp", 100.0))
+	hunger = float(s.get("hunger", 100.0))
+	sanity = float(s.get("sanity", 100.0))
+	wood = int(s.get("wood", 0))
+	stone = int(s.get("stone", 0))
+	berries = int(s.get("berries", 0))
+	has_knife = bool(s.get("has_knife", false))
+	has_camp = bool(s.get("has_camp", false))
+	if has_camp:
+		camp = Vector2(float(s.get("camp_x", player.x)), float(s.get("camp_y", player.y)))
+	Toast.show("Лагерь восстановлен: день %d" % day)

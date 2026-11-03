@@ -282,6 +282,8 @@ func _continue_mode(mode: String) -> void:
 			_go("res://scenes/td.tscn")
 		"duel":
 			_go("res://scenes/duel.tscn")
+		"survival_world":
+			_go("res://scenes/survival.tscn")
 		_:
 			GameState.frontier_mode = mode == "frontier"
 			GameState.rush_mode = mode == "rush"

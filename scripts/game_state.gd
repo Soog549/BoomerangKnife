@@ -1648,6 +1648,8 @@ func mode_label(mode: String) -> String:
 			return tr("БОСС-РАШ")
 		"survival":
 			return tr("ВЫЖИВАНИЕ")
+		"survival_world":
+			return tr("ВЫЖИВАНИЕ-МИР")
 		"td":
 			return tr("ОБОРОНА")
 		"duel":
