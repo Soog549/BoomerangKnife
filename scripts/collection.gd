@@ -108,12 +108,12 @@ func _cell(row: Array, path: String, idx: int, by_ach: bool) -> Control:
 	var tex := TextureRect.new()
 	var use_path := path
 	if not by_ach:
-		var warts2: Array = ["world_forest", "world_steppe", "world_ruin", "world_abyss",
-			"world_neon", "world_ice", "world_electro", "world_cosmos"]
+		var warts2: Array = ["world_forest", "world_ruby", "world_shadow", "world_toxic",
+			"world_neon", "world_ice", "world_elektro", "world_cosmos"]
 		use_path = "res://assets/images/worlds/%s.png" % str(warts2[idx % warts2.size()])
 	if not by_ach and not ResourceLoader.exists(use_path):
-		var warts: Array = ["world_forest", "world_steppe", "world_ruin", "world_abyss",
-			"world_neon", "world_ice", "world_electro", "world_cosmos"]
+		var warts: Array = ["world_forest", "world_ruby", "world_shadow", "world_toxic",
+			"world_neon", "world_ice", "world_elektro", "world_cosmos"]
 		var wp := "res://assets/images/worlds/%s.png" % str(warts[idx % warts.size()])
 		if ResourceLoader.exists(wp):
 			use_path = wp

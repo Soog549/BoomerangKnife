@@ -242,6 +242,8 @@ func _draw() -> void:
 	_bar(tl + Vector2(18, 80), 200, sanity / 100.0, Color(0.5, 0.75, 1.0))
 	draw_string(hud, tl + Vector2(18, 108), "ДЕРЕВО %d · КАМЕНЬ %d · ЯГОДЫ %d" % [wood, stone, berries],
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.85, 0.9, 1.0))
+	draw_string(hud, tl + Vector2(18, 130), tr("Тап по ресурсу — собрать · тап по земле — идти"),
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.6, 0.8, 0.75, 0.9))
 	# крафт-панель
 	var by: float = vp.y - 108.0
 	for i in 4:
