@@ -38,7 +38,7 @@ func back(root: Control, scene: String) -> void:
 	var b := Button.new()
 	b.text = "← НАЗАД"
 	b.custom_minimum_size = Vector2(200, BTN_H)
-	b.position = Vector2(M, H - M - BTN_H)
+	b.position = Vector2(M, H - M - BTN_H - 48.0)
 	b.pressed.connect(func() -> void: get_tree().change_scene_to_file(scene))
 	root.add_child(b)
 
@@ -57,7 +57,7 @@ func normalize(root: Node, top: float = 96.0) -> void:
 		(items as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var bb := root.get_node_or_null("BackButton")
 	if bb is Button:
-		(bb as Button).position = Vector2(M, H - M - BTN_H)
+		(bb as Button).position = Vector2(M, H - M - BTN_H - 48.0)
 		(bb as Button).size = Vector2(200.0, BTN_H)
 
 
