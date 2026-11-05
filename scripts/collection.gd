@@ -233,7 +233,7 @@ func _render(col: VBoxContainer) -> void:
 	var pager := HBoxContainer.new()
 	pager.add_theme_constant_override("separation", 8)
 	var prev := Button.new()
-	prev.text = "◀"
+	prev.text = "<"
 	prev.custom_minimum_size = Vector2(70, 44)
 	prev.disabled = _coll_page <= 0
 	prev.pressed.connect(func() -> void:
@@ -246,7 +246,7 @@ func _render(col: VBoxContainer) -> void:
 	mid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pager.add_child(mid)
 	var nxt := Button.new()
-	nxt.text = "▶"
+	nxt.text = ">"
 	nxt.custom_minimum_size = Vector2(70, 44)
 	nxt.disabled = _coll_page >= pages - 1
 	nxt.pressed.connect(func() -> void:

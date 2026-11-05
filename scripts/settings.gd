@@ -187,7 +187,7 @@ func _prow(title: String, value: String, cb: Callable) -> HBoxContainer:
 	l.custom_minimum_size = Vector2(180, 0)
 	row.add_child(l)
 	var prev_b := Button.new()
-	prev_b.text = "◀"
+	prev_b.text = "<"
 	prev_b.custom_minimum_size = Vector2(56, 44)
 	prev_b.pressed.connect(func() -> void: cb.call(-1))
 	row.add_child(prev_b)
@@ -197,7 +197,7 @@ func _prow(title: String, value: String, cb: Callable) -> HBoxContainer:
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(v)
 	var next_b := Button.new()
-	next_b.text = "▶"
+	next_b.text = ">"
 	next_b.custom_minimum_size = Vector2(56, 44)
 	next_b.pressed.connect(func() -> void: cb.call(1))
 	row.add_child(next_b)

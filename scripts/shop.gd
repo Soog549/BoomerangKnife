@@ -924,7 +924,7 @@ func _build_pager() -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
 	var prev := Button.new()
-	prev.text = "◀"
+	prev.text = "<"
 	prev.custom_minimum_size = Vector2(70, 44)
 	prev.disabled = _shop_page <= 0
 	prev.pressed.connect(func() -> void:
@@ -939,7 +939,7 @@ func _build_pager() -> void:
 	mid.add_theme_font_size_override("font_size", 16)
 	row.add_child(mid)
 	var nxt := Button.new()
-	nxt.text = "▶"
+	nxt.text = ">"
 	nxt.custom_minimum_size = Vector2(70, 44)
 	nxt.disabled = _shop_page >= SHOP_PAGES.size() - 1
 	nxt.pressed.connect(func() -> void:

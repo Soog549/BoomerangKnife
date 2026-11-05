@@ -30,7 +30,7 @@ func _build_nav() -> void:
 	_nav.add_theme_constant_override("separation", 10)
 	add_child(_nav)
 	var prev := Button.new()
-	prev.text = "◀"
+	prev.text = "<"
 	prev.custom_minimum_size = Vector2(90, 52)
 	prev.pressed.connect(func() -> void: _change_page(-1))
 	_nav.add_child(prev)
@@ -39,7 +39,7 @@ func _build_nav() -> void:
 	_page_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_nav.add_child(_page_label)
 	var nxt := Button.new()
-	nxt.text = "▶"
+	nxt.text = ">"
 	nxt.custom_minimum_size = Vector2(90, 52)
 	nxt.pressed.connect(func() -> void: _change_page(1))
 	_nav.add_child(nxt)
