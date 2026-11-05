@@ -35,6 +35,11 @@ func _ready() -> void:
 	vb.add_theme_constant_override("separation", 8)
 	scroll.add_child(vb)
 
+	var next_idx := -1
+	for i in GameState.CAMPAIGN.size():
+		if GameState.campaign_unlocked(i) and i not in GameState.campaign_done:
+			next_idx = i
+			break
 	for i in GameState.CAMPAIGN.size():
 		var idx: int = i
 		var e: Dictionary = GameState.CAMPAIGN[i]
@@ -43,7 +48,7 @@ func _ready() -> void:
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
 		var info := Label.new()
-		var status := "ГОТОВО" if done else ("ЗАКРЫТО" if not unlocked else "")
+		var status := "ГОТОВО" if done else ("ЗАКРЫТО" if not unlocked else ("СЛЕДУЮЩИЙ" if idx == next_idx else ""))
 		var line := "%s %s · %s" % [str(e["ep"]), tr(str(e["title"])), _mode_badge(str(e["scene"]))]
 		if status != "":
 			line += "  —  " + status
@@ -51,6 +56,8 @@ func _ready() -> void:
 		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		info.add_theme_font_size_override("font_size", 15)
 		info.modulate = Color(1, 1, 1, 1.0 if unlocked else 0.5)
+		if idx == next_idx:
+			info.add_theme_color_override("font_color", GameState.accent())
 		info.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		row.add_child(info)
 		if unlocked:
