@@ -104,6 +104,7 @@ var _rush_mode := false
 var _survival_arena := false
 var _anim_t := 0.0
 var _walk_accum := 0.0
+var _move_amt := 0.0
 var _comp_t := 0.0
 var _mode_key := ""
 var _rig_state := "idle"
@@ -536,6 +537,7 @@ func _process(dt: float) -> void:
 	py = clamp(py + mv.y * MOVE_SPEED * GameState.swipe_mult() * dt, AREA_TOP, field_bottom)
 	# шаг от ПРОЙДЕННОГО РАССТОЯНИЯ (ref2game: ноги не скользят)
 	_walk_accum += mv.length() * MOVE_SPEED * GameState.swipe_mult() * dt
+	_move_amt = clampf(mv.length(), 0.0, 1.0)
 
 	wave_t += dt
 	if false and wave_t > 15.0:
@@ -1331,7 +1333,7 @@ func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
 	# ЕСТЬ ЧАСТИ — настоящий риг из отдельных слоёв
 	if rig_torso != null:
 		_rig_t += get_process_delta_time()
-		var br: float = sin(_anim_t * 4.2) * 1.8
+		var br: float = sin(_anim_t * 4.2) * 1.8 + sin(_walk_accum * 0.32) * 3.0 * _move_amt
 		var stride: float = sin(_walk_accum * 0.16) * 0.13
 		var lean: float = 0.0
 		var head_dx: float = 0.0
@@ -1406,7 +1408,7 @@ func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		return
 	_rig_t += get_process_delta_time()
-	var breathing: float = sin(_anim_t * 4.2) * 2.6
+	var breathing: float = sin(_anim_t * 4.2) * 2.6 + sin(_walk_accum * 0.32) * 3.2 * _move_amt
 	var sway: float = sin(_anim_t * 5.4) * 2.2
 	var lean: float = -abs(sin(_anim_t * 2.1)) * 1.5
 	var s_legs := Vector2(sway, breathing * 0.3)
