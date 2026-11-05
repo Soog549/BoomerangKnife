@@ -103,6 +103,7 @@ var _hud_font: Font = null
 var _rush_mode := false
 var _survival_arena := false
 var _anim_t := 0.0
+var _walk_accum := 0.0
 var _comp_t := 0.0
 var _mode_key := ""
 var _rig_state := "idle"
@@ -533,6 +534,8 @@ func _process(dt: float) -> void:
 		mv = joy_vec.normalized() * clamp((joy_vec.length() - DEAD) / (1.0 - DEAD), 0.0, 1.0)
 	px = clamp(px + mv.x * MOVE_SPEED * GameState.swipe_mult() * dt, 50.0, W - 50.0)
 	py = clamp(py + mv.y * MOVE_SPEED * GameState.swipe_mult() * dt, AREA_TOP, field_bottom)
+	# шаг от ПРОЙДЕННОГО РАССТОЯНИЯ (ref2game: ноги не скользят)
+	_walk_accum += mv.length() * MOVE_SPEED * GameState.swipe_mult() * dt
 
 	wave_t += dt
 	if false and wave_t > 15.0:
@@ -1329,7 +1332,7 @@ func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
 	if rig_torso != null:
 		_rig_t += get_process_delta_time()
 		var br: float = sin(_anim_t * 4.2) * 1.8
-		var stride: float = sin(_anim_t * 7.0) * 0.13
+		var stride: float = sin(_walk_accum * 0.16) * 0.13
 		var lean: float = 0.0
 		var head_dx: float = 0.0
 		match _rig_state:
@@ -1445,7 +1448,7 @@ func _draw_rig(px: float, py: float, gh: float, gw: float, ts: Vector2) -> void:
 	var base_y: float = py + crouch
 	# ноги: две половины, попеременный шаг от бедра
 	var step_amp: float = 0.10
-	var stride: float = sin(_anim_t * 7.0) * step_amp
+	var stride: float = sin(_walk_accum * 0.16) * step_amp
 	var hip_y: float = base_y - gh * 0.42
 	# левая нога
 	draw_set_transform(Vector2(px - gw * 0.16 + s_legs.x, hip_y), -stride, Vector2.ONE)
