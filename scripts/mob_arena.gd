@@ -143,7 +143,7 @@ func _ready() -> void:
 		shield_tex = load(shp)
 	elif ResourceLoader.exists(sp):
 		shield_tex = load(sp)
-	for kind in ["runner", "drone", "anomaly", "boss"]:
+	for kind in ["runner", "drone", "anomaly", "boss", "armored", "swift"]:
 		var arr := []
 		for v in [1, 2]:
 			var mp := "res://assets/images/arena/mob-%s-%d.png" % [kind, v]
