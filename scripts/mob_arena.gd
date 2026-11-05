@@ -564,6 +564,8 @@ func _process(dt: float) -> void:
 	spawn_t += dt
 	if wave_quota <= 0:
 		wave += 1
+		if wave >= 5:
+			GameState.campaign_win()
 		wave_quota = 1 if _rush_mode else mini(3 + wave, 12)
 		wave_killed = 0
 		banner_n = wave

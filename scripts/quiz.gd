@@ -107,6 +107,7 @@ func _render() -> void:
 				if correct >= 4:
 					GameState.crystals += 5
 					GameState.save_settings()
+					GameState.campaign_win()
 			_render())
 		vb.add_child(b)
 

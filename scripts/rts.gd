@@ -83,6 +83,7 @@ func _process(dt: float) -> void:
 	if float(enemy_base["hp"]) <= 0.0:
 		over = true
 		win = true
+		GameState.campaign_win()
 	elif float(my_base["hp"]) <= 0.0:
 		over = true
 		win = false

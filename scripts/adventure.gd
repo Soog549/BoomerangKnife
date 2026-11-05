@@ -85,6 +85,7 @@ func _process(dt: float) -> void:
 					quest_killed += 1
 					if quest_killed >= 3:
 						quest_state = 2
+						GameState.campaign_win()
 						_say("Кузнец", "Вернись к кузнецу — он ждёт.")
 	for m in mobs:
 		if m["alive"]:
@@ -99,6 +100,7 @@ func _process(dt: float) -> void:
 					quest_killed += 1
 					if quest_killed >= 3:
 						quest_state = 2
+						GameState.campaign_win()
 						_say("Кузнец", "Вернись к кузнецу — он ждёт.")
 	queue_redraw()
 

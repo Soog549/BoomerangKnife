@@ -1178,6 +1178,7 @@ func load_settings() -> void:
 		var _cp = JSON.parse_string(_cd)
 		if _cp is Array:
 			campaign_done = _cp
+	campaign_active = int(cfg.get_value("settings", "campaign_active", -1))
 	var _rr = cfg.get_value("settings", "recent_runs", "[]")
 	if _rr is String and _rr != "":
 		var _rp = JSON.parse_string(_rr)
@@ -1252,6 +1253,7 @@ func _fill_cfg(cfg: ConfigFile) -> void:
 	cfg.set_value("settings", "item_levels", JSON.stringify(item_levels))
 	cfg.set_value("settings", "units", JSON.stringify(units))
 	cfg.set_value("settings", "campaign_done", JSON.stringify(campaign_done))
+	cfg.set_value("settings", "campaign_active", campaign_active)
 	cfg.set_value("settings", "accent_index", accent_index)
 	cfg.set_value("settings", "btn_scale_index", btn_scale_index)
 	cfg.set_value("settings", "ui_alpha", ui_alpha)
@@ -1873,6 +1875,7 @@ const CAMPAIGN := [
 	{"ep": "E12", "title": "Память", "scene": "res://scenes/main_menu.tscn", "flag": ""},
 ]
 var campaign_done: Array = []
+var campaign_active: int = -1
 
 
 func campaign_done_count() -> int:
@@ -1889,7 +1892,16 @@ func campaign_complete(idx: int) -> void:
 		save_settings()
 
 
+## Вызывается режимами при ПОБЕДЕ — закрывает активный эпизод кампании.
+func campaign_win() -> void:
+	if campaign_active >= 0:
+		campaign_complete(campaign_active)
+		campaign_active = -1
+		save_settings()
+
+
 func campaign_launch(idx: int) -> void:
+	campaign_active = idx
 	var e: Dictionary = CAMPAIGN[idx]
 	var flag: String = str(e.get("flag", ""))
 	match flag:

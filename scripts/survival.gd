@@ -69,6 +69,8 @@ func _process(dt: float) -> void:
 		phase -= 1.0
 		day += 1
 		_save_world()
+		if day >= 2:
+			GameState.campaign_win()
 	is_night = phase >= (DAY_LEN / total)
 	# голод
 	hunger = maxf(0.0, hunger - dt * (100.0 / 480.0))

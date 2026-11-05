@@ -59,7 +59,6 @@ func _ready() -> void:
 			b.custom_minimum_size = Vector2(120, 46)
 			b.pressed.connect(func() -> void:
 				AudioManager.play("level")
-				GameState.campaign_complete(idx)
 				GameState.campaign_launch(idx))
 			row.add_child(b)
 		vb.add_child(row)

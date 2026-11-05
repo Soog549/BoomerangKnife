@@ -125,6 +125,8 @@ func _on_path(pos: Vector2) -> bool:
 
 func _start_wave() -> void:
 	wave += 1
+	if wave >= 5:
+		GameState.campaign_win()
 	_td_checkpoint()
 	if wave > GameState.max_level_reached:
 		GameState.max_level_reached = wave
