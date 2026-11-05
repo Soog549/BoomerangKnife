@@ -1057,7 +1057,7 @@ func load_settings() -> void:
 	relics_total = cfg.get_value("settings", "relics_total", 0)
 	arena_tutorial_done = cfg.get_value("settings", "arena_tutorial_done", false)
 	music_track = cfg.get_value("settings", "music_track", -1)
-	style_pack = str(cfg.get_value("settings", "style_pack", "base"))
+	style_pack = str(cfg.get_value("settings", "style_pack", "imperial"))
 	var sl: Variant = cfg.get_value("settings", "seen_lore", {})
 	if sl is Dictionary:
 		seen_lore = sl
@@ -2264,7 +2264,7 @@ func toggle_postfx() -> void:
 
 
 func ui_bg_color() -> Color:
-	return Color(0.90, 0.92, 0.96, 1.0) if theme_light else Color(0.06, 0.07, 0.12, 1.0)
+	return Color(0.90, 0.92, 0.96, 1.0) if theme_light else Color(0.09, 0.08, 0.07, 1.0)
 
 
 func ui_fg_color() -> Color:

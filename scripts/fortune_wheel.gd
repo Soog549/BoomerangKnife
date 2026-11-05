@@ -6,18 +6,18 @@ class_name FortuneWheel
 signal finished(reward: Dictionary)
 
 const SECTORS := [
-	{"label": "+20", "col": Color(0.28, 0.42, 0.72)},
-	{"label": "+30", "col": Color(0.22, 0.34, 0.60)},
-	{"label": "+40", "col": Color(0.28, 0.42, 0.72)},
-	{"label": "+60", "col": Color(0.22, 0.34, 0.60)},
-	{"label": "+100", "col": Color(0.55, 0.40, 0.16)},
-	{"label": "30 XP", "col": Color(0.20, 0.46, 0.36)},
-	{"label": "50 XP", "col": Color(0.16, 0.38, 0.30)},
-	{"label": "80 XP", "col": Color(0.20, 0.46, 0.36)},
-	{"label": "+5", "col": Color(0.30, 0.34, 0.62)},
-	{"label": "+10", "col": Color(0.44, 0.30, 0.62)},
-	{"label": "+20", "col": Color(0.30, 0.34, 0.62)},
-	{"label": "БУСТЕР", "col": Color(0.62, 0.26, 0.34)},
+	{"label": "+20", "col": Color(0.20, 0.50, 0.46)},
+	{"label": "+30", "col": Color(0.15, 0.38, 0.35)},
+	{"label": "+40", "col": Color(0.20, 0.50, 0.46)},
+	{"label": "+60", "col": Color(0.15, 0.38, 0.35)},
+	{"label": "+100", "col": Color(0.62, 0.46, 0.18)},
+	{"label": "30 XP", "col": Color(0.42, 0.36, 0.24)},
+	{"label": "50 XP", "col": Color(0.32, 0.28, 0.18)},
+	{"label": "80 XP", "col": Color(0.42, 0.36, 0.24)},
+	{"label": "+5", "col": Color(0.26, 0.56, 0.50)},
+	{"label": "+10", "col": Color(0.55, 0.48, 0.22)},
+	{"label": "+20", "col": Color(0.20, 0.50, 0.46)},
+	{"label": "БУСТЕР", "col": Color(0.62, 0.34, 0.20)},
 ]
 
 var angle := 0.0
@@ -115,6 +115,10 @@ func _draw() -> void:
 	draw_arc(c, r, 0.0, TAU, 96, Color(0.95, 0.78, 0.30, 0.95), 6.0)
 	draw_arc(c, r - 7.0, 0.0, TAU, 96, Color(0.55, 0.38, 0.12, 0.85), 2.0)
 	draw_arc(c, r + 3.0, 0.0, TAU, 96, Color(1.0, 0.90, 0.55, 0.35), 2.0)
+	# концентрические кольца мишени (мульти-мишень)
+	draw_arc(c, r * 0.86, 0.0, TAU, 96, Color(0.95, 0.78, 0.30, 0.22), 2.0)
+	draw_arc(c, r * 0.62, 0.0, TAU, 96, Color(0.95, 0.78, 0.30, 0.18), 2.0)
+	draw_arc(c, r * 0.40, 0.0, TAU, 96, Color(0.95, 0.78, 0.30, 0.22), 2.0)
 
 	# ступица
 	draw_circle(c, 44.0, Color(0.10, 0.10, 0.16, 0.95))
