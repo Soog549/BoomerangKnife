@@ -894,7 +894,7 @@ func _draw() -> void:
 		var texs = mob_tex.get(str(m["kind"]), [])
 		if not texs.is_empty():
 			var tx: Texture2D = texs[int(m.get("var", 0)) % texs.size()]
-			var msz: float = minf(mr * 3.2, W * 0.30)
+			var msz: float = minf(mr * 2.4, W * 0.26)
 			var ph: float = float(m.get("var", 0)) * 1.7 + mx * 0.01
 			var mbob: float = sin(_anim_t * 3.6 + ph) * (3.4 if msz > 90.0 else 2.2)
 			var msw: float = sin(_anim_t * 2.4 + ph) * 0.045
